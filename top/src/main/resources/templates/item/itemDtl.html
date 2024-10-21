@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <script src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script> <!-- 아임포트 결제 -->
+</head>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    $(document).ready(function() {
+        calculateTotalPrice();
+
+        $("#count").change(function() {
+            calculateTotalPrice();
+        });
+    });
+
+    function calculateTotalPrice() {
+        var count = $("#count").val();
+        var price = $("#price").val();
+        var totalPrice = price * count;
+        $("#totalPrice").html(totalPrice + '원');
+    }
+
+
+    function order(){
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        var url = "/order";
+        var paramData = {
+            itemId : $("#itemId").val(),
+            count : $("#count").val()
+        };
+
+        var param = JSON.stringify(paramData);
+
+        $.ajax({
+            url      : url,
+            type     : "POST",
+            contentType : "application/json",
+            data     : param,
+            beforeSend : function(xhr){
+                /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                xhr.setRequestHeader(header, token);
+            },
+            dataType : "json",
+            cache   : false,
+            success  : function(result, status){
+                var totalAmount = parseInt($("#totalPrice").text().replace('원', '')); // 총 결제 금액
+                var itemId = $("#itemId").val(); // 상품 ID
+                var count = $("#count").val(); // 수량
+
+                requestPay(totalAmount, itemId, count);
+            },
+            error : function(jqXHR, status, error){
+
+                if(jqXHR.status == '200'){
+                    alert("로그인 후 이용해주세요.");
+                    location.href='/members/login';
+                } else{
+                    alert(jqXHR.responseText);
+                }
+
+            }
+        });
+    }
+
+    function requestPay(totalAmount, itemId, count) {
+        var IMP = window.IMP; // 아임포트 라이브러리 호출
+        IMP.init("imp12017008"); // 본인의 아임포트 코드로 변경
+
+        var merchant_uid = "order_" + new Date().getTime(); // 주문번호 생성
+
+        IMP.request_pay({
+            pg: "kakaopay", // 카카오페이 사용
+            pay_method: "card", // 결제 방식
+            merchant_uid: merchant_uid, // 주문번호
+            name: "주문 상품", // 주문명
+            amount: totalAmount, // 결제 금액
+        }, function(rsp) { // 결제 완료 후 실행되는 콜백 함수
+            if (rsp.success) {
+                // 결제 성공 시 주문 처리 호출
+                completeOrder(itemId, count, merchant_uid);
+            } else {
+                alert("결제에 실패하였습니다.");
+            }
+        });
+    }
+
+    function completeOrder(itemId, count, merchant_uid) {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        var url = "/order"; // 주문 처리 URL
+        var paramData = {
+            itemId: itemId,
+            count: count,
+            merchant_uid: merchant_uid // 결제 후 사용
+        };
+
+        var param = JSON.stringify(paramData);
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/json",
+            data: param,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            dataType: "json",
+            success: function(result) {
+                alert("주문이 완료 되었습니다.");
+                location.href = '/'; // 주문 후 홈으로 이동
+            },
+            error: function(jqXHR) {
+                alert("주문 처리 중 오류가 발생했습니다.");
+            }
+        });
+    }
+
+    function addCart() {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        var url = "/cart";
+        var paramData = {
+            itemId: $("#itemId").val(),
+            count: $("#count").val()
+        };
+
+        var param = JSON.stringify(paramData);
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/json",
+            data: param,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            dataType: "json",
+            success: function(result) {
+                alert("상품을 장바구니에 담았습니다.");
+                location.href = '/';
+            },
+            error: function(jqXHR) {
+                if (jqXHR.status == '200') {
+                    alert("로그인 후 이용해주세요");
+                    location.href = '/members/login';
+                } else {
+                    alert(jqXHR.responseText);
+                }
+            }
+        });
+    }
+  </script>
+</th:block>
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+  <style>
+    .mgb-15{
+        margin-bottom:15px;
+    }
+    .mgt-30{
+        margin-top:30px;
+    }
+    .mgt-50{
+        margin-top:50px;
+    }
+    .repImgDiv{
+        margin-right:15px;
+        height:auto;
+        width:65%;
+    }
+    .repImg{
+        width:100%;
+        height:400px;
+    }
+    .wd50{
+        height:auto;
+        width:35%;
+    }
+    .d-flex{
+        padding: 2%;
+    }
+    span{
+        width:100%
+    }
+  </style>
+</th:block>
+
+<div layout:fragment="content">
+
+  <input type="hidden" id="itemId" th:value="${item.id}">
+
+  <div class="d-flex">
+    <div class="repImgDiv">
+      <img th:src="${item.itemImgDtoList[0].imgUrl}" class = "rounded repImg" th:alt="${item.itemNm}">
+    </div>
+    <div class="wd50">
+      <!--        1017 은열 수정-->
+      <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}" class="badge badge-primary mgb-15">
+            판매중
+        </span>
+      <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}" class="badge btn-danger mgb-15">
+            품절
+        </span>
+      <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).DELETE}" class="badge badge-secondary mgb-15">
+            삭제됨
+        </span>
+      <div class="h4" th:text="${item.itemNm}"></div>
+      <hr class="my-4">
+
+      <div class="text-right">
+        <div class="h4 text-danger text-left">
+          <input type="hidden" th:value="${item.price}" id="price" name="price">
+          <span th:text="${item.price}"></span>원
+        </div>
+        <div class="input-group w-50">
+          <div class="input-group-prepend">
+            <span class="input-group-text">수량</span>
+          </div>
+          <input type="number" name="count" id="count" class="form-control" value="1" min="1">
+        </div>
+      </div>
+      <hr class="my-4">
+
+      <div class="text-right mgt-50">
+        <h5>결제 금액</h5>
+        <h3 name="totalPrice" id="totalPrice" class="font-weight-bold"></h3>
+      </div>
+      <div th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}" class="text-left">
+        <button type="button" class="btn-buy paybt" onclick="addCart()">장바구니 담기</button>
+        <button type="button" class="btn-buy paybt" onclick="order()">주문하기</button>
+      </div>
+      <!--        1017은열 수정-->
+      <div th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}" class="text-right">
+        <button type="button" class="btn btn-danger btn-lg">품절</button>
+      </div>
+      <div th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).DELETE}" class="text-right">
+        <button type="button" class="btn btn-danger btn-lg">삭제</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="jumbotron jumbotron-fluid container mgt-30">
+    <div class="container">
+      <h4 class="display-5">상품 상세 설명</h4>
+      <hr class="my-4">
+      <p class="lead" th:text="${item.itemDetail}"></p>
+    </div>
+  </div>
+
+  <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
+    <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
+  </div>
+  <div id="paynav" class="container-fluid" style="width: 100%;">
+    <div class="surv row">
+      <div class="col-sm-8">
+        <h4>LG 코드제로 로보킹 AI 올인원 (프리스탠딩)</h4>
+        <p class="product-price">2,209,000원</p>
+        <h5>1,990,000원 (최대 혜택가: 1,750,700원)</h5>
+      </div>
+      <div class="col-sm-4">
+        <button type="button" class="btn-buy paybt" onclick="order()">결제하기</button>
+        <button type="button" class="btn-buy paybt" onclick="addCart()">장바구니 담기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</html>
