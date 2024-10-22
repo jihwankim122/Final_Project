@@ -1,22 +1,23 @@
 package com.top.service;
 
-import com.top.dto.NoticeDTO;
+
 import com.top.dto.NpageRequestDTO;
 import com.top.dto.NpageResultDTO;
-import com.top.entity.Notice;
+import com.top.dto.QnaDTO;
+import com.top.entity.Qna;
 
-public interface NoticeService {
+public interface QnaService {
 
-    Long register(NoticeDTO dto); // Regist
-    NpageResultDTO<NoticeDTO, Notice> getList(NpageRequestDTO requestDTO); // List
-    NoticeDTO read(Long nno); // View Detail
-    void modify(NoticeDTO dto);
-    void remove(Long nno);
+    Long register(QnaDTO dto); // Regist
+    NpageResultDTO<QnaDTO, Qna> getList(NpageRequestDTO requestDTO); // List
+    QnaDTO read(Long qno); // View Detail
+    void modify(QnaDTO dto);
+    void remove(Long qno);
 
     // Changing DTO to ENTITY
-    default Notice dtoToEntity(NoticeDTO dto){
-        Notice entity = Notice.builder()
-                .nno(dto.getNno())
+    default Qna dtoToEntity(QnaDTO dto){
+        Qna entity = Qna.builder()
+                .qno(dto.getQno())
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .writer(dto.getWriter())
@@ -25,9 +26,9 @@ public interface NoticeService {
     }
 
     // Changing ENTITY to DTO
-    default NoticeDTO entityToDto(Notice entity){
-        NoticeDTO dto = NoticeDTO.builder()
-                .nno(entity.getNno())
+    default QnaDTO entityToDto(Qna entity){
+        QnaDTO dto = QnaDTO.builder()
+                .qno(entity.getQno())
                 .title(entity.getTitle())
                 .content(entity.getContent())
                 .writer(entity.getWriter())

@@ -6,9 +6,9 @@
 
 <!--  <th:block th:fragment="content">-->
 <div layout:fragment="content">
-<h1 class="mt-4">NOTICE
-    <span sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-    <a th:href="@{/notice/register}">
+<h1 class="mt-4">QNA
+    <span sec:authorize="hasAnyAuthority('ROLE_ADMIN','ROLE_USER')">
+    <a th:href="@{/qna/register}">
         <button type="button" class="btn btn-outline-primary">REGISTER
         </button>
     </a>
@@ -16,7 +16,7 @@
 </h1>
 
     <!-- 검색 --------------------------------------------------------------->
-    <form action="/notice/list" method="get" id="searchForm">
+    <form action="/qna/list" method="get" id="searchForm">
       <div class="input-group">
         <input type="hidden" name="page" value = "1">
         <div class="input-group-prepend">
@@ -51,9 +51,9 @@
       <tbody>
 
       <tr th:each="dto : ${result.dtoList}" >
-        <td>[[${dto.nno}]]</td>
+        <td>[[${dto.qno}]]</td>
         <th scope="row">
-          <a th:href="@{/notice/read(nno = ${dto.nno},
+          <a th:href="@{/qna/read(qno = ${dto.qno},
                     page= ${result.page},
                     type=${npageRequestDTO.type} ,
                     keyword = ${npageRequestDTO.keyword})}">
@@ -72,13 +72,13 @@
     <ul class="pagination h-100 justify-content-center align-items-center">
 
       <li class="page-item " th:if="${result.prev}">
-        <a class="page-link" th:href="@{/notice/list(page= ${result.start -1},
+        <a class="page-link" th:href="@{/qna/list(page= ${result.start -1},
                     type=${npageRequestDTO.type} ,
                     keyword = ${npageRequestDTO.keyword} ) }" tabindex="-1">Previous</a>
       </li>
 
       <li th:class=" 'page-item ' + ${result.page == page?'active':''} " th:each="page: ${result.pageList}">
-        <a class="page-link" th:href="@{/notice/list(page = ${page} ,
+        <a class="page-link" th:href="@{/qna/list(page = ${page} ,
                    type=${npageRequestDTO.type} ,
                    keyword = ${npageRequestDTO.keyword}  )}">
           [[${page}]]
@@ -86,7 +86,7 @@
       </li>
 
       <li class="page-item" th:if="${result.next}">
-        <a class="page-link" th:href="@{/notice/list(page= ${result.end + 1} ,
+        <a class="page-link" th:href="@{/qna/list(page= ${result.end + 1} ,
                     type=${npageRequestDTO.type} ,
                     keyword = ${npageRequestDTO.keyword} )}">Next</a>
       </li>

@@ -7,9 +7,9 @@
 
     <div layout:fragment="content">
 
-        <h1 class="mt-4">Notice Modify Page</h1>
+        <h1 class="mt-4">Qna Modify Page</h1>
 
-        <form action="/notice/modify" method="post">
+        <form action="/qna/modify" method="post">
 
             <!--페이지 번호  -->
             <input type="hidden" name="page" th:value="${requestDTO.page}">
@@ -19,7 +19,7 @@
 
             <div class="form-group">
                 <label ></label>
-                <input type="text" class="form-control" name="nno" th:value="${dto.nno}" readonly >
+                <input type="text" class="form-control" name="qno" th:value="${dto.qno}" readonly >
             </div>
 
             <div class="form-group">
@@ -56,11 +56,11 @@
         <script th:inline="javascript">
             var actionForm = $("form"); //form 태그 객체
             $(".removeBtn").click(function(){
-                    if (!confirm("정말로 삭제하시겠습니까?")) {
-            return;
-            }
+                if (!confirm("삭제하시겠습니까?")) {
+                return;
+                }
                 actionForm
-                    .attr("action", "/notice/remove")
+                    .attr("action", "/qna/remove")
                     .attr("method","post");
                 actionForm.submit();
             });
@@ -71,7 +71,7 @@
                 }
 
                 actionForm
-                    .attr("action", "/notice/modify")
+                    .attr("action", "/qna/modify")
                     .attr("method","post")
                     .submit();
             });
@@ -88,7 +88,7 @@
                 actionForm.append(keyword);
 
                 actionForm
-                    .attr("action", "/notice/list")
+                    .attr("action", "/qna/list")
                     .attr("method","get");
 
                actionForm.submit();

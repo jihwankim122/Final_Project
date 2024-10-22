@@ -9,11 +9,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Notice extends BaseEntity{
+public class Qna extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long nno;
+    private Long qno;
 
     @Column(length = 100, nullable = false)
     private String title;

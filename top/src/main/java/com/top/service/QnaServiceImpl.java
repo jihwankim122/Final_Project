@@ -3,12 +3,12 @@ package com.top.service;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.top.dto.NoticeDTO;
 import com.top.dto.NpageRequestDTO;
 import com.top.dto.NpageResultDTO;
-import com.top.entity.Notice;
-import com.top.entity.QNotice;
-import com.top.repository.NoticeRepository;
+import com.top.dto.QnaDTO;
+import com.top.entity.QQna;
+import com.top.entity.Qna;
+import com.top.repository.QnaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -23,28 +23,28 @@ import java.util.function.Function;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class NoticeServiceImpl implements NoticeService {
+public class QnaServiceImpl implements QnaService {
 
-    private final NoticeRepository repository;
+    private final QnaRepository repository;
 
     // Regist
     @Override
-    public Long register(NoticeDTO dto) {
+    public Long register(QnaDTO dto) {
         log.info("DTO------------------------");
         log.info(dto);
-        Notice entity = dtoToEntity(dto); // DTOtoENTITY
+        Qna entity = dtoToEntity(dto); // DTOtoENTITY
         log.info(entity);
         repository.save(entity); // Regist
-        return entity.getNno(); // List Number
+        return entity.getQno(); // List Number
     }
 
     @Override
-    public NpageResultDTO<NoticeDTO, Notice> getList(NpageRequestDTO requestDTO) {
-        Pageable pageable = requestDTO.getPageable(Sort.by("nno").descending()); // order by nno desc limit 0,10
+    public NpageResultDTO<QnaDTO, Qna> getList(NpageRequestDTO requestDTO) {
+        Pageable pageable = requestDTO.getPageable(Sort.by("qno").descending()); // order by qno desc limit 0,10
         BooleanBuilder booleanBuilder = getSearch(requestDTO);
 
-        Page<Notice> result = repository.findAll(booleanBuilder, pageable); // Using Querydsl
-        Function<Notice, NoticeDTO> fn = (entity -> entityToDto(entity)); // Create fn Reference
+        Page<Qna> result = repository.findAll(booleanBuilder, pageable); // Using Querydsl
+        Function<Qna, QnaDTO> fn = (entity -> entityToDto(entity)); // Create fn Reference
         return new NpageResultDTO<>(result, fn);
     }
 
@@ -52,10 +52,10 @@ public class NoticeServiceImpl implements NoticeService {
     private BooleanBuilder getSearch(NpageRequestDTO requestDTO) {
         String type = requestDTO.getType(); // 검색필드
         BooleanBuilder booleanBuilder = new BooleanBuilder(); // where
-        QNotice qnotice = QNotice.notice;
+        QQna qnotice = QQna.qna;
         String keyword = requestDTO.getKeyword(); // 검색어
-        BooleanExpression expression = qnotice.nno.gt(0L); // nno > 0 조건만 생성
-        booleanBuilder.and(expression); // where nno > 0
+        BooleanExpression expression = qnotice.qno.gt(0L); // qno > 0 조건만 생성
+        booleanBuilder.and(expression); // where qno > 0
         if (type == null || type.trim().length() == 0) { //검색 조건이 없는 경우
             return booleanBuilder;
         }
@@ -78,18 +78,18 @@ public class NoticeServiceImpl implements NoticeService {
 
     // Read
     @Override
-    public NoticeDTO read(Long nno) {
-        Optional<Notice> result = repository.findById(nno);
+    public QnaDTO read(Long qno) {
+        Optional<Qna> result = repository.findById(qno);
         return result.isPresent() ? entityToDto(result.get()) : null;
     }
 
     // Update
     @Override
-    public void modify(NoticeDTO dto) {
+    public void modify(QnaDTO dto) {
         //업데이트 하는 항목은 '제목', '내용'
-        Optional<Notice> result = repository.findById(dto.getNno());
+        Optional<Qna> result = repository.findById(dto.getQno());
         if (result.isPresent()) {
-            Notice entity = result.get();
+            Qna entity = result.get();
             entity.changeTitle(dto.getTitle());
             entity.changeContent(dto.getContent());
             repository.save(entity);
@@ -97,8 +97,8 @@ public class NoticeServiceImpl implements NoticeService {
     }
     // Delete
     @Override
-    public void remove(Long nno) {
-        repository.deleteById(nno);
+    public void remove(Long qno) {
+        repository.deleteById(qno);
     }
 
 }

@@ -1,8 +1,8 @@
 package com.top.controller;
 
-import com.top.dto.NoticeDTO;
 import com.top.dto.NpageRequestDTO;
-import com.top.service.NoticeService;
+import com.top.dto.QnaDTO;
+import com.top.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/notice")
+@RequestMapping("/qna")
 @Log4j2
 @RequiredArgsConstructor
-public class NoticeController {
-    private final NoticeService service;
+public class QnaController {
+    private final QnaService service;
 
     @GetMapping("/")
     public String index(){
 
-        return "redirect:/notice/list";
+        return "redirect:/qna/list";
     }
 
     // List
@@ -44,7 +44,7 @@ public class NoticeController {
     }
 
     @PostMapping("/register")
-    public String registerPost(NoticeDTO dto, RedirectAttributes redirectAttributes) {
+    public String registerPost(QnaDTO dto, RedirectAttributes redirectAttributes) {
         // Log Info
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName(); // getName
@@ -54,22 +54,22 @@ public class NoticeController {
         log.info("dto..." + dto);
 
         // New Entity Number
-        Long nno = service.register(dto);
-        redirectAttributes.addFlashAttribute("msg", nno);
-        return "redirect:/notice/list";
+        Long qno = service.register(dto);
+        redirectAttributes.addFlashAttribute("msg", qno);
+        return "redirect:/qna/list";
     }
 
     // read & Update
     @GetMapping({"/read", "/modify"})
-    public void read(long nno, @ModelAttribute("requestDTO") NpageRequestDTO requestDTO, Model model ){
-        log.info("nno: " + nno);
-        NoticeDTO dto = service.read(nno);
+    public void read(long qno, @ModelAttribute("requestDTO") NpageRequestDTO requestDTO, Model model ){
+        log.info("qno: " + qno);
+        QnaDTO dto = service.read(qno);
         model.addAttribute("dto", dto);
     }
 
     // Update
     @PostMapping("/modify")
-    public String modify(NoticeDTO dto,
+    public String modify(QnaDTO dto,
                          @ModelAttribute("requestDTO") NpageRequestDTO requestDTO,
                          RedirectAttributes redirectAttributes){
         log.info("post modify.........................................");
@@ -78,17 +78,17 @@ public class NoticeController {
         redirectAttributes.addAttribute("page",requestDTO.getPage());
         redirectAttributes.addAttribute("type",requestDTO.getType());
         redirectAttributes.addAttribute("keyword",requestDTO.getKeyword());
-        redirectAttributes.addAttribute("nno",dto.getNno());
-        return "redirect:/notice/read";
+        redirectAttributes.addAttribute("qno",dto.getQno());
+        return "redirect:/qna/read";
     }
 
     // Delete
     @PostMapping("/remove")
-    public String remove(long nno, RedirectAttributes redirectAttributes){
-        log.info("nno: " + nno);
-        service.remove(nno);
-        redirectAttributes.addFlashAttribute("msg", nno);
-        return "redirect:/notice/list";
+    public String remove(long qno, RedirectAttributes redirectAttributes){
+        log.info("qno: " + qno);
+        service.remove(qno);
+        redirectAttributes.addFlashAttribute("msg", qno);
+        return "redirect:/qna/list";
     }
 }
 

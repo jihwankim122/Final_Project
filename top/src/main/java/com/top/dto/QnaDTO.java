@@ -11,12 +11,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class NoticeDTO {
-    private Long nno;
+public class QnaDTO {
+    private Long qno;
     private String title;
     private String content;
     private String writer;
-//    private String name;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 }
