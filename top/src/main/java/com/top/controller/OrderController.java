@@ -32,6 +32,14 @@ public class OrderController {
 
     private final OrderServiceImpl orderService;
 
+    // 로그인 상태 확인
+    @GetMapping(value = "/order")
+    public @ResponseBody ResponseEntity<Boolean> checkLoginStatus(Principal principal) {
+        // Principal이 null이면 로그인하지 않은 상태
+        boolean isLoggedIn = principal != null;
+        return new ResponseEntity<>(isLoggedIn, HttpStatus.OK);
+    }
+
     // 주문하기
     @PostMapping(value = "/order")
     public @ResponseBody ResponseEntity order(@RequestBody @Valid OrderDto orderDto
@@ -86,15 +94,24 @@ public class OrderController {
         return "order/allOrders";
     }
 
-    // 주문 취소
+    // 주문 취소 승인 (관리자)
     @PostMapping("/order/{orderId}/cancel")
-    public @ResponseBody ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId , Principal principal){
-
-        if(!orderService.validateOrder(orderId, principal.getName())){
-            return new ResponseEntity<String>("주문 취소 권한이 없습니다.", HttpStatus.FORBIDDEN);
-        }
-
+    public @ResponseBody ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId){
         orderService.cancelOrder(orderId);
         return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
+
+    // 주문 취소 요청 (일반 유저)
+    @PostMapping("/order/{orderId}/requestCancel")
+    public @ResponseBody ResponseEntity requestCancelOrder(@PathVariable("orderId") Long orderId, Principal principal) {
+
+        if (!orderService.validateOrder(orderId, principal.getName())) {
+            return new ResponseEntity<String>("취소 요청 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+
+        orderService.requestCancelOrder(orderId);
+        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
+    }
+
+
 }

@@ -120,13 +120,12 @@
           IMP.init("imp12017008"); // 본인의 아임포트 코드로 변경
 
           var totalAmount = parseInt($("#orderTotalPrice").text().replace('원', '')); // 총 결제 금액
-          var merchant_uid = "order_" + new Date().getTime(); // 주문번호 생성
 
           IMP.request_pay({
+           // pg: "html5_inicis", // 이니시스 사용
               pg: "kakaopay", // 카카오페이 사용
               pay_method: "card", // 결제 방식
-              merchant_uid: merchant_uid,  // 주문번호
-              name: "장바구니 주문", // 주문명
+              name: "TOP 상품 주문", // 주문명
               amount: totalAmount, // 결제 금액
           }, function(rsp) { // 결제 완료 후 실행되는 콜백 함수
               if (rsp.success) {

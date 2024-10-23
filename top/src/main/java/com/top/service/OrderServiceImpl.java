@@ -29,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ItemImgRepository itemImgRepository;
 
+    // 주문
     @Override
     public Long order(OrderDto orderDto, String email) {
         Item item = itemRepository.findById(orderDto.getItemId())
@@ -45,6 +46,7 @@ public class OrderServiceImpl implements OrderService {
         return order.getId();
     }
 
+    // 주문 목록 조회
     @Override
     @Transactional(readOnly = true)
     public Page<OrderHistDto> getOrderList(String email, Pageable pageable) {
@@ -68,6 +70,7 @@ public class OrderServiceImpl implements OrderService {
         return new PageImpl<>(orderHistDtos, pageable, totalCount);
     }
 
+    // 현재 로그인한 사용자와 주문 데이터를 생성한 사용자가 같은지 검사
     @Override
     @Transactional(readOnly = true)
     public boolean validateOrder(Long orderId, String email) {
@@ -79,6 +82,7 @@ public class OrderServiceImpl implements OrderService {
         return StringUtils.equals(curMember.getEmail(), savedMember.getEmail());
     }
 
+    // 주문 취소
     @Override
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
@@ -86,6 +90,15 @@ public class OrderServiceImpl implements OrderService {
         order.cancelOrder();
     }
 
+    // 주문 취소 요청
+    @Override
+    public void requestCancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+        order.requestCancelOrder();
+    }
+
+    // 장바구니 주문
     @Override
     public Long orders(List<OrderDto> orderDtoList, String email) {
         Member member = memberRepository.findByEmail(email);
@@ -128,4 +141,6 @@ public class OrderServiceImpl implements OrderService {
         }
         return new PageImpl<>(orderHistDtos, pageable, totalCount); // 페이지 구현 객체를 생성하여 반환
     }
+
+
 }
