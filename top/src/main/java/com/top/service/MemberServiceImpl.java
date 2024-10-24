@@ -43,4 +43,12 @@ public class MemberServiceImpl implements MemberService {
                 .roles(member.getRole().toString())
                 .build();
     }
+
+    public Member findByEmail(String email) {
+        Member member = memberRepository.findByEmail(email);
+        if (member == null) {
+            throw new RuntimeException("회원 정보를 찾을 수 없습니다.");
+        }
+        return member;
+    }
 }

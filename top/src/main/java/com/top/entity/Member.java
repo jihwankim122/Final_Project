@@ -29,6 +29,11 @@ public class Member extends BaseEntity{
     private String email;
     private String password;
     private String address;
+    //1024 유진 추가
+    private String createdBy;
+    private String modifiedBy;
+    private String nickname;
+    //1024 유진 끝
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -40,7 +45,7 @@ public class Member extends BaseEntity{
         member.setAddress(memberFormDto.getAddress());
         String password = passwordEncoder.encode(memberFormDto.getPassword());
         member.setPassword(password);
-        member.setRole(Role.USER);
+        member.setRole(Role.ADMIN);
         return member;
     }
 
