@@ -16,6 +16,5 @@ public interface ItemService {
     Long updateItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception;
     Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
     Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
-    Page<MainItemDto> getCateItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
     void deleteItem(Long itemId) throws Exception; // 상품 삭제
 }

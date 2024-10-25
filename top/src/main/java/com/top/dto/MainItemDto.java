@@ -11,8 +11,6 @@ public class MainItemDto {
 
     private Long id;
 
-    private Long category; //241022 은열 추가
-
     private ItemSellStatus itemSellStatus; // 1018 은열 추가
 
     private String itemNm;
@@ -26,7 +24,6 @@ public class MainItemDto {
     @QueryProjection
     public MainItemDto(Long id, String itemNm, String itemDetail, String imgUrl,Integer price){
         this.id = id;
-        this.category=category; // 은열추가
         this.itemSellStatus=itemSellStatus; // 은열추가
         this.itemNm = itemNm;
         this.itemDetail = itemDetail;

@@ -110,58 +110,6 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .select(
                         new QMainItemDto(
                                 item.id,
-//                                item.category,
-                                item.itemNm,
-                                item.itemDetail,
-                                itemImg.imgUrl,
-                                item.price)
-                )
-                .from(itemImg)
-                .join(itemImg.item, item)
-                .where(builder)//은열 1018 수정
-                //                .where(itemImg.repimgYn.eq("Y"))
-                //                .where(itemNmLike(itemSearchDto.getSearchQuery()))
-                .orderBy(item.id.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        long total = queryFactory
-                .select(Wildcard.count)
-                .from(itemImg)
-                .join(itemImg.item, item)
-                .where(itemImg.repimgYn.eq("Y"))
-                .where(itemNmLike(itemSearchDto.getSearchQuery()))
-                .fetchOne()
-                ;
-
-        return new PageImpl<>(content, pageable, total);
-    }
-
-    @Override
-    public Page<MainItemDto> getCateItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
-        QItem item = QItem.item;
-        QItemImg itemImg = QItemImg.itemImg;
-
-        //10-18 은열추가
-        BooleanBuilder builder = new BooleanBuilder();
-        builder.and(itemImg.repimgYn.eq("Y"));
-        // ItemSellStatus 조건 추가
-        if (itemSearchDto.getSearchSellStatus() != null) {
-            builder.and(item.itemSellStatus.eq(ItemSellStatus.SELL)
-                    .or(item.itemSellStatus.eq(ItemSellStatus.SOLD_OUT)));
-        }
-        //241022 은열 카테고리 조건 추가
-        if (itemSearchDto.getCategory() != null) {
-            builder.and(item.category.eq(itemSearchDto.getCategory()));
-        }
-
-        builder.and(itemNmLike(itemSearchDto.getSearchQuery()));
-        //10-18은열 추가
-        List<MainItemDto> content = queryFactory
-                .select(
-                        new QMainItemDto(
-                                item.id,
                                 item.itemNm,
                                 item.itemDetail,
                                 itemImg.imgUrl,

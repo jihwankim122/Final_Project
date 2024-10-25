@@ -101,11 +101,6 @@ public class ItemServiceImpl implements ItemService {
     public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         return itemRepository.getMainItemPage(itemSearchDto, pageable);
     }
-    @Override
-    @Transactional(readOnly = true)
-    public Page<MainItemDto> getCateItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
-        return itemRepository.getCateItemPage(itemSearchDto, pageable);
-    }
 
     @Transactional
     @Override

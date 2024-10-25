@@ -45,9 +45,6 @@
             <thead>
             <tr>
                 <td>상품아이디</td>
-<!--                241022은열추가-->
-                <td>카테고리</td>
-<!--                241022은열추가-->
                 <td>상품명</td>
                 <td>상태</td>
                 <td>등록자</td>
@@ -57,9 +54,6 @@
             <tbody>
             <tr th:each="item, status: ${items.getContent()}">
                 <td th:text="${item.id}"></td>
-                <!--                241022은열추가-->
-                <td th:text="${item.category}"></td>
-                <!--                241022은열추가-->
                 <td>
                     <a th:href="'/admin/item/'+${item.id}" th:text="${item.itemNm}"></a>
                 </td>
