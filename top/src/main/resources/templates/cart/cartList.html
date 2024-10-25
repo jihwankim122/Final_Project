@@ -116,25 +116,39 @@
 
         /* 결제 요청 */
         function requestPay() {
-          var IMP = window.IMP; // 아임포트 라이브러리 호출
-          IMP.init("imp12017008"); // 본인의 아임포트 코드로 변경
+            var IMP = window.IMP; // 아임포트 라이브러리 호출
+            IMP.init("imp12017008"); // 본인의 아임포트 코드로 변경
 
-          var totalAmount = parseInt($("#orderTotalPrice").text().replace('원', '')); // 총 결제 금액
+            var totalAmount = parseInt($("#orderTotalPrice").text().replace('원', '')); // 총 결제 금액
+            var selectedItems = $("input[name=cartChkBox]:checked"); // 선택된 체크박스들
 
-          IMP.request_pay({
-           // pg: "html5_inicis", // 이니시스 사용
-              pg: "kakaopay", // 카카오페이 사용
-              pay_method: "card", // 결제 방식
-              name: "TOP 상품 주문", // 주문명
-              amount: totalAmount, // 결제 금액
-          }, function(rsp) { // 결제 완료 후 실행되는 콜백 함수
-              if (rsp.success) {
-                  // 결제 성공 시 주문 처리 호출
-                  orderCartAfterPayment();
-              } else {
-                  alert("상품이 선택되지 않았습니다.");
-              }
-          });
+            if (selectedItems.length === 0) {
+                alert("선택된 상품이 없습니다.");
+                return;
+            }
+
+            // 첫 번째 선택된 체크박스와 같은 행(tr)에 있는 상품명(span)을 가져옴
+            var firstItemNm = selectedItems.first().closest('tr').find('span.fs24').text();
+
+            // 만약 선택된 상품이 2개 이상이면 '외' 추가
+            if (selectedItems.length > 1) {
+                firstItemNm += " 외";
+            }
+
+            IMP.request_pay({
+                //pg: "html5_inicis", // 이니시스 사용
+                pg: "kakaopay", // 카카오페이 사용
+                pay_method: "card", // 결제 방식
+                name: firstItemNm, // 상품명으로 설정
+                amount: totalAmount, // 결제 금액
+            }, function(rsp) { // 결제 완료 후 실행되는 콜백 함수
+                if (rsp.success) {
+                    // 결제 성공 시 주문 처리 호출
+                    orderCartAfterPayment();
+                } else {
+                    alert("결제에 실패하였습니다.");
+                }
+            });
         }
 
         /* 결제 후 장바구니 주문 처리 */
@@ -209,7 +223,6 @@
 </th:block>
 
 <div layout:fragment="content" class="content-mg">
-
     <h2 class="mb-4">
         장바구니 목록
     </h2>
@@ -259,9 +272,9 @@
                     </div>
                 </td>
                 <td class="text-center align-middle">
-          <span th:id="'totalPrice_' + ${cartItem.cartItemId}"
-                name="totalPrice" th:text="${cartItem.price * cartItem.count} + '원'">
-          </span>
+                  <span th:id="'totalPrice_' + ${cartItem.cartItemId}"
+                        name="totalPrice" th:text="${cartItem.price * cartItem.count} + '원'">
+                  </span>
                 </td>
             </tr>
             </tbody>

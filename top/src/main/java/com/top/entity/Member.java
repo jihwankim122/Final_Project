@@ -25,10 +25,16 @@ public class Member extends BaseEntity{
     private String name;
 
     @Column(unique = true)
-
     private String email;
+
     private String password;
+
     private String address;
+
+    private String postcode; // 1025 성아 추가 // 우편번호
+    private String detailAddress; // 1025 성아 추가 // 상세주소
+
+
     //1024 유진 추가
     private String createdBy;
     private String modifiedBy;
@@ -42,10 +48,12 @@ public class Member extends BaseEntity{
         Member member = new Member();
         member.setName(memberFormDto.getName());
         member.setEmail(memberFormDto.getEmail());
+        member.setPostcode(memberFormDto.getPostcode()); // 1025 성아 추가
         member.setAddress(memberFormDto.getAddress());
+        member.setDetailAddress(memberFormDto.getDetailAddress()); // 1025 성아 추가
         String password = passwordEncoder.encode(memberFormDto.getPassword());
         member.setPassword(password);
-        member.setRole(Role.ADMIN);
+        member.setRole(Role.USER);
         return member;
     }
 
