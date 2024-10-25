@@ -53,11 +53,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 return (String) naverResponse.get("email");
             case "kakao":
                 Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-                return (String) kakaoAccount.get("email");
+                String email = (String) kakaoAccount.get("email");
+                if (email == null) {
+                    throw new OAuth2AuthenticationException("카카오 로그인: 이메일 정보가 없습니다.");
+                }
+                return email;
             default:
-                throw new OAuth2AuthenticationException("Unsupported provider: " + provider);
+                throw new OAuth2AuthenticationException("지원되지 않는 제공자: " + provider);
         }
     }
+
 
     private String extractName(String provider, Map<String, Object> attributes) {
         switch (provider) {
@@ -66,9 +71,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 return (String) attributes.getOrDefault("name", "Unknown");
             case "kakao":
                 Map<String, Object> profile = (Map<String, Object>) attributes.get("profile");
-                return profile != null ? (String) profile.get("nickname") : "Unknown";
+                return profile != null ? (String) profile.getOrDefault("nickname", "Unknown") : "Unknown";
             default:
-                throw new OAuth2AuthenticationException("Unsupported provider: " + provider);
+                throw new OAuth2AuthenticationException("지원되지 않는 제공자: " + provider);
         }
     }
 

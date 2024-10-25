@@ -135,4 +135,12 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.delete(cartItem);
         }
     }
+
+    public Member findMemberByEmail(String email) {
+        Member member = memberRepository.findByEmail(email);
+        if (member == null) {
+            throw new IllegalStateException("해당 이메일의 회원을 찾을 수 없습니다: " + email);
+        }
+        return member;
+    }
 }
