@@ -23,4 +23,12 @@ public class MemberFormDto {
 
     @NotEmpty(message = "주소를 입력하세요")
     private String address;
+
+    @NotEmpty(message = "우편번호를 입력하세요")
+    private String postcode;
+
+    // 1025 성아 추가
+    @NotEmpty(message = "상세 주소를 입력하세요")
+    private String detailAddress; // 상세 주소
+
 }
