@@ -41,6 +41,12 @@ dependencies {
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// 소셜로그인
+	implementation 'com.google.api-client:google-api-client:1.33.0'
+	implementation 'com.google.oauth-client:google-oauth-client-jetty:1.33.0'
+	implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
 
 	// https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.3.3'

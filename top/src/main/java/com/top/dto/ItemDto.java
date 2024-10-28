@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 public class ItemDto {
     private Long id;
+    private Long category; // 241022 은열추가
     private String itemNm;
     private Integer price;
     private String itemDetail;

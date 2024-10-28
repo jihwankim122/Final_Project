@@ -21,6 +21,9 @@ public class Item extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;       //상품 코드
 
+    @Column(nullable = false)
+    private Long category;// 241022 은열 추가
+
     @Column(nullable = false, length = 50)
     private String itemNm; //상품명
 
@@ -38,6 +41,7 @@ public class Item extends BaseEntity {
     private ItemSellStatus itemSellStatus; //상품 판매 상태
 
     public void updateItem(ItemFormDto itemFormDto){
+        this.category=itemFormDto.getCategory();// 241022 은열 추가
         this.itemNm = itemFormDto.getItemNm();
         this.price = itemFormDto.getPrice();
         this.stockNumber = itemFormDto.getStockNumber();

@@ -118,7 +118,7 @@ public class ItemController {
     }
 
 
-// 상품 삭제 처리
+    // 상품 삭제 처리
     @PostMapping(value = "/admin/item/delete/{itemId}")
     public String itemDelete(@PathVariable("itemId") Long itemId, Model model) throws Exception {
         try {

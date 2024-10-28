@@ -16,6 +16,8 @@ import java.util.List;
 public class ItemFormDto {
     private Long id;
 
+    private Long category;
+
     @NotBlank(message = "상품명을 입력하세요")
     private String itemNm;
 

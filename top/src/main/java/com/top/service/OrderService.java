@@ -15,4 +15,6 @@ public interface OrderService {
     Long orders(List<OrderDto> orderDtoList, String email);
 
     Page<OrderHistDto> getOrderListByAdmin(Pageable pageable);
+
+    void requestCancelOrder(Long orderId); // 주문 취소 요청
 }
