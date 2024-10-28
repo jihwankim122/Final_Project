@@ -16,7 +16,8 @@ public class NoticeDTO {
     private String title;
     private String content;
     private String writer;
-//    private String name;
+    private String writerName; // 25 Oct
+    private Long memberId;  // 25 Oct
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 }

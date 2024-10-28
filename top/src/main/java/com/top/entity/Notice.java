@@ -21,15 +21,19 @@ public class Notice extends BaseEntity{
     @Column(length = 1500, nullable = false)
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     @Column(length = 50, nullable = false)
     private String writer;
 
-    // title 수정 함수
+    // title modify
     public void changeTitle(String title){
         this.title = title;
     }
 
-    // content 수정 함수
+    // content modify
     public void changeContent(String content){
         this.content = content;
     }
