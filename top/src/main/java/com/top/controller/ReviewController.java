@@ -1,6 +1,9 @@
 package com.top.controller;
 
 import java.util.List;
+
+import com.top.dto.ItemFormDto;
+import com.top.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +24,7 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService reviewService;
-
+    private final ItemService itemService;
     // 목록 조회
     @GetMapping("/{id}/all")
     public ResponseEntity<List<ReviewDto>> getList(@PathVariable("id") Long id) {
@@ -72,13 +75,19 @@ public class ReviewController {
 
     @GetMapping("/review")
     public String getReviewPage(@RequestParam(value = "itemId", required = false) Long itemId, Model model) {
-        // 현재 로그인한 사용자의 이메일 가져오기
         String email = getCurrentUserEmail();
 
-        // Model에 itemId와 email을 추가하여 view로 전달
+        if (itemId != null) {
+            ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
+            model.addAttribute("item", itemFormDto);
+        }
+
         model.addAttribute("itemId", itemId);
         model.addAttribute("email", email);
 
-        return "review"; // review.html 렌더링
+        // 템플릿 경로 명확히 지정
+        return "item/review";
     }
+
+
 }
