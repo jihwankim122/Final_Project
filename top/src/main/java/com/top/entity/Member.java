@@ -3,9 +3,7 @@ package com.top.entity;
 import com.top.constant.Role;
 import com.top.dto.MemberFormDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
@@ -13,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Member extends BaseEntity {
 
     @Id
@@ -70,6 +69,20 @@ public class Member extends BaseEntity {
         this.address = address;
         this.postcode = postcode;
         this.detailAddress = detailAddress;
+        this.phone = phone;
+    }
+
+    @Builder
+    public Member(Long id, String name, String email, String password, String address, String postcode, String detailAddress, Role role, String nickname, String phone) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.postcode = postcode;
+        this.detailAddress = detailAddress;
+        this.role = role;
+        this.nickname = nickname;
         this.phone = phone;
     }
 }
