@@ -17,6 +17,10 @@ import com.top.repository.ItemImgRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import com.top.security.dto.ClubAuthMemberDto;
 import org.thymeleaf.util.StringUtils;
 
 @Service
@@ -46,6 +50,23 @@ public class OrderServiceImpl implements OrderService {
         return order.getId();
     }
 
+    // 로그인한 사용자의 이메일 가져오기 (소셜/일반 로그인 모두 처리)
+    private String getLoggedInUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalStateException("로그인된 사용자가 없습니다.");
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof User) {
+            return ((User) principal).getUsername();  // 일반 로그인 사용자의 이메일 반환
+        } else if (principal instanceof ClubAuthMemberDto) {
+            return ((ClubAuthMemberDto) principal).getEmail();  // 소셜 로그인 사용자의 이메일 반환
+        } else {
+            throw new IllegalStateException("알 수 없는 사용자 타입입니다.");
+        }
+    }
+
     // 주문 목록 조회
     @Override
     @Transactional(readOnly = true)
@@ -63,14 +84,13 @@ public class OrderServiceImpl implements OrderService {
                 OrderItemDto orderItemDto = new OrderItemDto(orderItem, itemImg.getImgUrl());
                 orderHistDto.addOrderItemDto(orderItemDto);
             }
-
             orderHistDtos.add(orderHistDto);
         }
 
         return new PageImpl<>(orderHistDtos, pageable, totalCount);
     }
 
-    // 현재 로그인한 사용자와 주문 데이터를 생성한 사용자가 같은지 검사
+    // 현재 로그인한 사용자와 주문 생성자가 동일한지 검증
     @Override
     @Transactional(readOnly = true)
     public boolean validateOrder(Long orderId, String email) {
@@ -118,29 +138,26 @@ public class OrderServiceImpl implements OrderService {
         return order.getId();
     }
 
-
-    // 관리자용 구매 이력 페이지
+    // 관리자용 주문 이력 페이지
     @Override
     @Transactional(readOnly = true)
     public Page<OrderHistDto> getOrderListByAdmin(Pageable pageable) {
-        List<Order> orders = orderRepository.findOrdersByAdmin(pageable); // 페이징 조건을 이용하여 전체 주문 목록 조회
-        Long totalCount = orderRepository.countOrderByAdmin(); // 총 주문 개수 구하기
+        List<Order> orders = orderRepository.findOrdersByAdmin(pageable);
+        Long totalCount = orderRepository.countOrderByAdmin();
 
         List<OrderHistDto> orderHistDtos = new ArrayList<>();
 
-        for (Order order : orders) { // 주문 리스트를 순회하면서 구매 이력 페이지에 전달할 DTO 생성
+        for (Order order : orders) {
             OrderHistDto orderHistDto = new OrderHistDto(order);
             List<OrderItem> orderItems = order.getOrderItems();
             for (OrderItem orderItem : orderItems) {
-                ItemImg itemImg = itemImgRepository.findByItemIdAndRepimgYn(orderItem.getItem().getId(), "Y");  // 주문한 상품의 대표 이미지 조회
+                ItemImg itemImg = itemImgRepository.findByItemIdAndRepimgYn(orderItem.getItem().getId(), "Y");
                 OrderItemDto orderItemDto = new OrderItemDto(orderItem, itemImg.getImgUrl());
                 orderHistDto.addOrderItemDto(orderItemDto);
             }
-
             orderHistDtos.add(orderHistDto);
         }
-        return new PageImpl<>(orderHistDtos, pageable, totalCount); // 페이지 구현 객체를 생성하여 반환
+
+        return new PageImpl<>(orderHistDtos, pageable, totalCount);
     }
-
-
 }

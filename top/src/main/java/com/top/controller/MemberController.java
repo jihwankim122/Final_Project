@@ -4,7 +4,10 @@ import com.top.dto.MemberFormDto;
 import com.top.security.dto.MemberUpdateFormDto;
 import com.top.entity.Member;
 import com.top.service.MemberServiceImpl;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
-import java.security.Principal;
 
 @RequestMapping("/members")
 @Controller
@@ -21,15 +23,14 @@ public class MemberController {
 
     private final MemberServiceImpl memberService;
     private final PasswordEncoder passwordEncoder;
+    private final HttpSession session; // 세션 주입
 
-    // 회원가입 폼 이동
     @GetMapping(value = "/new")
     public String memberForm(Model model) {
         model.addAttribute("memberFormDto", new MemberFormDto());
         return "member/memberForm";
     }
 
-    // 회원가입 처리
     @PostMapping(value = "/new")
     public String newMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -44,48 +45,73 @@ public class MemberController {
             return "member/memberForm";
         }
 
-        return "redirect:/login"; // 회원가입 후 로그인 페이지로 이동
+        return "redirect:/members/login";
     }
 
-    // 로그인 페이지 이동
     @GetMapping(value = "/login")
     public String loginMember() {
         return "/member/memberLoginForm";
     }
 
-    // 로그인 실패 시 오류 메시지 표시
     @GetMapping(value = "/login/error")
     public String loginError(Model model) {
         model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
         return "/member/memberLoginForm";
     }
 
-    // 회원 정보 수정 폼 이동
-    @GetMapping(value = "/update")
-    public String updateMemberForm(Principal principal, Model model) {
-        Member member = memberService.findByEmail(principal.getName());
+    // SecurityContextHolder 사용해 로그인된 사용자의 이메일 가져오기
+    private String getCurrentUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
+    }
 
-        if (member == null) {
-            throw new RuntimeException("회원 정보를 찾을 수 없습니다.");
+    // 비밀번호 확인 페이지로 이동
+    @GetMapping(value = "/check-password")
+    public String checkPasswordForm() {
+        return "member/checkPassword";
+    }
+
+    // 비밀번호 확인 처리
+    @PostMapping(value = "/check-password")
+    public String checkPassword(@RequestParam("password") String password, Model model) {
+        String email = getCurrentUserEmail();
+        Member member = memberService.findByEmail(email);
+
+        if (member == null || !passwordEncoder.matches(password, member.getPassword())) {
+            model.addAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
+            return "member/checkPassword";
         }
 
-        // DTO로 변환 후 전달
+        // 비밀번호가 일치하면 세션에 확인 상태 저장 후 회원 정보 수정 페이지로 이동
+        session.setAttribute("passwordVerified", true);
+        return "redirect:/members/update";
+    }
+
+    @GetMapping(value = "/update")
+    public String updateMemberForm(Model model) {
+        Boolean passwordVerified = (Boolean) session.getAttribute("passwordVerified");
+        if (passwordVerified == null || !passwordVerified) {
+            return "redirect:/members/check-password";
+        }
+
+        String email = getCurrentUserEmail();
+        Member member = memberService.findByEmail(email);
+
         MemberUpdateFormDto formDto = new MemberUpdateFormDto();
-        formDto.setName(member.getName()); // 이름은 수정 불가
-        formDto.setUsername(member.getId().toString()); // ID는 수정 불가
+        formDto.setName(member.getName());
+        formDto.setUsername(member.getId().toString());
         formDto.setEmail(member.getEmail());
         formDto.setAddress(member.getAddress());
+        formDto.setPostcode(member.getPostcode());
+        formDto.setDetailAddress(member.getDetailAddress());
+        formDto.setPhone(member.getPhone());
 
         model.addAttribute("memberUpdateFormDto", formDto);
         return "member/updateMemberForm";
     }
 
-    // 회원 정보 수정 처리
     @PostMapping(value = "/update")
-    public String updateMember(
-            @Valid MemberUpdateFormDto formDto, BindingResult bindingResult,
-            Principal principal, Model model) {
-
+    public String updateMember(@Valid MemberUpdateFormDto formDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "member/updateMemberForm";
         }
@@ -96,23 +122,21 @@ public class MemberController {
         }
 
         try {
-            Member member = memberService.findByEmail(principal.getName());
-            if (member == null) {
-                throw new RuntimeException("회원 정보를 찾을 수 없습니다.");
-            }
+            String email = getCurrentUserEmail();
+            Member member = memberService.findByEmail(email);
 
-            // 비밀번호 및 주소 업데이트
-            member.setPassword(passwordEncoder.encode(formDto.getPassword()));
-            member.setEmail(formDto.getEmail());
-            member.setAddress(formDto.getAddress());
-
-            memberService.saveMember(member);
+            memberService.updateMember(
+                    member, formDto.getEmail(), formDto.getPassword(),
+                    formDto.getAddress(), formDto.getPostcode(),
+                    formDto.getDetailAddress(), formDto.getPhone()
+            );
         } catch (Exception e) {
             model.addAttribute("errorMessage", "회원 정보 수정 중 오류가 발생했습니다.");
             return "member/updateMemberForm";
         }
 
+        // 수정 완료 후 세션의 비밀번호 확인 상태 초기화
+        session.removeAttribute("passwordVerified");
         return "redirect:/";
     }
 }
-//1024 유진 전체 복붙해서 수정
