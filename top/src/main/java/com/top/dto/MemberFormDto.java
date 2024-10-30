@@ -2,6 +2,7 @@ package com.top.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -30,5 +31,11 @@ public class MemberFormDto {
     // 1025 성아 추가
     @NotEmpty(message = "상세 주소를 입력하세요")
     private String detailAddress; // 상세 주소
+
+    //1028 유진 추가
+    @NotEmpty(message = "전화번호를 입력하세요")
+    @Pattern(regexp = "^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$",
+            message = "전화번호는 010-1234-5678 형식으로 입력해주세요")
+    private String phone;  // 전화번호 필드 추가
 
 }
