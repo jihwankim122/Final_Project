@@ -3,9 +3,7 @@ package com.top.entity;
 
 import com.top.constant.Role;
 import com.top.dto.MemberFormDto;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import jakarta.persistence.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Member extends BaseEntity{
 
     @Id
@@ -41,20 +40,32 @@ public class Member extends BaseEntity{
     private String nickname;
     //1024 유진 끝
 
+    @Builder
+    public Member(Long id, String name, String email, String password, String address, String postcode, String detailAddress, Role role, String nickname) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.postcode = postcode;
+        this.detailAddress = detailAddress;
+        this.role = role;
+        this.nickname = nickname;
+    }
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder){
-        Member member = new Member();
-        member.setName(memberFormDto.getName());
-        member.setEmail(memberFormDto.getEmail());
-        member.setPostcode(memberFormDto.getPostcode()); // 1025 성아 추가
-        member.setAddress(memberFormDto.getAddress());
-        member.setDetailAddress(memberFormDto.getDetailAddress()); // 1025 성아 추가
-        String password = passwordEncoder.encode(memberFormDto.getPassword());
-        member.setPassword(password);
-        member.setRole(Role.USER);
-        return member;
+    public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
+        return Member.builder()
+                .name(memberFormDto.getName())
+                .email(memberFormDto.getEmail())
+                .password(passwordEncoder.encode(memberFormDto.getPassword()))
+                .address(memberFormDto.getAddress())
+                .postcode(memberFormDto.getPostcode())
+                .detailAddress(memberFormDto.getDetailAddress())
+                .role(Role.USER)
+                .build();
     }
 
 }

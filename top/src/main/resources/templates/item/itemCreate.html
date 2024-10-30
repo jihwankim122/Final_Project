@@ -29,8 +29,6 @@
             $(this).siblings(".custom-file-label").html(fileName);
         });
     }
-
-
   </script>
 </th:block>
 
@@ -57,58 +55,61 @@
     <input type="hidden" th:field="*{id}">
 
     <div class="form-group">
-      <select th:field="*{itemSellStatus}" class="custom-select">
+      <label for="itemSellStatus">상품 판매 상태</label>
+      <select id="itemSellStatus" th:field="*{itemSellStatus}" class="custom-select">
         <option value="SELL">판매중</option>
         <option value="SOLD_OUT">품절</option>
       </select>
     </div>
-<!--  241022은열추가-->
+    <!--  241022은열추가 -->
     <div class="form-group">
-      <select th:field="*{category}" class="custom-select">
+      <label for="category">카테고리</label>
+      <select id="category" th:field="*{category}" class="custom-select">
         <option value="0">컴퓨터</option>
         <option value="1">TV</option>
         <option value="2">냉장고</option>
         <option value="3">에어컨</option>
       </select>
     </div>
-<!--  241022은열추가-->
+    <!--  241022은열추가 -->
+
     <div class="input-group">
-      <div class="input-group-prepend">
+      <label for="itemNm" class="input-group-prepend">
         <span class="input-group-text">상품명</span>
-      </div>
-      <input type="text" th:field="*{itemNm}" class="form-control" placeholder="상품명을 입력해주세요">
+      </label>
+      <input type="text" id="itemNm" th:field="*{itemNm}" class="form-control" placeholder="상품명을 입력해주세요">
     </div>
     <p th:if="${#fields.hasErrors('itemNm')}" th:errors="*{itemNm}" class="fieldError">Incorrect data</p>
 
     <div class="input-group">
-      <div class="input-group-prepend">
+      <label for="price" class="input-group-prepend">
         <span class="input-group-text">가격</span>
-      </div>
-      <input type="number" th:field="*{price}" class="form-control" placeholder="상품의 가격을 입력해주세요">
+      </label>
+      <input type="number" id="price" th:field="*{price}" class="form-control" placeholder="상품의 가격을 입력해주세요">
     </div>
     <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="fieldError">Incorrect data</p>
 
     <div class="input-group">
-      <div class="input-group-prepend">
+      <label for="stockNumber" class="input-group-prepend">
         <span class="input-group-text">재고</span>
-      </div>
-      <input type="number" th:field="*{stockNumber}" class="form-control" placeholder="상품의 재고를 입력해주세요">
+      </label>
+      <input type="number" id="stockNumber" th:field="*{stockNumber}" class="form-control" placeholder="상품의 재고를 입력해주세요">
     </div>
     <p th:if="${#fields.hasErrors('stockNumber')}" th:errors="*{stockNumber}" class="fieldError">Incorrect data</p>
 
     <div class="input-group">
-      <div class="input-group-prepend">
+      <label for="itemDetail" class="input-group-prepend">
         <span class="input-group-text">상품 상세 내용</span>
-      </div>
-      <textarea class="form-control" aria-label="With textarea" th:field="*{itemDetail}"></textarea>
+      </label>
+      <textarea id="itemDetail" class="form-control" aria-label="With textarea" th:field="*{itemDetail}"></textarea>
     </div>
     <p th:if="${#fields.hasErrors('itemDetail')}" th:errors="*{itemDetail}" class="fieldError">Incorrect data</p>
 
     <div th:if="${#lists.isEmpty(itemFormDto.itemImgDtoList)}">
       <div class="form-group" th:each="num: ${#numbers.sequence(1,5)}">
         <div class="custom-file img-div">
-          <input type="file" class="custom-file-input" name="itemImgFile">
-          <label class="custom-file-label" th:text="'상품이미지 ' + ${num}"></label>
+          <input type="file" id="itemImgFile${num}" class="custom-file-input" name="itemImgFile">
+          <label class="custom-file-label" for="itemImgFile${num}" th:text="'상품이미지 ' + ${num}"></label>
         </div>
       </div>
     </div>
@@ -116,9 +117,9 @@
     <div th:if="${not #lists.isEmpty(itemFormDto.itemImgDtoList)}">
       <div class="form-group" th:each="itemImgDto, status: ${itemFormDto.itemImgDtoList}">
         <div class="custom-file img-div">
-          <input type="file" class="custom-file-input" name="itemImgFile">
+          <input type="file" id="itemImgFile${status.index}" class="custom-file-input" name="itemImgFile">
           <input type="hidden" name="itemImgIds" th:value="${itemImgDto.id}">
-          <label class="custom-file-label" th:text="${not #strings.isEmpty(itemImgDto.oriImgName)} ? ${itemImgDto.oriImgName} : '상품이미지 ' + ${status.index + 1}"></label>
+          <label class="custom-file-label" for="itemImgFile${status.index}" th:text="${not #strings.isEmpty(itemImgDto.oriImgName)} ? ${itemImgDto.oriImgName} : '상품이미지 ' + ${status.index + 1}"></label>
         </div>
       </div>
     </div>

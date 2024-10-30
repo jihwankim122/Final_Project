@@ -2,9 +2,7 @@ package com.top.entity;
 
 import com.top.constant.ItemSellStatus;
 import com.top.exception.OutOfStockException;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import jakarta.persistence.*;
 import com.top.dto.ItemFormDto;
@@ -14,6 +12,7 @@ import com.top.dto.ItemFormDto;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Item extends BaseEntity {
 
     @Id
@@ -39,6 +38,17 @@ public class Item extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; //상품 판매 상태
+
+    @Builder
+    public Item(Long id, Long category, String itemNm, int price, int stockNumber, String itemDetail, ItemSellStatus itemSellStatus) {
+        this.id = id;
+        this.category = category;
+        this.itemNm = itemNm;
+        this.price = price;
+        this.stockNumber = stockNumber;
+        this.itemDetail = itemDetail;
+        this.itemSellStatus = itemSellStatus;
+    }
 
     public void updateItem(ItemFormDto itemFormDto){
         this.category=itemFormDto.getCategory();// 241022 은열 추가
