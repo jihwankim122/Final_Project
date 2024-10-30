@@ -1,9 +1,12 @@
 package com.top.service;
 
 
+import com.top.dto.NoticeDTO;
 import com.top.dto.NpageRequestDTO;
 import com.top.dto.NpageResultDTO;
 import com.top.dto.QnaDTO;
+import com.top.entity.Member;
+import com.top.entity.Notice;
 import com.top.entity.Qna;
 
 public interface QnaService {
@@ -36,6 +39,16 @@ public interface QnaService {
                 .modDate(entity.getUpdateTime())
                 .build();
         return dto;
+    }
+
+    // Creating ENTITY  28 Oct
+    default Qna createQnaEntity(QnaDTO dto, Member member) {
+        return Qna.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .writer(member.getEmail()) // Writer Email
+                .member(member) // Connecting Member
+                .build();
     }
 
 }

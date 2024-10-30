@@ -3,6 +3,7 @@ package com.top.service;
 import com.top.dto.NoticeDTO;
 import com.top.dto.NpageRequestDTO;
 import com.top.dto.NpageResultDTO;
+import com.top.entity.Member;
 import com.top.entity.Notice;
 
 public interface NoticeService {
@@ -35,6 +36,16 @@ public interface NoticeService {
                 .modDate(entity.getUpdateTime())
                 .build();
         return dto;
+    }
+
+    // Creating ENTITY
+    default Notice createNoticeEntity(NoticeDTO dto, Member member) {
+        return Notice.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .writer(member.getEmail()) // Writer Email
+                .member(member) // Connecting Member
+                .build();
     }
 
 }

@@ -2,6 +2,8 @@ package com.top.controller;
 
 import com.top.dto.NpageRequestDTO;
 import com.top.dto.QnaDTO;
+import com.top.entity.Member;
+import com.top.repository.MemberRepository;
 import com.top.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class QnaController {
     private final QnaService service;
+    private final MemberRepository memberRepository;
 
     @GetMapping("/")
     public String index(){
@@ -48,6 +51,9 @@ public class QnaController {
         // Log Info
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName(); // getName
+
+        Member member = memberRepository.findByEmail(currentUsername);
+        dto.setMemberId(member.getId()); // 현재 사용자 ID 설정
 
         dto.setWriter(currentUsername); // Setting Name
 

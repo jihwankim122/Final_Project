@@ -6,8 +6,10 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.top.dto.NoticeDTO;
 import com.top.dto.NpageRequestDTO;
 import com.top.dto.NpageResultDTO;
+import com.top.entity.Member;
 import com.top.entity.Notice;
 import com.top.entity.QNotice;
+import com.top.repository.MemberRepository;
 import com.top.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -26,17 +28,27 @@ import java.util.function.Function;
 public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository repository;
+    private final MemberRepository memberRepository; // 25 Oct
 
     // Regist
     @Override
     public Long register(NoticeDTO dto) {
         log.info("DTO------------------------");
         log.info(dto);
-        Notice entity = dtoToEntity(dto); // DTOtoENTITY
+//        /////////////////////////
+        Member member = memberRepository.findByEmail(dto.getWriter());
+        if (member == null) {
+            throw new RuntimeException("Member not found");
+        }
+
+        // Call Creating Entitiy
+        Notice entity = createNoticeEntity(dto, member);
+
         log.info(entity);
         repository.save(entity); // Regist
         return entity.getNno(); // List Number
     }
+    ////////////////////////////////
 
     @Override
     public NpageResultDTO<NoticeDTO, Notice> getList(NpageRequestDTO requestDTO) {
@@ -44,9 +56,20 @@ public class NoticeServiceImpl implements NoticeService {
         BooleanBuilder booleanBuilder = getSearch(requestDTO);
 
         Page<Notice> result = repository.findAll(booleanBuilder, pageable); // Using Querydsl
-        Function<Notice, NoticeDTO> fn = (entity -> entityToDto(entity)); // Create fn Reference
+        // 25 Oct ------------------------------------------------------------------------------------
+        Function<Notice, NoticeDTO> fn = (entity) -> {
+            NoticeDTO dto = entityToDto(entity); // Convert entity to DTO
+            Member member = memberRepository.findByEmail(dto.getWriter()); // Member From Email
+            if (member != null) {
+                dto.setWriterName(member.getName()); // 25 Oct
+            }
+            return dto;
+        };
+
         return new NpageResultDTO<>(result, fn);
     }
+
+
 
 
     private BooleanBuilder getSearch(NpageRequestDTO requestDTO) {

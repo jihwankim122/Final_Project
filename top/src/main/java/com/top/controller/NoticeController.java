@@ -2,6 +2,8 @@ package com.top.controller;
 
 import com.top.dto.NoticeDTO;
 import com.top.dto.NpageRequestDTO;
+import com.top.entity.Member;
+import com.top.repository.MemberRepository;
 import com.top.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -15,12 +17,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import static com.top.entity.QMember.member;
+
 @Controller
 @RequestMapping("/notice")
 @Log4j2
 @RequiredArgsConstructor
 public class NoticeController {
     private final NoticeService service;
+    private final MemberRepository memberRepository;
 
     @GetMapping("/")
     public String index(){
@@ -49,9 +54,11 @@ public class NoticeController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName(); // getName
 
+        Member member = memberRepository.findByEmail(currentUsername);
+        dto.setMemberId(member.getId()); // 현재 사용자 ID 설정
+
         dto.setWriter(currentUsername); // Setting Name
 
-        log.info("dto..." + dto);
 
         // New Entity Number
         Long nno = service.register(dto);

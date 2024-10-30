@@ -16,6 +16,8 @@ public class QnaDTO {
     private String title;
     private String content;
     private String writer;
+    private String writerName; // 28 Oct
+    private Long memberId;  // 28 Oct
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 }
