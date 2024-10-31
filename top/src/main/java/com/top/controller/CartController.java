@@ -6,8 +6,10 @@ import com.top.dto.CartOrderDto;
 import com.top.entity.Member;
 import com.top.security.dto.ClubAuthMemberDto;
 import com.top.service.CartServiceImpl;
+import com.top.service.DiscountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,6 +28,9 @@ import java.util.List;
 public class CartController {
 
     private final CartServiceImpl cartService;
+
+    @Autowired
+    private DiscountService discountService;
 
     // 현재 로그인된 사용자 정보를 가져오는 메서드
     private Member getLoggedInMember() {
@@ -73,7 +78,28 @@ public class CartController {
         try {
             Member member = getLoggedInMember();  // 로그인된 회원 정보 조회
             List<CartDetailDto> cartDetailList = cartService.getCartList(member.getEmail());
+
+            //241029은열 추가
+            int totalOrderPrice = 0; // 전체 주문 금액
+            // 각 장바구니 아이템의 최종 가격과 할인 금액 계산
+            for (CartDetailDto cartDetail : cartDetailList) {
+                // 할인 가격 및 최종 가격 계산
+                int itemTotalPrice = cartDetail.getPrice() * cartDetail.getCount();
+                int itemDiscount = discountService.discount(member, itemTotalPrice);
+                // 수량에 따른 총 할인 금액 계산
+                int totalItemDiscount = itemDiscount; // 할인 금액은 수량과 무관하게 고정된 값으로 사용
+
+                int itemFinalPrice = itemTotalPrice - itemDiscount;
+
+                totalOrderPrice += itemFinalPrice; // 최종 가격에 포함
+
+                // 각 항목에 할인 정보를 추가
+                cartDetail.setDiscount(totalItemDiscount); // 할인 금액을 DTO에 설정
+                cartDetail.setFinalPrice(itemFinalPrice); // 최종 가격을 DTO에 설정
+            }
             model.addAttribute("cartItems", cartDetailList);
+            model.addAttribute("totalOrderPrice", totalOrderPrice);
+            model.addAttribute("finalPrice", totalOrderPrice); // 최종 결제 금액 (모든 항목의 최종 가격 합계)
             return "cart/cartList";
         } catch (IllegalStateException e) {
             return "redirect:/members/login";  // 로그인되지 않은 경우 로그인 페이지로 리다이렉트

@@ -12,6 +12,11 @@ public class CartDetailDto {
     private int count; //수량
     private String imgUrl; //상품 이미지 경로
 
+        //241029 은열추가
+        private int discount;
+        private int totalPrice;
+        private int finalPrice;
+
     public CartDetailDto(Long cartItemId, String itemNm, int price, int count, String imgUrl){
         this.cartItemId = cartItemId;
         this.itemNm = itemNm;

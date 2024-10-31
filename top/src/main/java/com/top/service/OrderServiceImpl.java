@@ -32,19 +32,27 @@ public class OrderServiceImpl implements OrderService {
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
     private final ItemImgRepository itemImgRepository;
+      //241028은열추가
+    private final DiscountService discountService;
 
     // 주문
+    //241028은열수정
     @Override
     public Long order(OrderDto orderDto, String email) {
         Item item = itemRepository.findById(orderDto.getItemId())
                 .orElseThrow(EntityNotFoundException::new);
 
         Member member = memberRepository.findByEmail(email);
+        int price = item.getPrice();
+        int count = orderDto.getCount(); // 주문 수량 가져오기
+        int totalPrice = price * count; // 총 가격 계산
+        int discount = discountService.discount(member,totalPrice);
 
         List<OrderItem> orderItemList = new ArrayList<>();
         OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
         orderItemList.add(orderItem);
-        Order order = Order.createOrder(member, orderItemList);
+
+        Order order = Order.createOrder(member, orderItemList,discount, totalPrice - discount);
         orderRepository.save(order);
 
         return order.getId();
@@ -119,10 +127,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     // 장바구니 주문
+     // 241030 은열 수정
     @Override
     public Long orders(List<OrderDto> orderDtoList, String email) {
+
         Member member = memberRepository.findByEmail(email);
         List<OrderItem> orderItemList = new ArrayList<>();
+        int totalPrice = 0; // 총 가격을 저장할 변수
 
         for (OrderDto orderDto : orderDtoList) {
             Item item = itemRepository.findById(orderDto.getItemId())
@@ -130,9 +141,12 @@ public class OrderServiceImpl implements OrderService {
 
             OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
             orderItemList.add(orderItem);
+            totalPrice += item.getPrice() * orderDto.getCount();
         }
 
-        Order order = Order.createOrder(member, orderItemList);
+        int discount = discountService.discount(member,totalPrice);
+        Order order = Order.createOrder(member, orderItemList,discount, totalPrice - discount);
+        order.setFinalPrice(totalPrice - discount); // 최종 가격 계산
         orderRepository.save(order);
 
         return order.getId();

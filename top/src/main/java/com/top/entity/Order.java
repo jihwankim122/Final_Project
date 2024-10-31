@@ -32,12 +32,17 @@ public class Order extends BaseEntity{
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true , fetch = FetchType.LAZY)
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    //241029 은열 추가
+    private int discount;
+
+    private int finalPrice;
+
     public void addOrderItem(OrderItem orderItem){
         orderItems.add(orderItem);
         orderItem.setOrder(this);
     }
 
-    public static Order createOrder(Member member, List<OrderItem> orderItemList){
+    public static Order createOrder(Member member, List<OrderItem> orderItemList,int discount, int finalPrice){
         Order order = new Order();
         order.setMember(member);
         for(OrderItem orderItem : orderItemList){
@@ -45,6 +50,9 @@ public class Order extends BaseEntity{
         }
         order.setOrderStatus(OrderStatus.ORDER);
         order.setOrderDate(LocalDateTime.now());
+        //241028 은열 추가
+        order.setDiscount(discount); // 할인되는 가격 적용
+        order.setFinalPrice(finalPrice); // 최종 가격 적용
         return order;
     }
 
