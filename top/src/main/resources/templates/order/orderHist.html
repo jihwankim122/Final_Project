@@ -159,7 +159,12 @@
         </div>
       </div>
     </div>
-
+<!--    241028 은열 추가-->
+<div class="text-center mt-3">
+  <h4>주문 총 금액: <span th:text="${order.totalPrice} + '원'"></span></h4>
+  <h4>할인 금액: <span th:text="${order.discount} + '원'"></span></h4>
+  <h4>결제 금액: <span th:text="${order.finalPrice} + '원'"></span></h4>
+</div>
   </div>
 
   <div th:with="start=${(orders.number/maxPage)*maxPage + 1}, end=(${(orders.totalPages == 0) ? 1 : (start + (maxPage - 1) < orders.totalPages ? start + (maxPage - 1) : orders.totalPages)})" >
