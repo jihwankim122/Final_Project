@@ -26,10 +26,176 @@
     a:hover{
         text-decoration:none;
     }
-    .center{
-        text-align:center;
+        .center {
+        text-align: center;
+    }
+
+
+    /* 챗봇 아이콘 스타일 */
+    .chatbot-icon {
+        position: fixed;
+        bottom: 30px;
+        right: 30px; /* 아이콘을 오른쪽으로 이동 */
+        font-size: 40px; /* 아이콘 크기 증가 */
+        cursor: pointer; /* 커서 포인터 추가 */
+        background-color: #007bff; /* 배경 색 추가 */
+        color: white; /* 아이콘 색상 */
+        border-radius: 50%; /* 원형 */
+        padding: 10px; /* 여백 추가 */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+        transition: background-color 0.3s; /* 배경 색상 전환 효과 */
+    }
+
+    .chatbot-icon:hover {
+        background-color: #0056b3; /* 호버 시 색상 변경 */
+    }
+
+    /* 챗봇 스타일 */
+    .chatbot-container {
+        display: none; /* 기본적으로 숨김 */
+        position: fixed;
+        bottom: 30px; /* 위치 조정 */
+        right: 30px;
+        width: 300px; /* 너비 조정 */
+        height: 400px; /* 높이 늘리기 */
+        background-color: #ffffff; /* 배경색 */
+        border: 1px solid #ccc; /* 테두리 */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 */
+        border-radius: 8px; /* 모서리 둥글게 */
+        overflow: hidden; /* 내용이 넘치지 않도록 숨김 */
+    }
+
+    .chatbot-header {
+        background-color: #007bff; /* 챗봇 헤더 색상 */
+        color: white; /* 글자 색상 */
+        padding: 10px; /* 여백 */
+        text-align: center; /* 가운데 정렬 */
+        border-radius: 8px 8px 0 0; /* 모서리 둥글게 */
+    }
+
+    .chatbot-body {
+        padding: 10px; /* 여백 */
+        font-size: 16px; /* 글씨 크기 늘리기 */
+        line-height: 1.6; /* 줄 간격 늘리기 */
+        height: calc(100% - 95px); /* 입력창 크기를 고려한 높이 */
+        overflow-y: auto; /* 수직 스크롤 가능 */
+    }
+
+    .chatbot-input {
+        display: flex; /* 입력창 정렬 */
+        height: 50px;
+        padding: 5px; /* 여백 */
+        border-top: 1px solid #ccc; /* 입력창 위쪽에 테두리 추가 */
+        background-color: #f9f9f9; /* 입력창 배경색 */
+    }
+
+    .chatbot-input input {
+        flex-grow: 1; /* 입력창 확장 */
+        padding: 5px; /* 여백 */
+        border: 1px solid #ccc; /* 테두리 */
+        border-radius: 5px; /* 모서리 둥글게 */
+        margin-right: 5px; /* 버튼과의 간격 */
+    }
+
+    .chatbot-input button {
+        padding: 5px 10px; /* 버튼 여백 */
+        border: none; /* 테두리 제거 */
+        background-color: #007bff; /* 버튼 배경색 */
+        color: white; /* 버튼 글자색 */
+        border-radius: 5px; /* 모서리 둥글게 */
+        cursor: pointer; /* 커서 포인터 */
+    }
+
+    .chatbot-input button:hover {
+        background-color: #0056b3; /* 버튼 호버 색상 */
+    }
+
+    .close-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: transparent;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .chatbot-message {
+        background-color: #ffffff; /* 배경색 */
+        border-radius: 10px; /* 둥근 모서리 */
+        padding: 15px; /* 패딩 */
+        margin: 10px 0; /* 마진 */
+        font-size: 18px; /* 폰트 크기 */
+        line-height: 1.5; /* 줄 간격 */
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    }
+    .chatbot-message h3 {
+        margin: 0; /* 제목 마진 제거 */
+        font-size: 20px; /* 제목 폰트 크기 */
+        color: #007bff; /* 제목 색상 */
+    }
+    .chatbot-message ul {
+        padding-left: 20px; /* 리스트 왼쪽 패딩 */
     }
   </style>
+</th:block>
+
+<!-- 1030 성아 챗봇 스크립트 추가 -->
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    // 챗봇 토글 함수
+    function toggleChatbot() {
+        const chatbot = document.getElementById('chatbot');
+        const chatbotBody = document.getElementById('chatbotBody');
+
+        // 챗봇이 열리면 환영 메시지를 추가
+        if (chatbot.style.display === 'none' || chatbot.style.display === '') {
+            chatbot.style.display = 'block';
+            // 초기 메시지 추가
+            chatbotBody.innerHTML = "<div><strong>안녕하세요! 무엇을 도와드릴까요?</strong><br>" +
+                                    "1. 구매내역 보기 - '구매내역' 또는 '주문'을 입력하세요.<br>" +
+                                    "2. 공지사항 보기 - '공지사항' 또는 '공지'를 입력하세요.<br>" +
+                                    "3. QnA 보기 - 'QnA' 또는 '문의'를 입력하세요.</div>";
+        } else {
+            chatbot.style.display = 'none';
+        }
+
+        // 스크롤을 항상 아래로
+        chatbotBody.scrollTop = chatbotBody.scrollHeight;
+    }
+
+    // 메시지 전송 함수
+    function sendMessage() {
+        const userMessage = document.getElementById('userMessage').value.trim();
+        const chatbotBody = document.getElementById('chatbotBody');
+        let response = "";
+
+        if (!userMessage) {
+            // 사용자가 입력하지 않았을 때
+            return; // 아무 것도 하지 않음
+        } else if (userMessage.includes("구매내역") || userMessage.includes("주문")) {
+            response = "구매 내역 페이지로 이동합니다: <a href='/orders'>구매내역 보기</a>";
+        } else if (userMessage.includes("공지사항") || userMessage.includes("공지")) {
+            response = "공지사항 페이지로 이동합니다: <a href='/notice/list'>공지사항 보기</a>";
+        } else if (userMessage.includes("QnA") || userMessage.includes("문의")) {
+            response = "QnA 페이지로 이동합니다: <a href='/qna/list'>QnA 보기</a>";
+        } else {
+            response = "죄송합니다. 해당 요청에 대한 정보를 찾을 수 없습니다. '구매내역', '공지사항', 'QnA'와 같은 키워드를 입력해 주세요.";
+        }
+
+        chatbotBody.innerHTML += "<div>사용자: " + userMessage + "</div>";
+        chatbotBody.innerHTML += "<div>" + response + "</div>";
+        document.getElementById('userMessage').value = ""; // 입력창 비우기
+        chatbotBody.scrollTop = chatbotBody.scrollHeight; // 스크롤 아래로 이동
+    }
+
+    // 챗봇 닫기 함수
+    function closeChatbot() {
+        const chatbot = document.getElementById('chatbot');
+        chatbot.style.display = 'none'; // 챗봇 숨기기
+    }
+  </script>
 </th:block>
 
 <div layout:fragment="content">
@@ -89,27 +255,21 @@
     </th:block>
   </div>
 
-  <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >
-    <ul class="pagination justify-content-center">
-
-      <li class="page-item" th:classappend="${items.number eq 0}?'disabled':''">
-        <a th:href="@{'/' + '?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number-1}}" aria-label='Previous' class="page-link">
-          <span aria-hidden='true'>Previous</span>
-        </a>
-      </li>
-
-      <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page-1}?'active':''">
-        <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
-      </li>
-
-      <li class="page-item" th:classappend="${items.number+1 ge items.totalPages}?'disabled':''">
-        <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number+1}}" aria-label='Next' class="page-link">
-          <span aria-hidden='true'>Next</span>
-        </a>
-      </li>
-
-    </ul>
+  <!-- 1030 성아 챗봇 추가 ------------------------------------------------------>
+  <!-- 챗봇 아이콘 -->
+  <div class="chatbot-icon" onclick="toggleChatbot()">💬</div>
+  <!-- 챗봇 컨테이너 -->
+  <div id="chatbot" class="chatbot-container">
+    <button class="close-button" onclick="closeChatbot()">✖</button> <!-- X 버튼 추가 -->
+    <div class="chatbot-header">챗봇</div>
+    <div id="chatbotBody" class="chatbot-body"></div>
+    <div class="chatbot-input">
+      <input type="text" id="userMessage" placeholder="메시지를 입력하세요..." />
+      <button onclick="sendMessage()">전송</button>
+    </div>
   </div>
+  <!-- 챗봇 끝 -->
+
   <!-- ------------------------------------------------------------------------------------------------------------------------------------- -->
 </div>
 </html>
