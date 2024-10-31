@@ -1,5 +1,11 @@
 package com.top.controller;
 
+import com.top.entity.Member;
+import com.top.service.MemberService;
+import com.top.service.MemberServiceImpl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -20,6 +26,8 @@ import java.util.Optional;
 public class MainController {
 
     private final ItemServiceImpl itemService;
+    private final MemberServiceImpl memberService; // 1031 성아 추가
+
 
     @GetMapping(value = "/")
     public String main(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model){
@@ -34,6 +42,18 @@ public class MainController {
 
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
         Page<MainItemDto> items = itemService.getMainItemPage(itemSearchDto, pageable);
+
+        // 1031 성아 추가
+        // 로그인한 사용자 정보 가져오기(챗봇)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // 이메일 가져오기
+        try {
+            Member member = memberService.findByEmail(email); // 이메일로 회원 조회
+            model.addAttribute("memberName", member.getName()); // 로그인 상태 -> 이름 가져옴
+        } catch (UsernameNotFoundException e) {
+            model.addAttribute("memberName", "Guest"); // 로그아웃 상태 -> Guest로 출력
+        }
+
 
         model.addAttribute("items", items);
         model.addAttribute("itemSearchDto", itemSearchDto);
