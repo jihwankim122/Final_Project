@@ -25,7 +25,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class CartController {
+public class CartController extends MemberBasicController {
 
     private final CartServiceImpl cartService;
 

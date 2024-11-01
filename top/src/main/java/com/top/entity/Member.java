@@ -47,6 +47,27 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    //241101 은열 추가
+
+    private double totalSpentAmount;//누적 주문금액
+
+    public void addOrderPrice(int finalPrice) {
+        this.totalSpentAmount += finalPrice;
+        updateRank();
+
+    }
+    public void updateRank() {
+        if (totalSpentAmount >= 500000) {
+            grade = Grade.PLATINUM;
+        } else if (totalSpentAmount >= 300000) {
+            grade = Grade.GOLD;
+        } else if (totalSpentAmount >= 100000) {
+            grade = Grade.SILVER;
+        } else {
+            grade = Grade.BRONZE;
+        }
+    }
+
     // 1028 유진 수정 추가 - Member 생성 메서드 개선
     public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
         Member member = new Member();

@@ -23,7 +23,7 @@ import static com.top.entity.QMember.member;
 @RequestMapping("/notice")
 @Log4j2
 @RequiredArgsConstructor
-public class NoticeController {
+public class NoticeController extends MemberBasicController {
     private final NoticeService service;
     private final MemberRepository memberRepository;
 

@@ -19,7 +19,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/members")
 @Controller
 @RequiredArgsConstructor
-public class MemberController {
+public class MemberController extends MemberBasicController {
 
     private final MemberServiceImpl memberService;
     private final PasswordEncoder passwordEncoder;

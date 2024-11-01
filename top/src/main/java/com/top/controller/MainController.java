@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
-public class MainController {
+public class MainController extends MemberBasicController {
 
     private final ItemServiceImpl itemService;
     private final MemberServiceImpl memberService; // 1031 성아 추가
