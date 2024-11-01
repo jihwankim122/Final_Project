@@ -6,8 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ItemImgRepository extends JpaRepository<ItemImg, Long> {
-    List<ItemImg> findByItemIdOrderByIdAsc(Long itemId);
+    List<ItemImg> findByItemNoOrderByIdAsc(Long itemId); // 1101 성아 수정
 
-    ItemImg findByItemIdAndRepimgYn(Long itemId, String repimgYn);
+    ItemImg findByItemNoAndRepimgYn(Long itemId, String repimgYn); // 1101 성아 수정
+
 
 }

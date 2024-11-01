@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter @Setter
 public class MainItemDto {
 
-    private Long id;
+    private Long no; // 1101 성아 id -> no 수정
 
     private Long category; //241022 은열 추가
 
@@ -23,11 +23,12 @@ public class MainItemDto {
 
     private Integer price;
 
+    // 1101 성아 id -> no 수정
     @QueryProjection
-    public MainItemDto(Long id, String itemNm, String itemDetail, String imgUrl,Integer price){
-        this.id = id;
-        this.category=category; // 은열추가
-        this.itemSellStatus=itemSellStatus; // 은열추가
+    public MainItemDto(Long no, Long category, ItemSellStatus itemSellStatus, String itemNm, String itemDetail, String imgUrl, Integer price){
+        this.no = no;
+        this.category = category; // 은열추가
+        this.itemSellStatus = itemSellStatus; // 은열추가
         this.itemNm = itemNm;
         this.itemDetail = itemDetail;
         this.imgUrl = imgUrl;

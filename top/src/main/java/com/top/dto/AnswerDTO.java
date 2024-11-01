@@ -11,8 +11,10 @@ import java.time.LocalDateTime;
 public class AnswerDTO {
     private Long id;
     private String content;
+    private String writer; // Writer Email
+    private String writerName; // Writer Name
     private Long qid; // Qna ID
-    private Long mid; //
+    private Long mid; // Member ID
 
     private LocalDateTime regTime;
     private LocalDateTime updateTime;

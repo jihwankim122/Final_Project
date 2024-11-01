@@ -54,13 +54,13 @@ public class ItemServiceImpl implements ItemService {
             itemImgService.saveItemImg(itemImg, itemImgFileList.get(i));
         }
 
-        return item.getId();
+        return item.getNo(); // 1101 성아 getId -> getNo 수정
     }
 
     @Override
     @Transactional(readOnly = true)
     public ItemFormDto getItemDtl(Long itemId) {
-        List<ItemImg> itemImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
+        List<ItemImg> itemImgList = itemImgRepository.findByItemNoOrderByIdAsc(itemId); // 1101 성아 수정
         List<ItemImgDto> itemImgDtoList = new ArrayList<>();
         for (ItemImg itemImg : itemImgList) {
             ItemImgDto itemImgDto = ItemImgDto.of(itemImg);
@@ -71,14 +71,21 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(EntityNotFoundException::new);
         ItemFormDto itemFormDto = ItemFormDto.of(item);
         itemFormDto.setItemImgDtoList(itemImgDtoList);
+
+        // 1101 성아 리뷰 평균과 개수 쿼리 추가
+        Double avg = itemRepository.getAverageRating(itemId);
+        Integer reviewCnt = itemRepository.getReviewCount(itemId);
+        itemFormDto.setAvg(avg != null ? avg : 0.0);
+        itemFormDto.setReviewCnt(reviewCnt != null ? reviewCnt : 0);
+
         return itemFormDto;
     }
 
     @Override
     public Long updateItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception {
         // 상품 수정
-        Item item = itemRepository.findById(itemFormDto.getId())
-                .orElseThrow(EntityNotFoundException::new);
+        Item item = itemRepository.findById(itemFormDto.getNo())
+                .orElseThrow(EntityNotFoundException::new);  // 1101 성아 getId -> getNo 수정
         item.updateItem(itemFormDto);
         List<Long> itemImgIds = itemFormDto.getItemImgIds();
 
@@ -87,7 +94,7 @@ public class ItemServiceImpl implements ItemService {
             itemImgService.updateItemImg(itemImgIds.get(i), itemImgFileList.get(i));
         }
 
-        return item.getId();
+        return item.getNo(); // 1101 성아 getId -> getNo 수정
     }
 
     @Override
@@ -124,7 +131,7 @@ public class ItemServiceImpl implements ItemService {
 //        }
         // 장바구니 상품 조회
         System.out.println("Looking for cart items with itemId: " + itemId);
-        List<CartItem> cartItems = cartItemRepository.findByItemId(itemId);
+        List<CartItem> cartItems = cartItemRepository.findByItemNo(itemId); // 1101 성아 수정
         System.out.println("Found cart items: " + cartItems.size());
         // 장바구니 상품 삭제
         if (!cartItems.isEmpty()) { // 장바구니 항목이 존재하는 경우에만 삭제

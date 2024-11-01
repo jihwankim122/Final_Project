@@ -20,4 +20,7 @@ public class QnaDTO {
     private Long memberId;  // 28 Oct
     private LocalDateTime regDate;
     private LocalDateTime modDate;
+    private boolean hasAnswer; // 01 Nov
+
+
 }

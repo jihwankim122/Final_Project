@@ -51,19 +51,9 @@
 
         <button type="button" class="btn btn-info listBtn">List</button>
 
-        <button type="button" class="btn btn-danger removeBtn">Remove</button>
 
         <script th:inline="javascript">
             var actionForm = $("form"); //form 태그 객체
-            $(".removeBtn").click(function(){
-                if (!confirm("삭제하시겠습니까?")) {
-                return;
-                }
-                actionForm
-                    .attr("action", "/qna/remove")
-                    .attr("method","post");
-                actionForm.submit();
-            });
 
             $(".modifyBtn").click(function() {
                 if(!confirm("수정하시겠습니까?")){

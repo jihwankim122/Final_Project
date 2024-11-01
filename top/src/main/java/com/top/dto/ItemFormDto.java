@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ItemFormDto {
-    private Long id;
+    private Long no; // 1101 성아 id -> no 수정
 
     private Long category;
 
@@ -32,6 +32,10 @@ public class ItemFormDto {
     private ItemSellStatus itemSellStatus;
     private List<ItemImgDto> itemImgDtoList = new ArrayList<>();
     private List<Long> itemImgIds = new ArrayList<>();
+
+    private Double avg; // 1028 성아 추가 // 평균 평점
+    private Integer reviewCnt; // 1028 성아 추가 // 리뷰 개수
+
     private static ModelMapper modelMapper = new ModelMapper();
 
     public Item createItem(){

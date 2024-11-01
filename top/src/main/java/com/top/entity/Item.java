@@ -18,7 +18,7 @@ public class Item extends BaseEntity {
     @Id
     @Column(name="item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;       //상품 코드
+    private Long no; // 1101 성아 id-> no 변경
 
     @Column(nullable = false)
     private Long category;// 241022 은열 추가
@@ -40,8 +40,8 @@ public class Item extends BaseEntity {
     private ItemSellStatus itemSellStatus; //상품 판매 상태
 
     @Builder
-    public Item(Long id, Long category, String itemNm, int price, int stockNumber, String itemDetail, ItemSellStatus itemSellStatus) {
-        this.id = id;
+    public Item(Long no, Long category, String itemNm, int price, int stockNumber, String itemDetail, ItemSellStatus itemSellStatus) {
+        this.no = no; // 1101 성아 id -> no 수정
         this.category = category;
         this.itemNm = itemNm;
         this.price = price;

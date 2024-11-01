@@ -44,6 +44,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     // 이메일로 회원 조회 (회원 정보 없을 시 예외 처리)
+    @Override
     public Member findByEmail(String email) {
         Member member = memberRepository.findByEmail(email);
         if (member == null) {
@@ -75,4 +76,5 @@ public class MemberServiceImpl implements MemberService {
     public boolean memberExists(String email) {
         return memberRepository.existsByEmail(email);
     }
+
 }

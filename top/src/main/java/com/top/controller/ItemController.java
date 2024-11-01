@@ -1,6 +1,9 @@
 package com.top.controller;
 
-import com.top.service.OrderService;
+import com.top.entity.Member;
+import com.top.service.MemberService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +31,21 @@ import java.util.Optional;
 public class ItemController extends MemberBasicController {
 
     private final ItemService itemService;
-    private final OrderService orderService;
+    private final MemberService memberService;
 
     // 메인 상품 상세보기
     @GetMapping(value = "/item/{itemId}")
     public String itemDtl(Model model, @PathVariable("itemId") Long itemId){
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Member member = memberService.findByEmail(email);
+        model.addAttribute("member", member); // 1101 성아 추가
+
+        // 디버깅 로그 추가
+        System.out.println("리뷰 평균: " + itemFormDto.getAvg());
+        System.out.println("리뷰 개수: " + itemFormDto.getReviewCnt());
+
         model.addAttribute("item", itemFormDto);
         return "item/itemDtl";
     }
@@ -54,7 +66,7 @@ public class ItemController extends MemberBasicController {
             return "item/itemCreate";
         }
 
-        if (itemImgFileList.get(0).isEmpty() && itemFormDto.getId() == null) {
+        if (itemImgFileList.get(0).isEmpty() && itemFormDto.getNo() == null) { // 1101 성아 getId -> getNo 수정
             model.addAttribute("errorMessage", "첫번째 상품 이미지는 필수 입력 값 입니다.");
             return "item/itemCreate";
         }

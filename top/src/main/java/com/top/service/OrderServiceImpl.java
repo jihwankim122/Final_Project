@@ -88,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
             OrderHistDto orderHistDto = new OrderHistDto(order);
             List<OrderItem> orderItems = order.getOrderItems();
             for (OrderItem orderItem : orderItems) {
-                ItemImg itemImg = itemImgRepository.findByItemIdAndRepimgYn(orderItem.getItem().getId(), "Y");
+                ItemImg itemImg = itemImgRepository.findByItemNoAndRepimgYn(orderItem.getItem().getNo(), "Y"); // 1101 성아 getId -> getNo 수정
                 OrderItemDto orderItemDto = new OrderItemDto(orderItem, itemImg.getImgUrl());
                 orderHistDto.addOrderItemDto(orderItemDto);
             }
@@ -165,7 +165,7 @@ public class OrderServiceImpl implements OrderService {
             OrderHistDto orderHistDto = new OrderHistDto(order);
             List<OrderItem> orderItems = order.getOrderItems();
             for (OrderItem orderItem : orderItems) {
-                ItemImg itemImg = itemImgRepository.findByItemIdAndRepimgYn(orderItem.getItem().getId(), "Y");
+                ItemImg itemImg = itemImgRepository.findByItemNoAndRepimgYn(orderItem.getItem().getNo(), "Y"); // 1101 성아 getId -> getNo 수정
                 OrderItemDto orderItemDto = new OrderItemDto(orderItem, itemImg.getImgUrl());
                 orderHistDto.addOrderItemDto(orderItemDto);
             }

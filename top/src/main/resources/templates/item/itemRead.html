@@ -15,7 +15,7 @@
 
       // 수정 버튼 (수정 페이지로 이동)
       $(".editBtn").click(function() {
-        window.location.href = "/admin/item/edit/" + [[${itemFormDto.id}]];
+        window.location.href = "/admin/item/edit/" + [[${itemFormDto.no}]]; // 1101 성아 수정
       });
 
       // 삭제 버튼 (상품 삭제)
@@ -53,7 +53,9 @@
 
     <p class="h2">상품 정보</p>
 
-    <input type="hidden" th:field="*{id}">
+    <!-- 1101 성아 수정 -->
+    <!--    <input type="hidden" th:field="*{id}">-->
+    <input type="hidden" th:field="*{no}">
 
     <div class="form-group">
       <select th:field="*{itemSellStatus}" class="custom-select" disabled> <!-- disabled 속성 추가 -->
@@ -134,7 +136,8 @@
   </form>
 
   <!-- 삭제 처리용 hidden form -->
-  <form id="deleteForm" method="post" th:action="@{/admin/item/delete/{itemId}(itemId=${itemFormDto.id})}">
+  <!--  <form id="deleteForm" method="post" th:action="@{/admin/item/delete/{itemId}(itemId=${itemFormDto.id})}">-->
+  <form id="deleteForm" method="post" th:action="@{/admin/item/delete/{itemId}(itemId=${itemFormDto.no})}"> <!-- 1101 성아 수정 -->
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
   </form>
 

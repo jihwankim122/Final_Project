@@ -32,6 +32,7 @@ public class Qna extends BaseEntity{
     @Column(length = 50, nullable = false)
     private String writer;
 
+
     // title modify
     public void changeTitle(String title){
         this.title = title;
@@ -46,8 +47,10 @@ public class Qna extends BaseEntity{
     @OrderBy("id asc")
     private List<Answer> answer;
 
-    public Qna(Long qno) {
-        this.qno = qno;
+
+    public boolean hasAnswers() {
+        return answer != null && !answer.isEmpty();
     }
+
 
 }

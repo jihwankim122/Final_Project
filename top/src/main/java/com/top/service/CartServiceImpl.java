@@ -52,7 +52,7 @@ public class CartServiceImpl implements CartService {
             cartRepository.save(cart);
         }
 
-        CartItem savedCartItem = cartItemRepository.findByCartIdAndItemId(cart.getId(), item.getId());
+        CartItem savedCartItem = cartItemRepository.findByCartIdAndItemNo(cart.getId(), item.getNo()); // 1101 성아 getId -> getNo 수정
 
         if (savedCartItem != null) {
             savedCartItem.addCount(cartItemDto.getCount());
@@ -125,7 +125,7 @@ public class CartServiceImpl implements CartService {
                     .orElseThrow(EntityNotFoundException::new);
 
             OrderDto orderDto = new OrderDto();
-            orderDto.setItemId(cartItem.getItem().getId());
+            orderDto.setItemId(cartItem.getItem().getNo()); // 1101 성아 getId -> getNo 수정
             orderDto.setCount(cartItem.getCount());
             orderDtoList.add(orderDto);
         }
@@ -144,7 +144,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void deleteCartItemByItemId(Long itemId) {
         // 특정 아이템 ID에 해당하는 모든 장바구니 항목을 조회
-        List<CartItem> cartItems = cartItemRepository.findByItemId(itemId);
+        List<CartItem> cartItems = cartItemRepository.findByItemNo(itemId); // 1101 성아 findByItemId -> findByItemNo 수정
 
         // 각 장바구니 항목 삭제
         for (CartItem cartItem : cartItems) {

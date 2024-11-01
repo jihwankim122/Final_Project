@@ -353,6 +353,29 @@
         <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'"></p>
     </div>
 
+    <div class="row" style="padding: 50px; margin-bottom: 90px;;">
+        <div class="section-title">최신 상품</div>
+        <th:block th:each="item, status: ${items.getContent()}">
+            <div class="col-md-4 margin">
+                <div class="card">
+                    <!-- 1101 성아 수정 -->
+<!--                    <a class="text-dark" th:href="'/item/' +${item.id}">-->
+                    <a class="text-dark" th:href="'/item/' +${item.no}">
+                        <img class="card-img-top" th:alt="${item.itemNm}" th:src="${item.imgUrl}">
+                        <div class="card-body">
+                            <h4 class="card-title Best3-item-title">[[${item.itemNm}]]</h4>
+                            <p class="card-text">[[${item.itemDetail}]]</p>
+                            <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </th:block>
+    </div>
+    <!--------------- 카테고리 --------------->
+    <div class="container">
+        <img src="/img/temple.png" style="width:100%">
+    </div>
 
     <div class="container" id="categori">
         <div class="row">
@@ -406,27 +429,6 @@
             </div>
         </div>
     </div>
-    <div class="container" style="margin-top: 4rem; margin-bottom: 4rem;">
-        <img src="/img/temple.png" style="width:100%">
-    </div>
-    <div class="row" style="padding: 50px; margin-bottom: 90px;;">
-        <div class="section-title">최신 상품</div>
-        <th:block th:each="item, status: ${items.getContent()}">
-            <div class="col-md-4 margin">
-                <div class="card">
-                    <a class="text-dark" th:href="'/item/' +${item.id}">
-                        <img class="card-img-top" th:alt="${item.itemNm}" th:src="${item.imgUrl}">
-                        <div class="card-body">
-                            <h4 class="card-title Best3-item-title">[[${item.itemNm}]]</h4>
-                            <p class="card-text">[[${item.itemDetail}]]</p>
-                            <h3 class="card-title text-danger">[[${item.price}]]원</h3>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </th:block>
-    </div>
-    <!--------------- 카테고리 --------------->
     <!----------------- 카테코리.end ------------------->
     <!-- 1030 성아 챗봇 추가 ------------------------------------------------------>
     <!-- 챗봇 아이콘 -->

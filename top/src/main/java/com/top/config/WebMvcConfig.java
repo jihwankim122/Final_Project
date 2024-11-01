@@ -23,6 +23,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/img/social/");
         registry.addResourceHandler("/css/**")
                 .addResourceLocations("classpath:/static/css/");
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/"); // 1101 성아 추가 (starrr.js 로드)
     }
 
 }
