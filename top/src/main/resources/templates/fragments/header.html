@@ -11,7 +11,7 @@
 
 
       <div id="maincetegori" class="container-fluid">
-        <div class="container" style="width:98%">
+        <div class="container" style="width:100%">
           <div class="btn-group">
             <div class="btn-group">
               <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">제품</button>
@@ -42,12 +42,12 @@
                       class="fi fi-rr-search"></i></button>
             </form>
             <!--            241101 은열추가-->
-            <div id="member-grade" th:if="${member != null}" th:text="'회원님의 등급은 ' + ${member.grade} + '입니다❤'"></div>
+            <div style="font-size: small;  width: 100%;" id="member-grade" th:if="${member != null}" th:text="'회원님의 등급은 ' + ${member.grade} + '입니다❤'"></div>
             <div class="dropdown" id="temple">
               <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fi fi-rr-user"></i>
               </button>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu" style="width: 50%;">
                 <li class="dropdown-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                   <a class="nav-link" href="/admin/item/new">상품 등록</a>
                 </li>
@@ -81,6 +81,7 @@
             </div>
           </div>
         </div>
+        
       </div>
     </nav>
   </div>

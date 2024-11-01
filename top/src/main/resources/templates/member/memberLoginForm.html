@@ -31,7 +31,7 @@
 
     .form-group {
       margin: 1.5rem;
-      width: 40%;
+      width: 70%;
     }
 
     .form-control {
@@ -61,7 +61,7 @@
       font-weight: bold;
     }
 
-    #login-title{
+    #login-title {
       margin-bottom: 3rem;
     }
 
@@ -71,7 +71,7 @@
 
     .social-icon {
       background-color: rgb(232, 232, 232);
-      width: 17%;
+      width: 34%;
       border-radius: 5%;
     }
   </style>
@@ -82,39 +82,43 @@
 
   <div layout:fragment="content">
     <div class="container" id="loginform">
+      <div class="row">
+        <div class="col-sm-6">
+          <h1 id="login-title">로그인</h1>
+          <form role="form" method="post" action="/members/login">
+            <div id="login" style="margin-bottom: 7rem;">
+              <div class="form-group">
+                <input type="email" name="email" id="email" class="form-control" placeholder="Email">
+              </div>
+              <div class="form-group">
+                <input type="password" name="password" id="password" class="form-control" placeholder="password">
+              </div>
+            </div>
 
-      <h1 id="login-title">로그인</h1>
-      <form role="form" method="post" action="/members/login">
-        <div id="login">
-          <div class="form-group">
-            <input type="email" name="email" id="email" class="form-control" placeholder="Email">
-          </div>
-          <div class="form-group">
-            <input type="password" name="password" id="password" class="form-control" placeholder="password">
-          </div>
+            <!-- 로그인 오류 메시지 표시 -->
+            <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
+
+            <!-- 로그인 버튼 및 회원가입 버튼 -->
+            <button type="submit" class="btn loginbtn">로그인</button>
+            <button type="button" class="btn logbtn" onclick="location.href='/members/new'">회원가입</button>
+
+            <!-- CSRF 토큰 추가 -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+          </form>
         </div>
-
-        <!-- 로그인 오류 메시지 표시 -->
-        <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
-
-        <!-- 로그인 버튼 및 회원가입 버튼 -->
-        <button type="submit" class="btn loginbtn">로그인</button>
-        <button type="button" class="btn logbtn" onclick="location.href='/members/new'">회원가입</button>
-
-        <!-- CSRF 토큰 추가 -->
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-      </form>
-
-      <!-- 소셜 로그인 버튼 섹션 -->
-      <div class="social-login">
-        <h4>소셜 로그인</h4>
-        <div class="social-icon">
-          <a class="btn btn-google" href="/oauth2/authorization/google"><img class="google"
-              th:src="@{/img/social/google.png}" /></a>
-          <a class="btn btn-naver" href="/oauth2/authorization/naver"><img class="naver"
-              th:src="@{/img/social/naver.png}" /></a>
-          <a class="btn btn-kakao" href="/oauth2/authorization/kakao"><img class="kakao"
-              th:src="@{/img/social/kakao.png}"></a>
+        <!-- 소셜 로그인 버튼 섹션 -->
+        <div class="col-sm-6">
+          <div class="social-login">
+            <h4>소셜 로그인</h4>
+            <div class="social-icon">
+              <a class="btn btn-google" href="/oauth2/authorization/google"><img class="google"
+                  th:src="@{/img/social/google.png}" /></a>
+              <a class="btn btn-naver" href="/oauth2/authorization/naver"><img class="naver"
+                  th:src="@{/img/social/naver.png}" /></a>
+              <a class="btn btn-kakao" href="/oauth2/authorization/kakao"><img class="kakao"
+                  th:src="@{/img/social/kakao.png}"></a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

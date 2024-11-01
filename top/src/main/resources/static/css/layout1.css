@@ -45,7 +45,6 @@ span {
     float: right;
     display: flex;
     gap: 20px;
-    padding-right: 5rem;
 }
 
 .navbar > .Logo {
@@ -110,6 +109,7 @@ span {
     margin-top: 90px;
     text-align: center;
     font-size: xx-large;
+    margin-bottom: 5rem;
 }
 
 .section-inner > .row {
