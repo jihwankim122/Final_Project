@@ -20,7 +20,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
-    private boolean isSocial; // 소셜 로그인 여부 저장
+
     private final MemberRepository memberRepository;
     private final HttpSession httpSession; // 세션 주입
 
@@ -30,58 +30,50 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String provider = userRequest.getClientRegistration().getRegistrationId();
 
-        // 네이버와 다른 소셜 제공자 구분하여 이메일, 이름 추출
-        Map<String, Object> userAttributes = extractUserAttributes(provider, attributes);
-        String email = (String) userAttributes.get("email");
-        String name = (String) userAttributes.getOrDefault("name", "Unknown");
-        String nickname = name; // 이름을 닉네임으로 사용
+        String email = extractEmail(provider, attributes);
+        String name = extractName(provider, attributes);
+        String nickname = extractNickname(provider, attributes);
 
-        // 사용자 생성 또는 조회
         Member member = findOrCreateMember(email, name, nickname);
 
-        // 세션에 사용자 정보 저장
+        // 세션 설정
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         request.getSession().setAttribute("member", member);
 
-        // OAuth2User로 반환
         return new ClubAuthMemberDto(email, nickname, name, true, attributes);
     }
 
-    private Map<String, Object> extractUserAttributes(String provider, Map<String, Object> attributes) {
-        if ("naver".equals(provider)) {
-            // 네이버의 중첩된 응답에서 'response' 부분 추출
-            return (Map<String, Object>) attributes.get("response");
-        } else if ("kakao".equals(provider)) {
-            // 카카오의 경우 'kakao_account'에서 정보 추출
-            return (Map<String, Object>) attributes.get("kakao_account");
-        }
-        // 기본 제공자 (예: 구글)
-        return attributes;
-    }
-
-
     private String extractEmail(String provider, Map<String, Object> attributes) {
-        if ("naver".equals(provider)) {
-            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
-            return (String) response.get("email");
-        } else if ("kakao".equals(provider)) {
-            Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-            return (String) kakaoAccount.get("email");
+        switch (provider) {
+            case "google":
+                return (String) attributes.get("email");
+            case "naver":
+                Map<String, Object> naverResponse = (Map<String, Object>) attributes.get("response");
+                return (String) naverResponse.get("email");
+            case "kakao":
+                Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+                return (String) kakaoAccount.get("email");
+            default:
+                throw new OAuth2AuthenticationException("Unsupported provider: " + provider);
         }
-        return (String) attributes.get("email");  // 구글의 경우
     }
-
 
     private String extractName(String provider, Map<String, Object> attributes) {
-        if ("naver".equals(provider)) {
-            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
-            return (String) response.get("name");
-        } else if ("kakao".equals(provider)) {
-            Map<String, Object> profile = (Map<String, Object>) attributes.get("profile");
-            return profile != null ? (String) profile.get("nickname") : "Unknown";
+        switch (provider) {
+            case "google":
+                return (String) attributes.get("name");
+            case "naver":
+                Map<String, Object> naverResponse = (Map<String, Object>) attributes.get("response");
+                return (String) naverResponse.get("name");
+            case "kakao":
+                Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+                Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+                return profile != null ? (String) profile.get("nickname") : "Unknown";
+            default:
+                throw new OAuth2AuthenticationException("Unsupported provider: " + provider);
         }
-        return (String) attributes.getOrDefault("name", "Unknown");  // 구글의 경우
     }
+
 
     private String extractNickname(String provider, Map<String, Object> attributes) {
         return extractName(provider, attributes); // 기본적으로 이름을 닉네임으로 사용
