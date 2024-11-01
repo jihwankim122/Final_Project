@@ -42,7 +42,7 @@ public class NoticeServiceImpl implements NoticeService {
         }
 
         // Call Creating Entitiy
-        Notice entity = createNoticeEntity(dto, member);
+        Notice entity = dtoToEntity(dto, member);
 
         log.info(entity);
         repository.save(entity); // Regist

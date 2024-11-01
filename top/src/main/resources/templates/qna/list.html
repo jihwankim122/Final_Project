@@ -59,10 +59,13 @@
                     keyword = ${npageRequestDTO.keyword})}">
             [[${dto.title}]]
           </a>
+          <span  style="margin-left:1rem; width:11%;" class="badge bg-dark" th:text="${dto.hasAnswer ? '답변완료' : '미답변'}"></span> <!-- Checking Answer  -->
         </th>
         <!--        25 Oct-->
         <td>[[${dto.writerName}]]</td>
         <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
+        <td>
+        </td>
       </tr>
 
       </tbody>

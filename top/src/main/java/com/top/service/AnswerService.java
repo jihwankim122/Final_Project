@@ -9,7 +9,6 @@ public interface AnswerService {
 
     Long register(AnswerDTO dto); // Regist
     List<AnswerDTO> getList(Qna qna);
-    void modify(AnswerDTO dto); // Update
     void remove(Long id); // Delete
 
     // Changing DTO to ENTITY
@@ -28,6 +27,7 @@ public interface AnswerService {
                 .content(entity.getContent())
                 .qid(entity.getQna() != null ? entity.getQna().getQno() : null) // Qna ID
                 .mid(entity.getMember() != null ? entity.getMember().getId() : null) // Member ID
+                .writerName(entity.getMember().getName()) // Set WriterName
                 .regTime(entity.getRegTime()) // Date
                 .updateTime(entity.getUpdateTime()) // Modify Date
                 .build();

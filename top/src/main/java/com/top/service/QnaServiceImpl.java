@@ -3,7 +3,6 @@ package com.top.service;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.top.dto.NoticeDTO;
 import com.top.dto.NpageRequestDTO;
 import com.top.dto.NpageResultDTO;
 import com.top.dto.QnaDTO;
@@ -12,6 +11,7 @@ import com.top.entity.QQna;
 import com.top.entity.Qna;
 import com.top.repository.MemberRepository;
 import com.top.repository.QnaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -43,7 +43,7 @@ public class QnaServiceImpl implements QnaService {
         }
 
         // Call Creating Entitiy
-        Qna entity = createQnaEntity(dto, member);
+        Qna entity = dtoToEntity(dto, member);
 
         log.info(entity);
         repository.save(entity); // Regist
@@ -56,6 +56,7 @@ public class QnaServiceImpl implements QnaService {
         BooleanBuilder booleanBuilder = getSearch(requestDTO);
 
         Page<Qna> result = repository.findAll(booleanBuilder, pageable); // Using Querydsl
+
         // 25 Oct ------------------------------------------------------------------------------------
         Function<Qna, QnaDTO> fn = (entity) -> {
             QnaDTO dto = entityToDto(entity); // Convert entity to DTO
@@ -63,7 +64,10 @@ public class QnaServiceImpl implements QnaService {
             if (member != null) {
                 dto.setWriterName(member.getName()); // 25 Oct
             }
+            // true
+            dto.setHasAnswer(entity.hasAnswers()); // Setting Answers 01 Nov
             return dto;
+
         };
 
         return new NpageResultDTO<>(result, fn);
@@ -76,7 +80,7 @@ public class QnaServiceImpl implements QnaService {
         BooleanBuilder booleanBuilder = new BooleanBuilder(); // where
         QQna qnotice = QQna.qna;
         String keyword = requestDTO.getKeyword(); // 검색어
-        BooleanExpression expression = qnotice.qno.gt(0L); // qno > 0 조건만 생성
+        BooleanExpression expression = qnotice.qno.gt(0L); // qno > 0
         booleanBuilder.and(expression); // where qno > 0
         if (type == null || type.trim().length() == 0) { //검색 조건이 없는 경우
             return booleanBuilder;
@@ -104,6 +108,13 @@ public class QnaServiceImpl implements QnaService {
         Optional<Qna> result = repository.findById(qno);
         return result.isPresent() ? entityToDto(result.get()) : null;
     }
+
+    public Qna getQnaById(Long qno) {
+        return repository.findById(qno)
+                .orElseThrow(() -> new EntityNotFoundException("Qna not found for ID: " + qno)); // Qna 엔티티 반환
+    }
+
+
 
     // Update
     @Override
