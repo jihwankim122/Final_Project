@@ -1,8 +1,8 @@
 * {
     margin: 0;
     padding: 0;
-    color: gray;
-    font-family: Arial, sans-serif;
+    color: rgb(0, 0, 0);
+    font-family: "Noto Sans KR", sans-serif;
 }
 a{
     text-decoration: none;
@@ -45,6 +45,7 @@ span {
     float: right;
     display: flex;
     gap: 20px;
+    padding-right: 5rem;
 }
 
 .navbar > .Logo {

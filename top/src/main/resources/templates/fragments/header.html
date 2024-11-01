@@ -6,7 +6,7 @@
     <nav class="navbar navbar-expand-sm">
 
       <div class="Logo">
-        <a href="/"><img th:src="@{/img/Logo.png}" /></a> <!-- 메인으로 이동하는 링크 추가 -->
+        <a href="/"><img th:src="@{/img/Logo.png}"/></a> <!-- 메인으로 이동하는 링크 추가 -->
       </div>
 
 
@@ -36,8 +36,8 @@
 
 
             <form class="search-form form-inline my-2 my-lg-0" th:action="@{/}" method="get">
-              <input name="searchQuery" class="form-control me-2" type="search" placeholder="검색어를 입력하세요."
-                     aria-label="Search">
+              <input name="searchQuery" class="form-control me-2" type="search" placeholder="Search"
+                     aria-label="Search" style="width: 200px;">
               <button id="search" class="btn btn-outline-success my-2 my-sm-0" type="submit"><i
                       class="fi fi-rr-search"></i></button>
             </form>

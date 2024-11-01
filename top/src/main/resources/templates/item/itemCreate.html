@@ -34,6 +34,11 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
   <style>
+    .h2{
+      margin-top: 6rem !important;
+
+      text-align: center;
+    }
     .input-group {
       margin-bottom: 15px;
     }
@@ -45,21 +50,45 @@
     .fieldError {
       color: #bd2130;
     }
-    .container *{
+    .itemcreate *{
       margin: 10px;
+    }
+    .icreate{
+      width: 14rem;
+      margin-left: 2rem;
+    }
+
+    #itemSellStatus, #category, .input-group-text{
+      float: right;
+      border: none;
+      background: none;
+    }
+
+    .list{
+      width: 95%;
+      margin: auto;
+    }
+
+    .custom-file{
+      padding: 1rem;
+    }
+    .create-img-list, .icreate, #category, #itemSellStatus, .input-group-text, .custom-file{
+      border-bottom: solid 0.1px rgb(156, 156, 156);
+      border-radius: 5%;
+      margin-top: 1.5rem;
     }
   </style>
 </th:block>
 
 <div layout:fragment="content">
-  <div class="container">
+  <div class="container itemcreate">
     <form role="form" method="post" enctype="multipart/form-data" th:object="${itemFormDto}">
 
       <p class="h2">상품 등록</p>
 
       <input type="hidden" th:field="*{id}">
 
-      <div class="form-group">
+      <div class="form-group icreate">
         <label for="itemSellStatus">상품 판매 상태</label>
         <select id="itemSellStatus" th:field="*{itemSellStatus}" class="custom-select">
           <option value="SELL">판매중</option>
@@ -67,7 +96,7 @@
         </select>
       </div>
       <!--  241022은열추가 -->
-      <div class="form-group">
+      <div class="form-group icreate">
         <label for="category">카테고리</label>
         <select id="category" th:field="*{category}" class="custom-select">
           <option value="0">컴퓨터</option>
@@ -78,7 +107,7 @@
       </div>
       <!--  241022은열추가 -->
 
-      <div class="input-group">
+      <div class="input-group list">
         <label for="itemNm" class="input-group-prepend">
           <span class="input-group-text">상품명</span>
         </label>
@@ -86,7 +115,7 @@
       </div>
       <p th:if="${#fields.hasErrors('itemNm')}" th:errors="*{itemNm}" class="fieldError">Incorrect data</p>
 
-      <div class="input-group">
+      <div class="input-group list">
         <label for="price" class="input-group-prepend">
           <span class="input-group-text">가격</span>
         </label>
@@ -94,7 +123,7 @@
       </div>
       <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="fieldError">Incorrect data</p>
 
-      <div class="input-group">
+      <div class="input-group list">
         <label for="stockNumber" class="input-group-prepend">
           <span class="input-group-text">재고</span>
         </label>
@@ -103,7 +132,7 @@
       </div>
       <p th:if="${#fields.hasErrors('stockNumber')}" th:errors="*{stockNumber}" class="fieldError">Incorrect data</p>
 
-      <div class="input-group">
+      <div class="input-group list">
         <label for="itemDetail" class="input-group-prepend">
           <span class="input-group-text">상품 상세 내용</span>
         </label>
@@ -121,7 +150,7 @@
       </div>
 
       <div th:if="${not #lists.isEmpty(itemFormDto.itemImgDtoList)}">
-        <div class="form-group" th:each="itemImgDto, status: ${itemFormDto.itemImgDtoList}">
+        <div class="form-group create-img-list" th:each="itemImgDto, status: ${itemFormDto.itemImgDtoList}">
           <div class="custom-file img-div">
             <input type="file" id="itemImgFile${status.index}" class="custom-file-input" name="itemImgFile">
             <input type="hidden" name="itemImgIds" th:value="${itemImgDto.id}">

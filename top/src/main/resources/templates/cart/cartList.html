@@ -241,6 +241,13 @@
         .fs24{
             font-size:24px
         }
+        #checkall{
+            width: 100%;
+            display: flex;
+        }
+        #finalPrice{
+            color: red;
+        }
     </style>
 </th:block>
 
@@ -260,8 +267,8 @@
             </colgroup>
             <thead>
             <tr class="text-center">
-                <td>
-                    <input type="checkbox" id="checkall" onclick="checkAll()"> 전체선택
+                <td class="allckeack">
+                    전체선택<input type="checkbox" id="checkall" onclick="checkAll()">
                 </td>
                 <td>상품정보</td>
                 <td>상품금액</td>
@@ -307,11 +314,11 @@
             </tbody>
         </table>
 
-        <h2 class="text-center">
+        <h5 class="text-center">
             총 장바구니금액 : <span id="orderTotalPrice" >0원</span><br>
             VIP 등급 할인금액 : <span id="discountAmount" >0원</span><br>
-            총 결제금액 : <span id="finalPrice" >0원</span>
-        </h2>
+            <h3 class="text-center">총 결제금액 : <span id="finalPrice" >0원</span></h3>
+        </h5>
 
         <div class="text-center mt-3">
             <button type="button" class="btn btn-primary btn-lg" onclick="orders()">주문하기</button>
