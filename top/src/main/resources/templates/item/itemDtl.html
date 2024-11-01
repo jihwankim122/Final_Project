@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html class="itemDtl" layout:decorate="~{layouts/layout1}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta name="_csrf" th:content="${_csrf.token}" />
-    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 
 
 <div layout:fragment="content">
 
     <input id="itemId" name="itemId" th:value="${item.id}" type="hidden">
-    <input type="hidden" id="itemNm" th:value="${item.itemNm}"> <!-- 상품명 추가 -->
+    <input id="itemNm" th:value="${item.itemNm}" type="hidden"> <!-- 상품명 추가 -->
 
     <div class="d-flex">
         <div class="repImgDiv">
@@ -20,15 +20,15 @@
         <div class="wd50">
             <!--        1017 은열 수정-->
             <span class="badge badge-primary mgb-15"
-                th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}">
+                  th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}">
                 판매중
             </span>
             <span class="badge btn-danger mgb-15"
-                th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">
+                  th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">
                 품절
             </span>
             <span class="badge badge-secondary mgb-15"
-                th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).DELETE}">
+                  th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).DELETE}">
                 삭제됨
             </span>
             <div class="h4" th:text="${item.itemNm}"></div>
@@ -76,30 +76,43 @@
 
     <div class="text-center" th:each="itemImg : ${item.itemImgDtoList}">
         <img class="rounded mgb-15" th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}"
-            width="800">
+             width="800">
     </div>
 
-    <button type="button" class="btn btn-primary">
-        Review Count <span class="badge badge-light">[[${dto.reviewCnt}]]</span>
+    <button type="button" class="btn btn-primary" th:text="'리뷰 개수 ' + ${item.reviewCnt}">
+        <span class="badge badge-light" th:text="${item.reviewCnt}">0</span>
     </button>
 
-    <button type="button" class="btn btn-primary addReviewBtn" data-bs-toggle="modal" data-bs-target="#myModal">
-        Review Register
+    <button type="button" class="btn btn-primary" th:text="'별점 평균 ' + ${item.avg}">
+        <span class="badge badge-light" th:text="${item.avg}">0</span>
     </button>
-    
-    <div class="reviewModal modal fade" tabindex="-1" role="dialog" id="myModal">
+
+    <button type="button" class="btn btn-info addReviewBtn">
+        리뷰 작성
+    </button>
+
+
+    <div class="list-group reviewList">
+
+    </div>
+
+    <!-- 리뷰갯수.리뷰등록.리뷰목록. 끝.-->
+
+    <!-- 리뷰모달창 -------------------------------------------------------->
+    <div class="reviewModal modal" id="myModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Movie Review</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title">상품 리뷰</h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModal2">
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Reviewer ID</label>
                         <input type="text" class="form-control" name="mid">
-                        <input type="text" class="form-control" name="email" placeholder="Reviewer Email">
                     </div>
                     <div class="form-group" id="divGrade">
                         <label>Grade <span class="grade"></span></label>
@@ -107,18 +120,19 @@
                     </div>
                     <div class="form-group">
                         <label>Review Text</label>
-                        <input type="text" class="form-control" name="text" placeholder="Good Item!">
+                        <input type="text" class="form-control" name="text" placeholder="내용을 입력하세요.">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModal1">Close</button>
                     <button type="button" class="btn btn-primary reviewSaveBtn">Save changes</button>
-                    <button type="button" class="btn btn-warning modifyBtn">Modify</button>
-                    <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                    <button type="button" class="btn btn-warning modifyBtn">Modify </button>
+                    <button type="button" class="btn btn-danger removeBtn">Remove </button>
                 </div>
             </div>
         </div>
     </div>
+    <!-- 리뷰모달창.끝. -->
 
     <!-- <button type="button" onclick="location.href='/reviews/review?itemId=' + document.getElementById('itemId').value" class="btn">리뷰 작성</button>
     <div class="list-group reviewList">
@@ -259,205 +273,222 @@
         }
     </script>
 </th:block>
+<script th:src="@{/starrr.js}"></script>
+<link rel="stylesheet" th:href="@{/css/starrr.css}">
+<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <script>
     $(document).ready(function (e) {
-        //리뷰
+        $("#count").change(function () {
+        calculateTotalPrice();
+      });
 
-        var itemId = document.getElementById('itemId').value; // 아이템 ID 가져오기
-        var itemName = document.getElementById('itemName').innerText; // 아이템 이름 가져오기
+      var grade = 0; //평점. 기본값 0
+      var id = [[${ item.id }]]; //상품 번호
 
-        // review.html 페이지로 이동하면서 아이템 ID와 이름을 전달
-        window.location.href = 'review.html?itemId=' + itemId + '&itemName=' + encodeURIComponent(itemName);
+      //starrr생성
+      $(".starrr").starrr({
+        rating: grade,//평점
+        change: function (e, value) { //change 이벤트처리
+          if (value) {
+            console.log(value);
+            grade = value;
+          }
+        }
+      });
 
-        var grade = 0;
-        var id = [[${ item.id }]];
+      var reviewModal = $(".reviewModal");
+      var inputMid = $('input[name="mid"]');
+      var inputText = $('input[name="text"]');
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
-            }
-        });
+
+      $(".addReviewBtn").click(function () {
+        grade = 0;
+        inputMid.val("");
+        inputText.val("");
+
+        //.starrr초기화
+        var star = $(".starrr").clone();
+        $(".starrr").remove();
+        $("#divGrade").append(star);
         $('.starrr').starrr({
-            rating: grade,
-            change: function (e, value) {
-                if (value) {
-                    console.log(value);
-                    grade = value;
-                }
+          rating: grade,
+          change: function (e, value) {
+            if (value) {
+              console.log(value);
+              grade = value;
             }
+          }
         });
+        $(".removeBtn ,  .modifyBtn").hide();
+        $(".reviewSaveBtn").show();
 
-        //$(".reviewModal").modal("show"); 미리 보기용
+        reviewModal.modal('show');
+      });
 
-        var reviewModal = $(".reviewModal");
-        var inputEmail = $('input[name="email"]');
-        var inputText = $('input[name="text"]');
+      $('.reviewSaveBtn').click(function () {
 
+        var data = { id: id, grade: grade, text: inputText.val(), mid: inputMid.val() };
 
-        $(".addReviewBtn").click(function () {
-            inputEmail.val("");
-            inputText.val("");
+        console.log(data);
 
-            $(".removeBtn ,  .modifyBtn").hide();
-            $(".reviewSaveBtn").show();
+        $.ajax({
+          url: '/reviews/' + id,
+          type: "POST",
+          data: JSON.stringify(data),
+          contentType: "application/json; charset=utf-8",
+          dataType: "text",
+          beforeSend: function (xhr) {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            xhr.setRequestHeader(header, token);
+          },
+          success: function (result) {
 
-            reviewModal.modal('show');
-        });
+            console.log("result: " + result);
 
+            self.location.reload();//현재페이지 다시로딩
+            // getMovieReviews();//리뷰목록갱신
+            // reviewcnt갱신
+            // reviewavg갱신. select문 만들어서 구현
 
-        $('.reviewSaveBtn').click(function () {
-            var id = $("#itemId").val();
-            var email = $("#email").val();
-            var text = $("#reviewText").val();
+          }
+        })
+        reviewModal.modal('hide');
 
-            var data = {
-                id: id,
-                grade: grade,
-                text: text,
-                email: email
-            };
-
-            $.ajax({
-                url: '/reviews/' + id,
-                type: "POST",
-                data: JSON.stringify(data),
-                contentType: "application/json; charset=utf-8",
-                dataType: "text",
-                success: function (result) {
-                    self.location.reload();
-                }
-            });
-            reviewModal.modal('hide');
-        });
+      });
 
 
-        //페이지가 열리면 바로 리뷰 데이터들을 가져와서 사용한다.
-        function getItemReviews() {
-            function formatTime(str) {
-                var date = new Date(str);
+      //페이지가 열리면 바로 리뷰 데이터들을 가져와서 사용한다.
+      function getItemReviews() {
 
-                return date.getFullYear() + '/' +
-                    (date.getMonth() + 1) + '/' +
-                    date.getDate() + ' ' +
-                    date.getHours() + ':' +
-                    date.getMinutes();
-            }
-            console.log("id" + id);
-            $.ajax({
-                url: "/reviews/" + id + "/all", // 요청할 URL
-                method: "GET", // 요청 방식
-                dataType: "json", // 응답 데이터 타입
-                success: function (arr) {
-                    console.log("??????????????");
-                    var str = "";
+        function formatTime(str) {
+          var date = new Date(str);
 
-                    $.each(arr, function (idx, review) {
-                        console.log(review);
-
-                        str += '    <div class="card-body" data-reviewnum=' + review.reviewnum + ' data-email=' + review.email + '>';
-                        str += '    <h5 class="card-title">' + review.text + ' <span class="reviewgrade" data-grade2=' + review.grade + '></span></h5>';
-                        str += '    <h6 class="card-subtitle mb-2 text-muted">' + review.email + '</h6>';
-                        str += '    <p class="card-text">' + formatTime(review.regTime) + '</p>';
-                        str += '    </div>';
-                    });
-
-                    $(".reviewList").html(str);
-                    // 리뷰 별모양으로 나오게하기
-                    $(".reviewgrade").each(function (idx, o) {
-                        console.log(o);
-                        $(this).starrr({ rating: $(this).data("grade2"), readOnly: true });
-                    });
-                }, error: function (xhr, status, error) {
-                    console.error("Error: " + error);
-                    console.error("Response Text: " + xhr.responseText);
-                }
-            });
+          return date.getFullYear() + '/' +
+            (date.getMonth() + 1) + '/' +
+            date.getDate() + ' ' +
+            date.getHours() + ':' +
+            date.getMinutes();
         }
 
-        //리뷰목록 바로 보이게 하기
-        getItemReviews();
+        $.getJSON("/reviews/" + id + "/all", function (arr) {
+          var str = "";
+
+          $.each(arr, function (idx, review) {
+
+            console.log(review);
+
+            str += '    <div style="cursor:pointer" class="card-body" data-reviewnum=' + review.reviewnum + ' data-mid=' + review.mid + '>';
+            str += '    <h5 class="card-title">' + review.text + ' <span class="reviewgrade" data-grade2=' + review.grade + '></span></h5>';
+            str += '    <h6 class="card-subtitle mb-2 text-muted">' + review.name + '</h6>';
+            str += '    <p class="card-text">' + formatTime(review.regTime) + '</p>';
+            str += '    </div>';
+          });
+
+          $(".reviewList").html(str);
+          //평점을 별점(starrr)으로 출력.
+          $(".reviewgrade").each(function (idx, o) {
+            console.log(o);
+            $(this).starrr({ rating: $(this).data("grade2"), readOnly: true });
+          });
+        });
+      }
+
+      // 리뷰목록
+      getItemReviews();
 
 
-        //modify reveiw
+      //리뷰모달창 상세보기
+      var reviewnum;
 
-        var reviewnum;
+      $(".reviewList").on("click", ".card-body", function () {
 
-        $(".reviewList").on("click", ".card-body", function () {
-
-            $(".reviewSaveBtn").hide();
-            $(".removeBtn , .modifyBtn").show();
+        $(".reviewSaveBtn").hide();
+        $(".removeBtn , .modifyBtn").show();
 
 
-            var targetReview = $(this);
+        var targetReview = $(this);
 
-            reviewnum = targetReview.data("reviewnum");
-            console.log("reviewnum: " + reviewnum);
-            inputEmail.val(targetReview.data("email"));
-            inputText.val(targetReview.find('.card-title').clone().children().remove().end().text());
+        reviewnum = targetReview.data("reviewnum");
+        console.log("reviewnum: " + reviewnum);
+        inputMid.val(targetReview.data("mid"));
 
-            var grade = targetReview.find('.card-title span').html();
-            //$(".starrr a:nth-child("+grade+")").trigger('click');
+        inputText.val(targetReview.find('.card-title').text().trim());
+        var grade2 = $(this).find(".reviewgrade").data("grade2"); // 리뷰 목록에서 사용
+        console.log(grade2);
 
-            $('.reviewModal').modal('show');
+        //.starrr초기화
+        var star = $(".starrr").clone();
+        $(".starrr").remove();
+        $("#divGrade").append(star);
+
+        $(".starrr").starrr({
+          rating: grade2,
+          change: function (e, value) {
+            if (value) {
+              console.log(value);
+              grade = value;
+            }
+          }
         });
 
+        $('.reviewModal').modal('show');
+      });
 
-        $(".modifyBtn").on("click", function () {
 
-            var data = { reviewnum: reviewnum, id: id, grade: grade, text: inputText.val(), email: inputEmail.val() };
+      //리뷰수정버튼 이벤트처리
+      $(".modifyBtn").on("click", function () {
+        var data = { reviewnum: reviewnum, id: id, grade: grade, text: inputText.val(), mid: inputMid.val() };
+        console.log(data);
 
-            console.log(data);
+        $.ajax({
+          url: '/reviews/' + id + "/" + reviewnum,
+          type: "PUT",
+          data: JSON.stringify(data),
+          contentType: "application/json; charset=utf-8",
+          dataType: "text",
+          beforeSend: function (xhr) {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            xhr.setRequestHeader(header, token);
+          },
+          success: function (result) {
+            console.log("result: " + result);
+            self.location.reload();
+          }
+        })
+        reviewModal.modal('hide');
+      });
 
-            $.ajax({
-                url: '/reviews/' + id + "/" + reviewnum,
-                type: "PUT",
-                data: JSON.stringify(data),
-                contentType: "application/json; charset=utf-8",
-                dataType: "text",
-                success: function (result) {
 
-                    console.log("result: " + result);
+      //삭제버튼이벤트처리
+      $(".removeBtn").on("click", function () {
+        var data = { reviewnum: reviewnum };
+        console.log(data);
 
-                    self.location.reload();
+        $.ajax({
+          url: '/reviews/' + id + "/" + reviewnum,
+          type: "DELETE",
+          contentType: "application/json; charset=utf-8",
+          dataType: "text",
+          beforeSend: function (xhr) {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            xhr.setRequestHeader(header, token);
+          },
+          success: function (result) {
+            console.log("result: " + result);
+            self.location.reload();
+          }
+        })
+        reviewModal.modal('hide');
+      });
 
-                }
-            })
-            reviewModal.modal('hide');
-        });
+      $('#closeModal1, #closeModal2').on('click', function () {
+        $('#myModal').modal('hide'); // 모달 강제 닫기
+      });
 
-        $(".removeBtn").on("click", function () {
-
-            var data = { reviewnum: reviewnum };
-
-            console.log(data);
-
-            $.ajax({
-                url: '/reviews/' + id + "/" + reviewnum,
-                type: "DELETE",
-                contentType: "application/json; charset=utf-8",
-                dataType: "text",
-                success: function (result) {
-
-                    console.log("result: " + result);
-
-                    self.location.reload();
-
-                }
-            })
-            reviewModal.modal('hide');
-        });
-
-        $(".uploadResult li").click(function () {
-
-            var file = $(this).data('file');
-
-            console.log(file);
-
-            $('.imageModal .modal-body').html("<img style='width:100%' src='/display?fileName=" + file + "&size=1' >")
-
-            $(".imageModal").modal("show");
-
-        });
+    });
 
 
 
