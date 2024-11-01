@@ -72,7 +72,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                         searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
                         searchByLike(itemSearchDto.getSearchBy(),
                                 itemSearchDto.getSearchQuery()))
-                .orderBy(QItem.item.id.desc())
+                .orderBy(QItem.item.no.desc()) // 1101 성아 수정
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -109,8 +109,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         List<MainItemDto> content = queryFactory
                 .select(
                         new QMainItemDto(
-                                item.id,
-//                                item.category,
+                                item.no, // 1101 성아 수정
+                                item.category,
+                                item.itemSellStatus,
                                 item.itemNm,
                                 item.itemDetail,
                                 itemImg.imgUrl,
@@ -121,7 +122,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .where(builder)//은열 1018 수정
                 //                .where(itemImg.repimgYn.eq("Y"))
                 //                .where(itemNmLike(itemSearchDto.getSearchQuery()))
-                .orderBy(item.id.desc())
+                .orderBy(item.no.desc()) // 1101 성아 수정
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -161,7 +162,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         List<MainItemDto> content = queryFactory
                 .select(
                         new QMainItemDto(
-                                item.id,
+                                item.no, // 1101 성아 수정
+                                item.category,
+                                item.itemSellStatus,
                                 item.itemNm,
                                 item.itemDetail,
                                 itemImg.imgUrl,
@@ -172,7 +175,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .where(builder)//은열 1018 수정
                 //                .where(itemImg.repimgYn.eq("Y"))
                 //                .where(itemNmLike(itemSearchDto.getSearchQuery()))
-                .orderBy(item.id.desc())
+                .orderBy(item.no.desc()) // 1101 성아 수정
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

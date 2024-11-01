@@ -86,7 +86,9 @@
 
       <p class="h2">상품 등록</p>
 
-      <input type="hidden" th:field="*{id}">
+      <!-- 1101 성아 수정 -->
+      <!--    <input type="hidden" th:field="*{id}">-->
+      <input type="hidden" th:field="*{no}">
 
       <div class="form-group icreate">
         <label for="itemSellStatus">상품 판매 상태</label>
@@ -160,7 +162,9 @@
         </div>
       </div>
 
-      <div th:if="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center">
+      <!-- 1101 성아 수정 -->
+      <!--    <div th:if="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center">-->
+      <div th:if="${#strings.isEmpty(itemFormDto.no)}" style="text-align: center">
         <button th:formaction="@{/admin/item/new}" type="submit" class="btn btn-primary">등록</button>
       </div>
 

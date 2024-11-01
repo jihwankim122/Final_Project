@@ -1,41 +1,42 @@
 package com.top.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReviewDto {
-
-    private Long id; //상품코드
-
-    @NotNull
-    private int grade; // 평점, 1~5
-
-    @NotBlank
-    private String text; // 리뷰 내용
-
-    @NotNull
-    private int rCnt; // 리뷰 추천수
 
     //review num
     private Long reviewnum;
 
+    //Item id
+    private Long no; // 1101 성아 id -> no 수정
+
     //Membmer id
-    private Long member_id;
-    
+    private Long id; // 1101 성아 mid -> id 원복
+
+    //Member name
+    private String name;
+
     //Member email
     private String email;
-    
+
+    // 별점
+    private int grade;
+
+    // 내용
+    private String text;
 
     private LocalDateTime regTime;
-    private LocalDateTime updateTime;
 
+    private LocalDateTime updateTime;
 
 }

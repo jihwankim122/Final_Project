@@ -358,7 +358,9 @@
         <th:block th:each="item, status: ${items.getContent()}">
             <div class="col-md-4 margin">
                 <div class="card">
-                    <a class="text-dark" th:href="'/item/' +${item.id}">
+                    <!-- 1101 성아 수정 -->
+<!--                    <a class="text-dark" th:href="'/item/' +${item.id}">-->
+                    <a class="text-dark" th:href="'/item/' +${item.no}">
                         <img class="card-img-top" th:alt="${item.itemNm}" th:src="${item.imgUrl}">
                         <div class="card-body">
                             <h4 class="card-title Best3-item-title">[[${item.itemNm}]]</h4>

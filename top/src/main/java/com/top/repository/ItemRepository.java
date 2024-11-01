@@ -28,5 +28,13 @@ public interface ItemRepository extends JpaRepository<Item, Long>,  // entity , 
                 "%:itemDetail% order by i.price desc", nativeQuery = true)
         List<Item> findByItemDetailByNative (@Param("itemDetail") String itemDetail);
 
+        // 1028 성아 추가 (별점 평균) // 1101 성아 item.id -> item.no 변경
+        @Query("SELECT AVG(r.grade) FROM Review r WHERE r.item.no = :itemId")
+        Double getAverageRating(@Param("itemId") Long itemId);
+
+        // 1028 성아 추가 (리뷰 개수) // 1101 성아 item.id -> item.no 변경
+        @Query("SELECT COUNT(r) FROM Review r WHERE r.item.no = :itemId")
+        Integer getReviewCount(@Param("itemId") Long itemId);
+
     }
 

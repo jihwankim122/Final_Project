@@ -56,12 +56,16 @@
             </thead>
             <tbody>
             <tr th:each="item, status: ${items.getContent()}">
-                <td th:text="${item.id}"></td>
+                <!-- 1101 성아 수정 -->
+<!--                <td th:text="${item.id}"></td>-->
+                <td th:text="${item.no}"></td>
                 <!--                241022은열추가-->
                 <td th:text="${item.category}"></td>
                 <!--                241022은열추가-->
                 <td>
-                    <a th:href="'/admin/item/'+${item.id}" th:text="${item.itemNm}"></a>
+                    <!-- 1101 성아 수정 -->
+<!--                    <a th:href="'/admin/item/'+${item.id}" th:text="${item.itemNm}"></a>-->
+                    <a th:href="'/admin/item/'+${item.no}" th:text="${item.itemNm}"></a>
                 </td>
                 <!--                1017 은열 수정-->
                 <td th:text="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL ? '판매중' :
