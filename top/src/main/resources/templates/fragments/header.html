@@ -11,7 +11,7 @@
 
 
       <div id="maincetegori" class="container-fluid">
-        <div class="container">
+        <div class="container" style="width:98%">
           <div class="btn-group">
             <div class="btn-group">
               <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">제품</button>
@@ -41,7 +41,7 @@
               <button id="search" class="btn btn-outline-success my-2 my-sm-0" type="submit"><i
                       class="fi fi-rr-search"></i></button>
             </form>
-            <div class="dropdown">
+            <div class="dropdown" id="temple">
               <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fi fi-rr-user"></i>
               </button>
@@ -59,7 +59,6 @@
                 <li class="dropdown-item" sec:authorize="isAuthenticated()">
                   <a class="nav-link" href="/members/check-password">회원 정보 수정</a>
                 </li>
-                <li class="dropdown-item">
 <!--                <li class="dropdown-item" sec:authorize="isAuthenticated()">-->
 <!--                  <a class="nav-link" href="/orders">구매이력</a>-->
 <!--                </li>-->

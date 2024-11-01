@@ -10,6 +10,8 @@ import com.top.repository.CartRepository;
 import com.top.repository.ItemRepository;
 import com.top.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
@@ -34,6 +36,10 @@ public class CartServiceImpl implements CartService {
     private final CartItemRepository cartItemRepository;
     private final OrderServiceImpl orderService;
 
+     @Autowired
+    private DiscountService discountService; //241028 은열 추가
+
+    // 은열 241031수정
     @Override
     public Long addCart(CartItemDto cartItemDto, String email) {
         Item item = itemRepository.findById(cartItemDto.getItemId())
@@ -50,12 +56,22 @@ public class CartServiceImpl implements CartService {
 
         if (savedCartItem != null) {
             savedCartItem.addCount(cartItemDto.getCount());
+            updatePrices(savedCartItem);
             return savedCartItem.getId();
         } else {
-            CartItem cartItem = CartItem.createCartItem(cart, item, cartItemDto.getCount());
+            CartItem cartItem = CartItem.createCartItem(cart, item, cartItemDto.getCount(), member);
+            updatePrices(cartItem);
             cartItemRepository.save(cartItem);
             return cartItem.getId();
         }
+    }
+   // 은열 241031추가
+    private void updatePrices(CartItem cartItem) {
+        int itemPrice = cartItem.getItem().getPrice();
+        int totalPrice = itemPrice * cartItem.getCount();
+        int discountAmount = discountService.discount(cartItem.getMember(), totalPrice);
+
+        cartItem.calculatePrices(discountAmount, totalPrice);
     }
 
     @Override

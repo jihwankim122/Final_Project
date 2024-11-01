@@ -20,30 +20,52 @@
             $("input[name=cartChkBox]").change(function(){
                 getOrderTotalPrice();
             });
+            getOrderTotalPrice(); // 페이지 로드 시에도 초기 금액 계산
         });
 
-        /* 총 주문금액 계산 */
-        function getOrderTotalPrice() {
+        /* 총 주문금액 계산 241030 은열 수정 */
+
+        async function getOrderTotalPrice() {
             var orderTotalPrice = 0;
-            $("input[name=cartChkBox]:checked").each(function() {
-                var cartItemId = $(this).val();
-                var price = $("#price_" + cartItemId).attr("data-price");
-                var count = $("#count_" + cartItemId).val();
-                orderTotalPrice += price * count;
-            });
+            var totalDiscount = 0; // 체크된 항목에 대한 총 할인 금액
+                $("input[name=cartChkBox]:checked").each(function() {
+                    var cartItemId = $(this).val();
+                    var price = $("#price_" + cartItemId).data("price")
+                    var count = $("#count_" + cartItemId).val();
+
+                   // 최종 가격 계산
+                    var itemTotalPrice = price * count;
+                    var discount = parseInt($("#discount_" + cartItemId).text().replace('원', '')) || 0; // 할인 금액 가져오기
+                        // 수량에 따른 최종 할인 금액
+                    var totalItemDiscount = discount * count;
+                    orderTotalPrice += itemTotalPrice; // 최종 가격 업데이트
+                    totalDiscount += totalItemDiscount; // 할인 금액 업데이트
+               });
+            var finalPrice =  orderTotalPrice - totalDiscount;
             $("#orderTotalPrice").html(orderTotalPrice + '원');
+            $("#discountAmount").html(totalDiscount + '원');
+            $("#finalPrice").html(finalPrice + '원');
         }
 
         /* 상품 수량 변경 */
-        function changeCount(obj) {
-            var count = obj.value;
-            var cartItemId = obj.id.split('_')[1];
-            var price = $("#price_" + cartItemId).data("price");
-            var totalPrice = count * price;
-            $("#totalPrice_" + cartItemId).html(totalPrice + "원");
-            getOrderTotalPrice();
-            updateCartItemCount(cartItemId, count);
-        }
+             function changeCount(obj) {
+                var count = parseInt(obj.value) || 0; // 현재 수량
+                var cartItemId = obj.id.split('_')[1];
+                var price = $("#price_" + cartItemId).data("price");
+                // 아이템 총 가격 계산
+                var totalPrice = count * price;
+                // 현재 상품의 할인 금액
+                var discount = parseInt($("#discount_" + cartItemId).text().replace('원', '')) || 0;
+                // 할인 금액을 수량과 곱하여 최종 가격 계산
+                var totalItemDiscount = discount; // 수량에 따른 할인 금액
+                var finalPrice = totalPrice - totalItemDiscount; // 최종 가격 계산
+                // 각 요소에 업데이트
+                $("#totalPrice_" + cartItemId).html(totalPrice + "원");
+                $("#discount_" + cartItemId).html(totalItemDiscount + "원"); // 현재 할인 금액 유지
+                $("#finalPrice_" + cartItemId).html(finalPrice + "원"); // 최종 가격 업데이트
+                getOrderTotalPrice();// 전체 가격 다시 계산
+                updateCartItemCount(cartItemId, count); // 수량 업데이트
+            }
 
         /* 상품 전체 선택 */
         function checkAll() {
@@ -119,7 +141,7 @@
             var IMP = window.IMP; // 아임포트 라이브러리 호출
             IMP.init("imp12017008"); // 본인의 아임포트 코드로 변경
 
-            var totalAmount = parseInt($("#orderTotalPrice").text().replace('원', '')); // 총 결제 금액
+            var totalAmount = parseInt($("#finalPrice").text().replace('원', '')); // 총 결제 금액
             var selectedItems = $("input[name=cartChkBox]:checked"); // 선택된 체크박스들
 
             if (selectedItems.length === 0) {
@@ -231,8 +253,9 @@
 
         <table class="table">
             <colgroup>
-                <col width="15%"/>
-                <col width="70%"/>
+                <col width="10%"/>
+                <col width="65%"/>
+                <col width="10%"/>
                 <col width="15%"/>
             </colgroup>
             <thead>
@@ -242,6 +265,7 @@
                 </td>
                 <td>상품정보</td>
                 <td>상품금액</td>
+                <td>1개당 할인가격</td>
             </tr>
             </thead>
             <tbody>
@@ -276,12 +300,17 @@
                         name="totalPrice" th:text="${cartItem.price * cartItem.count} + '원'">
                   </span>
                 </td>
+                <td class="text-center align-middle">
+                    <span th:id="'discount_' + ${cartItem.cartItemId}" th:text="${cartItem.discount} + '원'">0원</span>
+                </td>
             </tr>
             </tbody>
         </table>
 
         <h2 class="text-center">
-            총 주문 금액 : <span id="orderTotalPrice" class="text-danger">0원</span>
+            총 장바구니금액 : <span id="orderTotalPrice" >0원</span><br>
+            VIP 등급 할인금액 : <span id="discountAmount" >0원</span><br>
+            총 결제금액 : <span id="finalPrice" >0원</span>
         </h2>
 
         <div class="text-center mt-3">

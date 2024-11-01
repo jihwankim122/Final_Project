@@ -1,5 +1,6 @@
 package com.top.entity;
 
+import com.top.constant.Grade;
 import com.top.constant.Role;
 import com.top.dto.MemberFormDto;
 import jakarta.persistence.*;
@@ -31,6 +32,10 @@ public class Member extends BaseEntity {
     private String postcode; // 1025 성아 추가: 우편번호
     private String detailAddress; // 1025 성아 추가: 상세주소
 
+     //241023 은열 추가
+    @Enumerated(EnumType.STRING)
+    private Grade grade;
+
     // 1024 유진 추가: 생성자 및 수정자 정보
     private String createdBy; // 생성자
     private String modifiedBy; // 수정자
@@ -52,6 +57,8 @@ public class Member extends BaseEntity {
         member.setDetailAddress(memberFormDto.getDetailAddress()); // 1025 성아 추가
         member.setPhone(memberFormDto.getPhone()); // 1028 유진 추가: 전화번호 설정
         String password = passwordEncoder.encode(memberFormDto.getPassword());
+         //241023 은열 추가
+         member.setGrade(Grade.BRONZE);
         member.setPassword(password);
         member.setRole(Role.USER);
         return member;
