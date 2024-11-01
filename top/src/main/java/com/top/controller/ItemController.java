@@ -25,7 +25,7 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
-public class ItemController {
+public class ItemController extends MemberBasicController {
 
     private final ItemService itemService;
     private final OrderService orderService;

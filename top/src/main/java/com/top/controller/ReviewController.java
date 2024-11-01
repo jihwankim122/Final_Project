@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/reviews")
 @Log4j2
 @RequiredArgsConstructor
-public class ReviewController {
+public class ReviewController extends MemberBasicController {
     private final ReviewService reviewService;
     private final ItemService itemService;
     // 목록 조회

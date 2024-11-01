@@ -41,6 +41,8 @@
               <button id="search" class="btn btn-outline-success my-2 my-sm-0" type="submit"><i
                       class="fi fi-rr-search"></i></button>
             </form>
+            <!--            241101 은열추가-->
+            <div id="member-grade" th:if="${member != null}" th:text="'회원님의 등급은 ' + ${member.grade} + '입니다❤'"></div>
             <div class="dropdown" id="temple">
               <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fi fi-rr-user"></i>

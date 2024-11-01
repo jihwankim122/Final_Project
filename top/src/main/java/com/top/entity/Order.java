@@ -53,6 +53,9 @@ public class Order extends BaseEntity{
         //241028 은열 추가
         order.setDiscount(discount); // 할인되는 가격 적용
         order.setFinalPrice(finalPrice); // 최종 가격 적용
+
+        //241101 은열 주문 가격을 누적가격에추가
+        member.addOrderPrice(finalPrice); // 멤버의 누적 주문 금액 업데이트
         return order;
     }
 

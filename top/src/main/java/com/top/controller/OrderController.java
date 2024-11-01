@@ -26,7 +26,7 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
-public class OrderController {
+public class OrderController extends MemberBasicController {
 
     private final OrderServiceImpl orderService;
 

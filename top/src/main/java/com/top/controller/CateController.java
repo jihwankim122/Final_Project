@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
-public class CateController {
+public class CateController extends MemberBasicController {
 
     private final ItemServiceImpl itemService;
 

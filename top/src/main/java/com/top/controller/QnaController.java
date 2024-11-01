@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/qna")
 @Log4j2
 @RequiredArgsConstructor
-public class QnaController {
+public class QnaController extends MemberBasicController {
     private final QnaService service;
     private final MemberRepository memberRepository;
 
