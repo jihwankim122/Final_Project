@@ -3,32 +3,33 @@
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout1}">
 
 
-  <th:block layout:fragment="css">
-    <style>
-        a {
-            text-decoration: none;
-            color: black;
-        }
-        .Qnaregisterbtn{
-          float: right;
-          margin-right: 2rem;
-        }
-        .Qnatop{
-          margin-bottom: 3rem;
-          gap: 1em;
-        }
-        .custom-select{
-          height: 100%
-        }
-        .table-striped{
-          border-top: solid 0.1px rgb(189, 189, 189);
-        }
-        .table-title{
-          background-color: rgb(144, 201, 255);
-          background-color: red;
-        }
+<th:block layout:fragment="css">
+  <style>
+    a {
+      text-decoration: none;
+      color: black;
+    }
 
-    </style>
+    .Qnaregisterbtn {
+      float: right;
+      margin-right: 2rem;
+    }
+
+    .Qnatop {
+      margin-bottom: 3rem;
+      gap: 1em;
+    }
+
+    .custom-select {
+      height: 100%
+    }
+
+    .Qnasearch {
+      border: none;
+      border-bottom: solid 0.1px rgb(190, 190, 190);
+      border-radius: 5%;
+    }
+  </style>
 </th:block>
 
 
@@ -110,13 +111,13 @@
           [[${page}]]
         </a>
       </li>
-      
+
       <li class="page-item" th:if="${result.next}">
         <a class="page-link" th:href="@{/qna/list(page= ${result.end + 1} ,
                     type=${npageRequestDTO.type} ,
                     keyword = ${npageRequestDTO.keyword} )}">Next</a>
       </li>
-      
+
     </ul>
     <!-- 페이징 end -->
     <span sec:authorize="hasAnyAuthority('ROLE_ADMIN','ROLE_USER')">

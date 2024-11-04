@@ -2,17 +2,20 @@
     margin: 0;
     padding: 0;
     color: rgb(0, 0, 0);
-    font-family: "Noto Sans KR", sans-serif;
+    font-family: "Stylish", serif;
 }
-a{
+
+a {
     text-decoration: none;
 }
+
 span {
     text-align: center;
     width: 100%;
 }
 
-.navbar, #maincetegori {
+.navbar,
+#maincetegori {
     width: 100%;
     border-bottom: solid 0.1px rgba(206, 206, 206, 0.232);
     display: flex;
@@ -47,7 +50,7 @@ span {
     gap: 20px;
 }
 
-.navbar > .Logo {
+.navbar>.Logo {
     width: 60%;
     position: relative;
     text-align: center;
@@ -61,18 +64,19 @@ span {
     position: relative;
 }
 
-#demo > button {
+#demo>button {
     top: 10%;
     position: absolute;
 }
 
-.carousel-item > img {
+.carousel-item>img {
     height: 100%;
     width: 100%;
     object-fit: cover;
 }
 
-.carousel-inner, .carousel-item {
+.carousel-inner,
+.carousel-item {
     height: 100%;
     width: 100%;
     background-color: gray;
@@ -85,7 +89,8 @@ span {
     gap: 30px;
 }
 
-#categori button, #categori img {
+#categori button,
+#categori img {
     border-radius: 50%;
     width: 100px;
     height: 100px;
@@ -113,20 +118,20 @@ span {
     border-bottom: solid 0.2px rgb(197, 197, 197);
 }
 
-.section-inner > .row {
+.section-inner>.row {
     width: 100%;
     display: flex;
     justify-content: center;
     gap: 30px;
 }
 
-.section-inner > .row > .col-sm-3 {
+.section-inner>.row>.col-sm-3 {
     border-radius: 3%;
     border: solid 0.2px rgb(209, 209, 209);
     padding: 30px;
 }
 
-.section-inner > .row > .col-sm-3 > img {
+.section-inner>.row>.col-sm-3>img {
     border-radius: 5%;
     object-fit: cover;
     width: 50%;
@@ -153,7 +158,7 @@ footer {
     margin-top: 10ch;
 }
 
-footer > button {
+footer>button {
     border: none;
     background: none;
 }
