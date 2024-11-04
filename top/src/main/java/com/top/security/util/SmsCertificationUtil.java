@@ -24,6 +24,12 @@ public class SmsCertificationUtil {
 
     @PostConstruct
     public void init() {
+        // 주입된 값 확인을 위한 로그 출력
+        System.out.println("API Key: " + apiKey);
+        System.out.println("API Secret: " + apiSecret);
+        System.out.println("From Number: " + fromNumber);
+
+        // 값이 정상적으로 주입된 경우 메시지 서비스 초기화
         this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
     }
 
@@ -36,4 +42,3 @@ public class SmsCertificationUtil {
         this.messageService.sendOne(new SingleMessageSendingRequest(message));
     }
 }
-

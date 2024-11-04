@@ -6,6 +6,7 @@ import com.top.repository.MemberRepository;
 import com.top.security.dto.ClubAuthMemberDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -22,7 +23,8 @@ import java.util.Map;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
-    private final HttpSession httpSession; // 세션 주입
+    @Getter
+    private final HttpSession httpSession;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -36,7 +38,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         Member member = findOrCreateMember(email, name, nickname);
 
-        // 세션 설정
+        // 세션에 Member 엔터티 저장
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         request.getSession().setAttribute("member", member);
 
@@ -74,16 +76,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
     }
 
-
     private String extractNickname(String provider, Map<String, Object> attributes) {
-        return extractName(provider, attributes); // 기본적으로 이름을 닉네임으로 사용
+        return extractName(provider, attributes);
     }
 
     private Member findOrCreateMember(String email, String name, String nickname) {
         Member member = memberRepository.findByEmail(email);
 
         if (member == null) {
-            // 사용자 정보가 없으면 새로 생성
             member = createNewMember(email, name, nickname);
             memberRepository.save(member);
             System.out.println("Creating new member with email: " + email);
@@ -104,4 +104,5 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         member.setModifiedBy(null);
         return member;
     }
+
 }
