@@ -21,14 +21,20 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws ServletException, IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String email = authentication.getName();
         Member member = memberRepository.findByEmail(email);
 
-        if (member != null) {
+        if (member != null && member.isSocial() && (member.getPhone() == null || member.getAddress() == null)) {
+            // 소셜 회원이면서 필수 정보가 없는 경우
             request.getSession().setAttribute("member", member);
+            getRedirectStrategy().sendRedirect(request, response, "/members/add-social-info");
+        } else {
+            // 그 외 경우
+            super.onAuthenticationSuccess(request, response, authentication);
         }
-        super.onAuthenticationSuccess(request, response, authentication);
     }
+
+
+
 }

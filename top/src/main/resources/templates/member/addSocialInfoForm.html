@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>추가 정보 입력</title>
+  <style>
+    .form-group {
+        width: 50%;
+        margin: 20px 0;
+    }
+    .btn {
+        margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>추가 정보 입력</h1>
+  <form th:action="@{/members/add-social-info}" method="post" th:object="${memberUpdateFormDto}">
+    <div class="form-group">
+      <label for="phone">전화번호</label>
+      <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}" required>
+    </div>
+    <div class="form-group">
+      <label for="address">주소</label>
+      <input type="text" class="form-control" id="address" name="address" th:field="*{address}" required>
+    </div>
+    <div class="form-group">
+      <label for="postcode">우편번호</label>
+      <input type="text" class="form-control" id="postcode" name="postcode" th:field="*{postcode}" required>
+    </div>
+    <div class="form-group">
+      <label for="detailAddress">상세 주소</label>
+      <input type="text" class="form-control" id="detailAddress" name="detailAddress" th:field="*{detailAddress}">
+    </div>
+    <button type="submit" class="btn btn-primary">저장</button>
+    <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">취소</button>
+  </form>
+</div>
+</body>
+</html>

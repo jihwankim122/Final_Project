@@ -102,6 +102,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         member.setAddress(null);
         member.setCreatedBy(null);
         member.setModifiedBy(null);
+        member.setSocial(true);
         return member;
     }
 

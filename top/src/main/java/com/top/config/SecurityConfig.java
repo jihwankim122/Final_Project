@@ -50,7 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
                         .requestMatchers("/", "/members/**", "/item/**", "/images/**","/reviews/**","/notice/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/sms/**", "/members/login").permitAll() // 새로 추가된 접근 허용 경로
+                        .requestMatchers("/sms/**", "/members/login","/members/add-social-info").permitAll() // 새로 추가된 접근 허용 경로
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
