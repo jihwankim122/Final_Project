@@ -84,7 +84,6 @@ public class MemberController extends MemberBasicController {
         return "member/checkPassword";
     }
 
-    // 비밀번호 확인 처리
     @PostMapping(value = "/check-password")
     public String checkPassword(@RequestParam("password") String password, Model model) {
         String email = getCurrentUserEmail();
@@ -97,8 +96,15 @@ public class MemberController extends MemberBasicController {
 
         // 비밀번호가 일치하면 세션에 확인 상태 저장 후 회원 정보 수정 페이지로 이동
         session.setAttribute("passwordVerified", true);
-        return "redirect:/members/update";
+        if (member.isSocial()) {
+            return "redirect:/members/add-social-info"; // 소셜 회원 경로
+        } else {
+            return "redirect:/members/update"; // 로컬 회원 경로
+        }
     }
+
+
+
 
     @GetMapping(value = "/update")
     public String updateMemberForm(Model model) {
@@ -152,4 +158,30 @@ public class MemberController extends MemberBasicController {
         session.removeAttribute("passwordVerified");
         return "redirect:/";
     }
+
+    //1104 유진 수정
+    @GetMapping("/add-social-info")
+    public String addSocialInfoForm(Model model) {
+        model.addAttribute("memberUpdateFormDto", new MemberUpdateFormDto());
+        return "member/addSocialInfoForm";
+    }
+
+    @PostMapping("/add-social-info")
+    public String addSocialInfo(@Valid MemberUpdateFormDto formDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "member/addSocialInfoForm";
+        }
+
+        String email = getCurrentUserEmail();
+        Member member = memberService.findByEmail(email);
+
+        memberService.updateMember(
+                member, member.getEmail(), null,
+                formDto.getAddress(), formDto.getPostcode(),
+                formDto.getDetailAddress(), formDto.getPhone()
+        );
+
+        return "redirect:/";
+    }
+
 }

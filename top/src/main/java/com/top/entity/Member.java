@@ -32,30 +32,31 @@ public class Member extends BaseEntity {
     private String postcode; // 1025 성아 추가: 우편번호
     private String detailAddress; // 1025 성아 추가: 상세주소
 
-     //241023 은열 추가
+    //241023 은열 추가
     @Enumerated(EnumType.STRING)
-    private Grade grade;
+    private Grade grade; // 회원 등급 필드
 
     // 1024 유진 추가: 생성자 및 수정자 정보
-    private String createdBy; // 생성자
-    private String modifiedBy; // 수정자
-    private String nickname; // 닉네임
-
-    // 1028 유진 추가: 전화번호 필드
-    private String phone;
+    private String createdBy; // 생성자 정보
+    private String modifiedBy; // 수정자 정보
+    private String nickname; // 닉네임 필드
+    private String phone; // 전화번호 필드
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role; // 회원 권한 필드
 
     //241101 은열 추가
+    private double totalSpentAmount; // 누적 주문 금액 필드
 
-    private double totalSpentAmount;//누적 주문금액
+    private boolean isSocial; // 소셜 로그인 여부 필드
 
+    // 주문 금액을 누적하고 회원의 등급을 업데이트하는 메서드
     public void addOrderPrice(int finalPrice) {
         this.totalSpentAmount += finalPrice;
         updateRank();
-
     }
+
+    // 누적 주문 금액에 따라 회원의 등급을 업데이트하는 메서드
     public void updateRank() {
         if (totalSpentAmount >= 500000) {
             grade = Grade.PLATINUM;
@@ -68,31 +69,30 @@ public class Member extends BaseEntity {
         }
     }
 
-    // 1028 유진 수정 추가 - Member 생성 메서드 개선
+    // 회원 생성 메서드 - MemberFormDto의 정보와 비밀번호 인코더를 사용해 새로운 회원 객체 생성
     public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
         Member member = new Member();
         member.setName(memberFormDto.getName());
         member.setEmail(memberFormDto.getEmail());
-        member.setPostcode(memberFormDto.getPostcode()); // 1025 성아 추가
+        member.setPostcode(memberFormDto.getPostcode());
         member.setAddress(memberFormDto.getAddress());
-        member.setDetailAddress(memberFormDto.getDetailAddress()); // 1025 성아 추가
-        member.setPhone(memberFormDto.getPhone()); // 1028 유진 추가: 전화번호 설정
+        member.setDetailAddress(memberFormDto.getDetailAddress());
+        member.setPhone(memberFormDto.getPhone());
         String password = passwordEncoder.encode(memberFormDto.getPassword());
-         //241023 은열 추가
-         member.setGrade(Grade.BRONZE);
         member.setPassword(password);
-        member.setRole(Role.ADMIN);
+        member.setGrade(Grade.BRONZE); // 기본 등급 설정
+        member.setRole(Role.ADMIN); // 기본 권한 설정
+        member.setSocial(false); // 일반 회원으로 생성
         return member;
     }
 
-    // 1028 유진 수정 추가 - 비밀번호 업데이트 메서드
+    // 비밀번호를 업데이트하는 메서드
     public void updatePassword(String newPassword, PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(newPassword);
     }
 
-    // 1028 유진 수정 추가 - 회원 정보 업데이트 메서드
-    public void updateMemberInfo(
-            String email, String address, String postcode, String detailAddress, String phone) {
+    // 회원 정보 업데이트 메서드
+    public void updateMemberInfo(String email, String address, String postcode, String detailAddress, String phone) {
         this.email = email;
         this.address = address;
         this.postcode = postcode;
@@ -101,7 +101,7 @@ public class Member extends BaseEntity {
     }
 
     @Builder
-    public Member(Long id, String name, String email, String password, String address, String postcode, String detailAddress, Role role, String nickname, String phone) {
+    public Member(Long id, String name, String email, String password, String address, String postcode, String detailAddress, Role role, String nickname, String phone, boolean isSocial) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -112,5 +112,16 @@ public class Member extends BaseEntity {
         this.role = role;
         this.nickname = nickname;
         this.phone = phone;
+        this.isSocial = isSocial;
+    }
+
+    // 소셜 로그인 여부 확인 메서드
+    public boolean isSocial() {
+        return isSocial;
+    }
+
+    // 소셜 로그인 여부 설정 메서드
+    public void setSocial(boolean social) {
+        this.isSocial = social;
     }
 }
