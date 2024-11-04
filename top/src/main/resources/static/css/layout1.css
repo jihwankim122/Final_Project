@@ -110,6 +110,7 @@ span {
     text-align: center;
     font-size: xx-large;
     margin-bottom: 5rem;
+    border-bottom: solid 0.2px rgb(197, 197, 197);
 }
 
 .section-inner > .row {

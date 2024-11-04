@@ -1,72 +1,94 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout1}">
+
+
+  <th:block layout:fragment="css">
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+        }
+        .Qnaregisterbtn{
+          float: right;
+          margin-right: 2rem;
+        }
+        .Qnatop{
+          margin-bottom: 3rem;
+          gap: 1em;
+        }
+        .custom-select{
+          height: 100%
+        }
+        .table-striped{
+          border-top: solid 0.1px rgb(189, 189, 189);
+        }
+        .table-title{
+          background-color: rgb(144, 201, 255);
+          background-color: red;
+        }
+
+    </style>
+</th:block>
+
 
 <!--  <th:block th:fragment="content">-->
 <div layout:fragment="content">
-<h1 class="mt-4">QNA
-    <span sec:authorize="hasAnyAuthority('ROLE_ADMIN','ROLE_USER')">
-    <a th:href="@{/qna/register}">
-        <button type="button" class="btn btn-outline-primary">REGISTER
-        </button>
-    </a>
-    </span>
-</h1>
-
+  <div class="container Qnatable">
+    <h1 class="mt-4 mb-4">QNA</h1>
     <!-- 검색 --------------------------------------------------------------->
     <form action="/qna/list" method="get" id="searchForm">
-      <div class="input-group">
-        <input type="hidden" name="page" value = "1">
+      <div class="input-group Qnatop">
+        <input type="hidden" name="page" value="1">
         <div class="input-group-prepend">
           <select class="custom-select" name="type">
             <option th:selected="${npageRequestDTO.type == null}">-------</option>
-            <option value="t" th:selected="${npageRequestDTO.type =='t'}" >제목</option>
-            <option value="c" th:selected="${npageRequestDTO.type =='c'}"  >내용</option>
-            <option value="w"  th:selected="${npageRequestDTO.type =='w'}" >작성자</option>
-            <option value="tc"  th:selected="${npageRequestDTO.type =='tc'}" >제목 + 내용</option>
-            <option value="tcw"  th:selected="${npageRequestDTO.type =='tcw'}" >제목 + 내용 + 작성자</option>
+            <option value="t" th:selected="${npageRequestDTO.type =='t'}">제목</option>
+            <option value="c" th:selected="${npageRequestDTO.type =='c'}">내용</option>
+            <option value="w" th:selected="${npageRequestDTO.type =='w'}">작성자</option>
+            <option value="tc" th:selected="${npageRequestDTO.type =='tc'}">제목 + 내용</option>
+            <option value="tcw" th:selected="${npageRequestDTO.type =='tcw'}">제목 + 내용 + 작성자</option>
           </select>
         </div>
-        <input class="form-control" name="keyword" th:value="${npageRequestDTO.keyword}">
+        <input class="form-control Qnasearch" name="keyword" th:value="${npageRequestDTO.keyword}" placeholder="Search">
         <div class="input-group-append" id="button-addon4">
-          <button class="btn btn-outline-secondary btn-search" type="button">Search</button>
-          <button class="btn btn-outline-secondary btn-clear" type="button">Clear</button>
+          <button class="btn btn-outline-secondary btn-search" type="button"><i class="fi fi-rr-search"></i></button>
+          <button class="btn btn-outline-secondary btn-clear" type="button">취소</button>
         </div>
       </div>
     </form>
     <!-- 검색 end -->
 
     <!-- 목록 --------------------------------------------------------------------------------------->
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Title</th>
-        <th scope="col">Writer</th>
-        <th scope="col">Regdate</th>
-      </tr>
+    <table class="table">
+      <thead class="table-primary">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">제목</th>
+          <th scope="col">작성자</th>
+          <th scope="col">작성 날짜</th>
+        </tr>
       </thead>
       <tbody>
 
-      <tr th:each="dto : ${result.dtoList}" >
-        <td>[[${dto.qno}]]</td>
-        <th scope="row">
-          <a th:href="@{/qna/read(qno = ${dto.qno},
+        <tr th:each="dto : ${result.dtoList}">
+          <td>[[${dto.qno}]]</td>
+          <th scope="row">
+            <a th:href="@{/qna/read(qno = ${dto.qno},
                     page= ${result.page},
                     type=${npageRequestDTO.type} ,
                     keyword = ${npageRequestDTO.keyword})}">
-            [[${dto.title}]]
-          </a>
-          <span  style="margin-left:1rem; width:11%;" class="badge bg-dark" th:text="${dto.hasAnswer ? '답변완료' : '미답변'}"></span> <!-- Checking Answer  -->
-        </th>
-        <!--        25 Oct-->
-        <td>[[${dto.writerName}]]</td>
-        <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
-        <td>
-        </td>
-      </tr>
+              [[${dto.title}]]
+            </a>
+            <span style="margin-left:1rem; width:11%;" class="badge bg-dark"
+              th:text="${dto.hasAnswer ? '답변완료' : '미답변'}"></span> <!-- Checking Answer  -->
+          </th>
+          <!--        25 Oct-->
+          <td>[[${dto.writerName}]]</td>
+          <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
+          <td>
+          </td>
+        </tr>
 
       </tbody>
     </table>
@@ -88,16 +110,21 @@
           [[${page}]]
         </a>
       </li>
-
+      
       <li class="page-item" th:if="${result.next}">
         <a class="page-link" th:href="@{/qna/list(page= ${result.end + 1} ,
                     type=${npageRequestDTO.type} ,
                     keyword = ${npageRequestDTO.keyword} )}">Next</a>
       </li>
-
+      
     </ul>
     <!-- 페이징 end -->
-
+    <span sec:authorize="hasAnyAuthority('ROLE_ADMIN','ROLE_USER')">
+      <a th:href="@{/qna/register}">
+        <button type="button" class="btn btn-outline-primary Qnaregisterbtn">작성
+        </button>
+      </a>
+    </span>
     <!-- 등록 처리 시 모달 -->
     <div class="modal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -120,23 +147,24 @@
     </div>
 
     <script th:inline="javascript">
-      var msg = [[${msg}]];
+      var msg = [[${ msg }]];
       console.log(msg);
-      if(msg){
-          $(".modal").modal();
+      if (msg) {
+        $(".modal").modal();
       }
       var searchForm = $("#searchForm");
-      $('.btn-search').click(function(e){
-          searchForm.submit();
+      $('.btn-search').click(function (e) {
+        searchForm.submit();
       });
 
-      $('.btn-clear').click(function(e){
-          searchForm.empty().submit();
+      $('.btn-clear').click(function (e) {
+        searchForm.empty().submit();
       });
     </script>
 
-  </th:block>
-
-<!--</th:block>-->
+    </th:block>
+  </div>
+  <!--</th:block>-->
 </div>
+
 </html>
