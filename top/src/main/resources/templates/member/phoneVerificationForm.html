@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>휴대폰 인증</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">휴대폰 인증</h2>
+    <form id="phoneVerificationForm" class="mx-auto" style="max-width: 400px;">
+        <!-- 휴대폰 번호 입력 -->
+        <div class="form-group">
+            <label for="phone">휴대폰 번호</label>
+            <input id="phone" name="phoneNum" placeholder="010-1234-5678" required type="text" class="form-control">
+            <p id="phoneError" class="text-danger mt-1" style="display: none;">유효한 전화번호를 입력하세요.</p>
+        </div>
+
+        <!-- 인증 코드 입력 -->
+        <div id="codeSection" class="form-group" style="display: none;">
+            <label for="verificationCode">인증 코드</label>
+            <input id="verificationCode" placeholder="인증 코드를 입력하세요" type="text" class="form-control">
+            <p id="codeError" class="text-danger mt-1" style="display: none;">유효한 인증 코드를 입력하세요.</p>
+        </div>
+
+        <!-- 버튼들 -->
+        <div class="text-center">
+            <button id="sendCodeBtn" type="button" class="btn btn-primary">인증 코드 보내기</button>
+            <button id="verifyCodeBtn" style="display: none;" type="button" class="btn btn-success">인증 완료</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function(){
+        const csrfToken = $('meta[name="_csrf"]').attr('content');
+        const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+        $('#sendCodeBtn').on('click', function(){
+            const phoneNum = $('#phone').val();
+            if (phoneNum.match(/^010-\d{3,4}-\d{4}$/)) {
+                $.ajax({
+                    url: '/sms/send',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader(csrfHeader, csrfToken); // CSRF 토큰 설정
+                    },
+                    data: JSON.stringify({ phoneNum: phoneNum }),
+                    success: function(response) {
+                        alert(response);
+                        $('#codeSection').show();
+                        $('#sendCodeBtn').hide();
+                        $('#verifyCodeBtn').show();
+                        $('#phoneError').hide();
+                    },
+                    error: function() {
+                        alert('인증 코드 전송 실패. 다시 시도해주세요.');
+                    }
+                });
+            } else {
+                $('#phoneError').show();
+            }
+        });
+
+        $('#verifyCodeBtn').on('click', function(){
+            const verificationCode = $('#verificationCode').val();
+            if (verificationCode.length === 6) {
+                $.ajax({
+                    url: '/sms/verifyCode',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader(csrfHeader, csrfToken);
+                    },
+                    data: JSON.stringify({ verificationCode: verificationCode }),
+                    success: function(response) {
+                        alert('인증 성공! 회원가입 페이지로 이동합니다.');
+                        window.location.href = '/members/new';
+                    },
+                    error: function() {
+                        $('#codeError').show();
+                    }
+                });
+            } else {
+                $('#codeError').show();
+            }
+        });
+    });
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
