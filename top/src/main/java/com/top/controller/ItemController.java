@@ -35,32 +35,31 @@ public class ItemController extends MemberBasicController {
 
     // 메인 상품 상세보기
     @GetMapping(value = "/item/{itemId}")
-    public String itemDtl(Model model, @PathVariable("itemId") Long itemId){
+    public String itemDtl(Model model, @PathVariable("itemId") Long itemId) {
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        Member member = memberService.findByEmail(email);
-        model.addAttribute("member", member); // 1101 성아 추가
+        Member member = null;
+        if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getName())) {
+            String email = authentication.getName();
+            member = memberService.findByEmail(email);
+        }
 
-        // 디버깅 로그 추가
-        System.out.println("리뷰 평균: " + itemFormDto.getAvg());
-        System.out.println("리뷰 개수: " + itemFormDto.getReviewCnt());
-
+        model.addAttribute("member", member);
         model.addAttribute("item", itemFormDto);
         return "item/itemDtl";
     }
 
-    // 상품 등록 페이지
+    // 기존 관리자 기능 (상품 등록, 수정, 삭제 등)은 그대로 유지
     @GetMapping(value = "/admin/item/new")
-    public String itemForm(Model model){
+    public String itemForm(Model model) {
         model.addAttribute("itemFormDto", new ItemFormDto());
         return "item/itemCreate";  // itemCreate.html로 이동
     }
 
-    // 상품 등록 처리
     @PostMapping(value = "/admin/item/new")
     public String itemNew(@Valid ItemFormDto itemFormDto, BindingResult bindingResult,
-                          Model model, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList){
+                          Model model, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
 
         if (bindingResult.hasErrors()) {
             return "item/itemCreate";
@@ -83,7 +82,7 @@ public class ItemController extends MemberBasicController {
 
     // 관리자 상품 상세보기 페이지
     @GetMapping(value = "/admin/item/{itemId}")
-    public String itemRead(@PathVariable("itemId") Long itemId, Model model){
+    public String itemRead(@PathVariable("itemId") Long itemId, Model model) {
         try {
             ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
             model.addAttribute("itemFormDto", itemFormDto);
@@ -97,7 +96,7 @@ public class ItemController extends MemberBasicController {
 
     // 상품 수정 페이지
     @GetMapping(value = "/admin/item/edit/{itemId}")
-    public String itemEdit(@PathVariable("itemId") Long itemId, Model model){
+    public String itemEdit(@PathVariable("itemId") Long itemId, Model model) {
         try {
             ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
             model.addAttribute("itemFormDto", itemFormDto);
@@ -109,8 +108,6 @@ public class ItemController extends MemberBasicController {
         return "item/itemEdit";  // itemEdit.html로 이동
     }
 
-
-    // 상품 수정 처리
     @PostMapping(value = "/admin/item/edit/{itemId}")
     public String itemUpdate(@Valid ItemFormDto itemFormDto, BindingResult bindingResult,
                              @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList, Model model) {
@@ -129,8 +126,6 @@ public class ItemController extends MemberBasicController {
         return "redirect:/admin/items";
     }
 
-
-    // 상품 삭제 처리
     @PostMapping(value = "/admin/item/delete/{itemId}")
     public String itemDelete(@PathVariable("itemId") Long itemId, Model model) throws Exception {
         try {
@@ -142,7 +137,6 @@ public class ItemController extends MemberBasicController {
         return "redirect:/admin/items";
     }
 
-    // 상품 관리 페이지
     @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
     public String itemManage(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page, Model model) {
         Pageable pageable = PageRequest.of(page.orElse(0), 3);
@@ -155,3 +149,4 @@ public class ItemController extends MemberBasicController {
         return "item/itemMng";
     }
 }
+

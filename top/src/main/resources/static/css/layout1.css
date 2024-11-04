@@ -157,17 +157,7 @@ footer > button {
     background: none;
 }
 
-#paynav {
-    text-align: right;
-    position: fixed;
-    bottom: 0;
-    height: 17%;
-    border-top: solid 0.2px rgb(255, 0, 0);
-    background-color: rgb(255, 255, 255);
-    opacity: 0.3;
-    transition: opacity 0.3s ease;
-    padding: 20px;
-}
+
 
 #paynav:hover {
     opacity: 1;
