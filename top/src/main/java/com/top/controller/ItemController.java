@@ -2,23 +2,19 @@ package com.top.controller;
 
 import com.top.entity.Member;
 import com.top.service.MemberService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.Getter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.ui.Model;
 import com.top.dto.ItemFormDto;
-
 import com.top.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
-
 import jakarta.persistence.EntityNotFoundException;
-
 import com.top.dto.ItemSearchDto;
 import com.top.entity.Item;
 import org.springframework.data.domain.Page;
@@ -26,24 +22,22 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
+@Getter
 @Controller
 @RequiredArgsConstructor
 public class ItemController extends MemberBasicController {
 
     private final ItemService itemService;
     private final MemberService memberService;
+    private final HttpSession httpSession;
 
     // 메인 상품 상세보기
     @GetMapping(value = "/item/{itemId}")
     public String itemDtl(Model model, @PathVariable("itemId") Long itemId) {
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Member member = null;
-        if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getName())) {
-            String email = authentication.getName();
-            member = memberService.findByEmail(email);
-        }
+        // 세션에서 Member 객체를 가져옴 (로그인하지 않은 경우 null일 수 있음)
+        Member member = (Member) httpSession.getAttribute("member");
 
         model.addAttribute("member", member);
         model.addAttribute("item", itemFormDto);
@@ -65,7 +59,7 @@ public class ItemController extends MemberBasicController {
             return "item/itemCreate";
         }
 
-        if (itemImgFileList.get(0).isEmpty() && itemFormDto.getNo() == null) { // 1101 성아 getId -> getNo 수정
+        if (itemImgFileList.get(0).isEmpty() && itemFormDto.getNo() == null) {
             model.addAttribute("errorMessage", "첫번째 상품 이미지는 필수 입력 값 입니다.");
             return "item/itemCreate";
         }
@@ -149,4 +143,3 @@ public class ItemController extends MemberBasicController {
         return "item/itemMng";
     }
 }
-

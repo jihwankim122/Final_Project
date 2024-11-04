@@ -78,6 +78,11 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oauth2UserService())
                         )
+                )
+                .sessionManagement(session -> session
+                        .sessionFixation().migrateSession() // 세션 고정 공격 방지
+                        .maximumSessions(1) // 사용자는 하나의 세션만 유지
+                        .maxSessionsPreventsLogin(false) // 이전 세션은 무효화
                 );
         return http.build();
     }
