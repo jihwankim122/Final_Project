@@ -81,7 +81,7 @@ public class Member extends BaseEntity {
          //241023 은열 추가
          member.setGrade(Grade.BRONZE);
         member.setPassword(password);
-        member.setRole(Role.USER);
+        member.setRole(Role.ADMIN);
         return member;
     }
 

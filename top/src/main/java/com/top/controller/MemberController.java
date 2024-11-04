@@ -25,9 +25,22 @@ public class MemberController extends MemberBasicController {
     private final PasswordEncoder passwordEncoder;
     private final HttpSession session; // 세션 주입
 
+    // 회원가입 페이지 이동 시 인증된 전화번호 포함
     @GetMapping(value = "/new")
     public String memberForm(Model model) {
-        model.addAttribute("memberFormDto", new MemberFormDto());
+        MemberFormDto memberFormDto = new MemberFormDto();
+
+        // 세션에서 인증된 전화번호 가져와서 설정
+        String verifiedPhone = (String) session.getAttribute("verifiedPhone");
+        System.out.println("Verified phone: " + verifiedPhone);
+        if (verifiedPhone == null) {
+            // 인증된 전화번호가 없는 경우 휴대폰 인증 페이지로 리다이렉트
+            return "redirect:/sms/verify";
+        }
+
+        // 인증된 전화번호가 있을 경우 폼에 설정
+        memberFormDto.setPhone(verifiedPhone);
+        model.addAttribute("memberFormDto", memberFormDto);
         return "member/memberForm";
     }
 
