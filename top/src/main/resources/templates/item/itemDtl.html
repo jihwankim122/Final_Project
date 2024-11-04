@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout1}" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout1}" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
 <head>
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
@@ -167,8 +169,11 @@
                 });
                 reviewModal.modal('hide');
             });
-        });
 
+            $('#closeModal1, #closeModal2').on('click', function () {
+                $('#myModal').modal('hide'); // 모달 강제 닫기
+            });
+        });
         function calculateTotalPrice() {
             var count = $("#count").val();
             var price = $("#price").val();
@@ -283,14 +288,133 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
-        .mgb-15 { margin-bottom: 15px; }
-        .mgt-30 { margin-top: 30px; }
-        .mgt-50 { margin-top: 50px; }
-        .repImgDiv { margin-right: 15px; width: 65%; text-align: center; }
-        .repImg { width: 100%; height: 400px; }
-        .wd50 { width: 35%; }
-        .starrr { color: #EBE700; }
-        .reviewtable { margin-bottom: 20rem; }
+        .mgb-15 {
+            margin-bottom: 15px;
+        }
+
+        .mgt-30 {
+            margin-top: 30px;
+        }
+
+        .mgt-50 {
+            margin-top: 50px;
+        }
+
+        .repImgDiv {
+            margin-right: 15px;
+            width: 65%;
+            text-align: center;
+        }
+
+        .repImg {
+            width: 100%;
+            height: 400px;
+        }
+
+        .wd50 {
+            width: 35%;
+        }
+
+        .starrr {
+            color: #EBE700;
+        }
+
+        .reviewtable {
+            margin-bottom: 20rem;
+        }
+
+        .mgb-15 {
+            margin-bottom: 15px;
+        }
+
+        .mgt-30 {
+            margin-top: 30px;
+        }
+
+        .mgt-50 {
+            margin-top: 50px;
+        }
+
+        .repImgDiv {
+            margin-right: 15px;
+            height: auto;
+            width: 65%;
+        }
+
+        .repImg {
+            width: 100%;
+            height: 400px;
+        }
+
+        .wd50 {
+            height: auto;
+            width: 35%;
+        }
+
+        .d-flex {
+            padding: 2%;
+        }
+
+        .repImgDiv {
+            text-align: center;
+        }
+
+        .rounded {
+            object-fit: contain;
+        }
+
+        .repImgDiv .rounded {
+            margin: auto;
+            width: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .repImgDiv:hover .rounded {
+            transform: scale(1.5);
+        }
+
+        #paynav {
+            text-align: right;
+            position: fixed;
+            height: 17%;
+            bottom: -150px;
+            border-top: solid 0.2px rgb(255, 0, 0);
+            background-color: rgb(255, 255, 255);
+            opacity: 0.2;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+            margin-bottom: 9rem;
+        }
+
+        .reviewtable {
+            margin-bottom: 20rem;
+        }
+
+        #closeModal2 {
+            position: absolute;
+            right: 1rem;
+            border-radius: 30%;
+            border: solid 0.5px rgb(199, 199, 199);
+            background: none;
+        }
+
+        .addReviewBtn {
+            float: right;
+            background-color: rgb(144, 201, 255);
+            color: rgb(41, 41, 41);
+            font-weight: bold;
+        }
+
+        .reviewList {
+            border-top: solid 0.1px rgb(209, 209, 209);
+            margin-top: 0.5rem;
+        }
+
+        .reviewList .card-body {
+            border-bottom: solid 0.1px rgb(209, 209, 209);
+            padding-bottom: 1rem;
+            padding-top: 1rem;
+        }
     </style>
 </th:block>
 
@@ -303,8 +427,14 @@
             <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
         </div>
         <div class="wd50">
-            <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}" class="badge badge-primary mgb-15">판매중</span>
-            <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}" class="badge btn-danger mgb-15">품절</span>
+            
+            <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}"
+                class="badge badge-primary mgb-15" style="background-color: red; width: 4rem;">판매중</span>
+            <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}"
+                class="badge btn-danger mgb-15" style="background-color: red; width: 4rem;">품절</span>
+                <button type="button" class="btn" th:text="'별점 ' + ${item.avg}">
+                    <span class="badge badge-light" th:text="${item.avg}">0</span>
+                </button>
             <div class="h4" th:text="${item.itemNm}"></div>
             <hr class="my-4">
 
@@ -341,7 +471,8 @@
     </div>
 
     <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
-        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
+        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15"
+            width="800">
     </div>
 
     <div class="container reviewtable">
@@ -369,9 +500,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group reviewbody">
-                        <input type="hidden" class="form-control" name="id" th:value="${member != null ? member.id : ''}">
+                        <input type="hidden" class="form-control" name="id"
+                            th:value="${member != null ? member.id : ''}">
                         <label>이름</label>
-                        <input type="text" class="form-control" name="name" th:value="${member != null ? member.name : '비회원'}" readonly>
+                        <input type="text" class="form-control" name="name"
+                            th:value="${member != null ? member.name : '비회원'}" readonly>
                     </div>
                     <div class="form-group reviewbody" id="divGrade">
                         <label>별점 <span class="grade"></span></label>
@@ -385,7 +518,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModal1">닫기</button>
                     <button type="button" class="btn btn-primary reviewSaveBtn">저장</button>
-                    <button type="button" class="btn btn-warning modifyBtn">수정</button>
+                    <button type="button" class="btn btn-primary modifyBtn">수정</button>
                     <button type="button" class="btn btn-danger removeBtn">삭제</button>
                 </div>
             </div>
@@ -409,4 +542,5 @@
         </div>
     </div>
 </div>
+
 </html>

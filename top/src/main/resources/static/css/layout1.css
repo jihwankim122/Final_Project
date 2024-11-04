@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     color: rgb(0, 0, 0);
-    font-family: "Noto Sans KR", sans-serif;
+    font-family: 'IBM Plex Sans KR', sans-serif;
 }
 
 a {
@@ -75,6 +75,18 @@ span {
     object-fit: cover;
 }
 
+#paynav {
+    text-align: right;
+    position: fixed;
+    bottom: 0;
+    height: 17%;
+    border-top: solid 0.2px rgb(255, 0, 0);
+    background-color: rgb(255, 255, 255);
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+    padding: 20px;
+}
+
 .carousel-inner,
 .carousel-item {
     height: 100%;
@@ -115,7 +127,6 @@ span {
     text-align: center;
     font-size: xx-large;
     margin-bottom: 5rem;
-    border-bottom: solid 0.2px rgb(197, 197, 197);
 }
 
 .section-inner>.row {
