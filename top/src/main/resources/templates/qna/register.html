@@ -2,21 +2,35 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layouts/layout1}">
 
-
+<th:block layout:fragment="css">
+    <style>
+        .Qna-register-label{
+            font-weight: bold;
+            font-size: large;
+            margin: 1rem;
+        }
+        .Qna-register-h1{
+            margin-bottom: 2rem;
+        }
+        .Qna-register-text{
+            width: 80%;
+        }
+    </style>
+</th:block>
 <th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">
 
     <div layout:fragment="content">
         <div class="container">
-            <h1 class="mt-4">QnA</h1>
+            <h1 class="mt-4 Qna-register-h1">QnA 작성</h1>
 
             <form th:action="@{/qna/register}" th:method="post">
                 <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" class="form-control" name="title" placeholder="Enter Title">
+                    <label class="Qna-register-label">제목</label>
+                    <input type="text" class="form-control Qna-register-text" name="title" placeholder=" Title">
                 </div>
-                <div class="form-group">
-                    <label>Content</label>
-                    <textarea class="form-control" rows="5" name="content"></textarea>
+                <div class="form-group" style="margin-bottom: 3rem;">
+                    <label class="Qna-register-label">내용</label>
+                    <textarea class="form-control Qna-register-text" rows="5" name="content" placeholder="content"></textarea>
                 </div>
                 <!--            Writer ----------  ----------------------------------------------------------------------->
                 <!--            <div class="form-group">-->
@@ -24,7 +38,7 @@
                 <!--                <input type="text" class="form-control" name="writer" placeholder="Enter Writer">-->
                 <!--            </div>-->
 
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">이게 버튼이냐</button>
             </form>
         </div>
     </div>
