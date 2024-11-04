@@ -17,11 +17,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -32,15 +28,13 @@ public class SecurityConfig {
     private final MemberRepository memberRepository;
     private final HttpSession httpSession;
     private final CustomLoginSuccessHandler loginSuccessHandler;
-    private final DataSource dataSource;
 
     public SecurityConfig(@Lazy MemberServiceImpl memberService, MemberRepository memberRepository,
-                          HttpSession httpSession, CustomLoginSuccessHandler loginSuccessHandler, DataSource dataSource) {
+                          HttpSession httpSession, CustomLoginSuccessHandler loginSuccessHandler) {
         this.memberService = memberService;
         this.memberRepository = memberRepository;
         this.httpSession = httpSession;
         this.loginSuccessHandler = loginSuccessHandler;
-        this.dataSource = dataSource;
     }
 
     @Bean
@@ -48,46 +42,31 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
-                        .requestMatchers("/", "/members/**", "/item/**", "/item/*", "/images/**").permitAll()
+                        .requestMatchers("/", "/members/**", "/item/**", "/images/**","/reviews/**","/notice/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/sms/**", "/members/login").permitAll()
-                        .anyRequest().authenticated() // 그 외 요청만 인증 필요
+                        .anyRequest().authenticated()
                 )
-
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/members/login") // 기존 설정 유지
-                        .successHandler(loginSuccessHandler) // 기존 설정 유지
-                        .usernameParameter("email") // 기존 설정 유지
-                        .failureUrl("/members/login/error") // 기존 설정 유지
+                        .loginPage("/members/login")
+                        .successHandler(loginSuccessHandler)
+                        .usernameParameter("email")
+                        .failureUrl("/members/login/error")
                 )
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/members/logout")) // 기존 설정 유지
-                        .logoutSuccessUrl("/") // 기존 설정 유지
-                        .invalidateHttpSession(true) // 기존 설정 유지
-                        .deleteCookies("JSESSIONID") // 기존 설정 유지
-                )
-                .rememberMe(rememberMe -> rememberMe
-                        .key("uniqueAndSecretKey") // 보안을 위해 랜덤한 키를 사용
-                        .rememberMeParameter("remember-me") // HTML 폼에서 "remember-me"라는 이름의 필드를 사용
-                        .tokenValiditySeconds(86400) // 1일(86400초) 동안 유지
-                        .tokenRepository(persistentTokenRepository()) // 토큰을 저장할 저장소
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/members/logout"))
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
-                        .loginPage("/members/login") // 기존 설정 유지
-                        .successHandler(loginSuccessHandler) // 기존 설정 유지
-                        .failureUrl("/members/login/error") // 기존 설정 유지
+                        .loginPage("/members/login")
+                        .successHandler(loginSuccessHandler)
+                        .failureUrl("/members/login/error")
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(oauth2UserService()) // 기존 설정 유지
+                                .userService(oauth2UserService())
                         )
                 );
         return http.build();
-    }
-
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
-        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(dataSource);
-        return tokenRepository;
     }
 
     @Bean
@@ -100,3 +79,4 @@ public class SecurityConfig {
         return new CustomOAuth2UserService(memberRepository, httpSession);
     }
 }
+
