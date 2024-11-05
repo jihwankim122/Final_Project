@@ -86,6 +86,16 @@ public class Member extends BaseEntity {
         return member;
     }
 
+    public static Member createSocialMember(String email, String name, String nickname) {
+        Member member = new Member();
+        member.setEmail(email);
+        member.setName(name);
+        member.setNickname(nickname);
+        member.setRole(Role.USER);
+        member.setSocial(true); // 소셜 회원으로 생성
+        return member;
+    }
+
     // 비밀번호를 업데이트하는 메서드
     public void updatePassword(String newPassword, PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(newPassword);

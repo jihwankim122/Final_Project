@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layouts/layout1}">
+      layout:decorate="~{layouts/layout1}">
 
 <head>
     <title>회원 정보 수정</title>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> <!-- 다음 주소 API -->
     <style>
         .hidden {
             display: none;
@@ -19,75 +20,130 @@
         .updatemember {
             margin-top: 5rem;
         }
-        .updatetitle{
+
+        .updatetitle {
             margin-bottom: 4rem;
         }
-        .updatename{
+
+        .updatename {
             font-weight: bold;
         }
-        .form-group{
+
+        .form-group {
             width: 50%;
         }
     </style>
 </th:block>
 
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        // 다음 주소 API 호출
+        function sample6_execDaumPostcode() {
+            var themeObj = {
+                bgColor: "#ECECEC",
+                searchBgColor: "#FFFFFF",
+                contentBgColor: "#FFFFFF",
+                pageBgColor: "#FAFAFA",
+                textColor: "#333333",
+                queryTextColor: "#222222",
+                postcodeTextColor: "#FA4256",
+                emphTextColor: "#008BD3",
+                outlineColor: "#E0E0E0"
+            };
+            new daum.Postcode({
+                oncomplete: function (data) {
+                    var addr = '';
+                    var detailAddr = '';
+
+                    if (data.userSelectedType === 'R') {
+                        addr = data.roadAddress;
+                    } else {
+                        addr = data.jibunAddress;
+                    }
+
+                    if (data.userSelectedType === 'R') {
+                        if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                            detailAddr += data.bname;
+                        }
+                        if (data.buildingName !== '' && data.apartment === 'Y') {
+                            detailAddr += (detailAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                        }
+                        if (detailAddr !== '') {
+                            detailAddr = ' (' + detailAddr + ')';
+                        }
+                        document.getElementById("detailAddress").value = detailAddr;
+                    } else {
+                        document.getElementById("detailAddress").value = '';
+                    }
+
+                    document.getElementById('postcode').value = data.zonecode;
+                    document.getElementById("address").value = addr;
+                    document.getElementById("detailAddress").focus();
+                }
+            }).open();
+        }
+    </script>
+</th:block>
+
 <body>
-    <div layout:fragment="content">
-        <div class="container updatemember">
-            <h1 class="updatetitle">회원 정보 수정</h1>
-            <form th:action="@{/members/update}" th:object="${memberUpdateFormDto}" method="post">
-                <div class="form-group">
-                    <label class="updatename" for="name">이름</label>
-                    <input class="form-control" type="text" id="name" name="name" th:field="*{name}" readonly><br>
-                </div>
-                
-                <div class="hidden">
-                    <label for="username">아이디</label>
-                    <input class="form-control" type="text" id="username" name="username" th:field="*{username}">
-                </div>
-                <div class="form-group">
+<div layout:fragment="content">
+    <div class="container updatemember">
+        <h1 class="updatetitle">회원 정보 수정</h1>
+        <form th:action="@{/members/update}" th:object="${memberUpdateFormDto}" method="post">
+            <div class="form-group">
+                <label class="updatename" for="name">이름</label>
+                <input class="form-control" type="text" id="name" name="name" th:field="*{name}" readonly><br>
+            </div>
 
-                    <label class="updatename" for="email">이메일</label>
-                    <input class="form-control" type="email" id="email" name="email" th:field="*{email}" readonly><br>
-                </div>
-                <div class="form-group">
+            <div class="hidden">
+                <label for="username">아이디</label>
+                <input class="form-control" type="text" id="username" name="username" th:field="*{username}">
+            </div>
+            <div class="form-group">
+                <label class="updatename" for="email">이메일</label>
+                <input class="form-control" type="email" id="email" name="email" th:field="*{email}" readonly><br>
+            </div>
+            <div class="form-group">
+                <label class="updatename" for="password">비밀번호</label>
+                <input class="form-control" type="password" id="password" name="password" th:field="*{password}"><br>
+            </div>
+            <div class="form-group">
+                <label class="updatename" for="confirmPassword">비밀번호 확인</label>
+                <input class="form-control" type="password" id="confirmPassword" name="confirmPassword" th:field="*{confirmPassword}"><br>
+            </div>
 
-                    <label class="updatename" for="password">비밀번호</label>
-                    <input class="form-control" type="password" id="password" name="password" th:field="*{password}"><br>
+            <div class="form-group">
+                <label class="updatename" for="postcode">우편번호</label>
+                <div class="input-group">
+                    <input type="text" id="postcode" th:field="*{postcode}" class="form-control"
+                           placeholder="우편번호">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-secondary" onclick="sample6_execDaumPostcode()">우편번호
+                            찾기</button>
+                    </div>
                 </div>
-                <div class="form-group">
+            </div>
 
-                    <label class="updatename" for="confirmPassword">비밀번호 확인</label>
-                    <input class="form-control" type="password" id="confirmPassword" name="confirmPassword" th:field="*{confirmPassword}"><br>
-                </div>
-                <div class="form-group">
-
-                    <label class="updatename" for="address">주소</label>
-                    <input class="form-control" type="text" id="address" name="address" th:field="*{address}"><br>
-                </div>
-                <div class="form-group">
-
-                    <label class="updatename" for="postcode">우편번호</label>
-                    <input class="form-control" type="text" id="postcode" name="postcode" th:field="*{postcode}"><br>
-                </div>
-                <div class="form-group">
-
-                    <label class="updatename" for="detailAddress">상세주소</label>
-                    <input class="form-control" type="text" id="detailAddress" name="detailAddress" th:field="*{detailAddress}"><br>
-                </div>
-                <div class="form-group">
-
-                    <label class="updatename" for="phone">전화번호</label>
-                    <input class="form-control" type="text" id="phone" name="phone" th:field="*{phone}"readonly><br>
-                </div>
-                <div class="form-group">
-
-                    <button class="btn" type="submit">수정</button>
-                    <button class="btn" type="button" onclick="location.href='/'">취소</button>
-                </div>
-            </form>
-        </div>
+            <div class="form-group">
+                <label class="updatename" for="address">주소</label>
+                <input class="form-control" type="text" id="address" name="address" th:field="*{address}"><br>
+            </div>
+            <div class="form-group">
+                <label class="updatename" for="detailAddress">상세주소</label>
+                <input class="form-control" type="text" id="detailAddress" name="detailAddress"
+                       th:field="*{detailAddress}"><br>
+            </div>
+            <div class="form-group">
+                <label class="updatename" for="phone">전화번호</label>
+                <input class="form-control" type="text" id="phone" name="phone" th:field="*{phone}" readonly><br>
+            </div>
+            <div class="form-group">
+                <button class="btn" type="submit">수정</button>
+                <button class="btn" type="button" onclick="location.href='/'">취소</button>
+            </div>
+        </form>
     </div>
+</div>
 </body>
 
 </html>

@@ -1,40 +1,164 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
 <head>
   <title>추가 정보 입력</title>
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> <!-- 다음 주소 API -->
   <style>
-    .form-group {
-        width: 50%;
-        margin: 20px 0;
+    .hidden {
+      display: none;
     }
-    .btn {
-        margin-top: 20px;
+
+    .updatemember {
+      margin-top: 5rem;
+    }
+
+    .updatetitle {
+      margin-bottom: 4rem;
+      font-weight: bold;
+    }
+
+    .updatename {
+      font-weight: bold;
+    }
+
+    .form-group {
+      width: 50%;
+      margin: 1.5rem 0;
+    }
+
+    .container {
+      margin-top: 5rem;
     }
   </style>
+  <script>
+    function sample6_execDaumPostcode() {
+      var themeObj = {
+        bgColor: "#ECECEC",
+        searchBgColor: "#FFFFFF",
+        contentBgColor: "#FFFFFF",
+        pageBgColor: "#FAFAFA",
+        textColor: "#333333",
+        queryTextColor: "#222222",
+        postcodeTextColor: "#FA4256",
+        emphTextColor: "#008BD3",
+        outlineColor: "#E0E0E0"
+      };
+      new daum.Postcode({
+        oncomplete: function (data) {
+          var addr = '';
+          var detailAddr = '';
+
+          if (data.userSelectedType === 'R') {
+            addr = data.roadAddress;
+          } else {
+            addr = data.jibunAddress;
+          }
+
+          if (data.userSelectedType === 'R') {
+            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+              detailAddr += data.bname;
+            }
+            if (data.buildingName !== '' && data.apartment === 'Y') {
+              detailAddr += (detailAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+            }
+            if (detailAddr !== '') {
+              detailAddr = ' (' + detailAddr + ')';
+            }
+            document.getElementById("detailAddress").value = detailAddr;
+          } else {
+            document.getElementById("detailAddress").value = '';
+          }
+
+          document.getElementById('postcode').value = data.zonecode;
+          document.getElementById("address").value = addr;
+          document.getElementById("detailAddress").focus();
+        }
+      }).open();
+    }
+
+    // 휴대폰 인증 요청 함수
+    function requestPhoneVerification() {
+      const phone = document.getElementById("phone").value;
+      if (!phone) {
+        alert("전화번호를 입력하세요.");
+        return;
+      }
+      // 실제 API 요청을 보내는 로직이 필요합니다.
+      alert("인증번호가 발송되었습니다.");
+
+      // 인증 코드 입력 필드 표시
+      document.getElementById("verificationCodeField").style.display = "block";
+    }
+
+    // 인증 코드 확인 함수
+    function verifyCode() {
+      const verificationCode = document.getElementById("verificationCode").value;
+      if (!verificationCode) {
+        alert("인증 코드를 입력하세요.");
+        return;
+      }
+      // 실제 인증 코드 확인 로직이 필요합니다.
+      alert("인증이 완료되었습니다.");
+    }
+  </script>
 </head>
+
 <body>
-<div class="container">
-  <h1>추가 정보 입력</h1>
-  <form th:action="@{/members/add-social-info}" method="post" th:object="${memberUpdateFormDto}">
-    <div class="form-group">
-      <label for="phone">전화번호</label>
-      <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}" required>
-    </div>
-    <div class="form-group">
-      <label for="address">주소</label>
-      <input type="text" class="form-control" id="address" name="address" th:field="*{address}" required>
-    </div>
-    <div class="form-group">
-      <label for="postcode">우편번호</label>
-      <input type="text" class="form-control" id="postcode" name="postcode" th:field="*{postcode}" required>
-    </div>
-    <div class="form-group">
-      <label for="detailAddress">상세 주소</label>
-      <input type="text" class="form-control" id="detailAddress" name="detailAddress" th:field="*{detailAddress}">
-    </div>
-    <button type="submit" class="btn btn-primary">저장</button>
-    <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">취소</button>
-  </form>
+<div layout:fragment="content">
+  <div class="container updatemember">
+    <h1 class="updatetitle">추가 정보 입력</h1>
+    <form th:action="@{/members/add-social-info}" method="post" th:object="${memberUpdateFormDto}">
+      <!-- 전화번호 및 인증 버튼 -->
+      <div class="form-group">
+        <label class="updatename" for="phone">전화번호</label>
+        <div class="input-group">
+          <input type="text" class="form-control" id="phone" name="phone" th:field="*{phone}" required>
+          <div class="input-group-append">
+            <button type="button" class="btn btn-secondary" onclick="requestPhoneVerification()">인증 요청</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 인증 코드 입력 필드 (인증 요청 후 표시) -->
+      <div class="form-group hidden" id="verificationCodeField">
+        <label class="updatename" for="verificationCode">인증 코드</label>
+        <div class="input-group">
+          <input type="text" class="form-control" id="verificationCode" placeholder="인증 코드를 입력하세요">
+          <div class="input-group-append">
+            <button type="button" class="btn btn-primary" onclick="verifyCode()">인증 확인</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="updatename" for="postcode">우편번호</label>
+        <div class="input-group">
+          <input type="text" class="form-control" id="postcode" name="postcode" th:field="*{postcode}" required>
+          <div class="input-group-append">
+            <button type="button" class="btn btn-secondary" onclick="sample6_execDaumPostcode()">우편번호 찾기</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="updatename" for="address">주소</label>
+        <input type="text" class="form-control" id="address" name="address" th:field="*{address}" required>
+      </div>
+
+      <div class="form-group">
+        <label class="updatename" for="detailAddress">상세 주소</label>
+        <input type="text" class="form-control" id="detailAddress" name="detailAddress" th:field="*{detailAddress}">
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">저장</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">취소</button>
+      </div>
+    </form>
+  </div>
 </div>
 </body>
+
 </html>
