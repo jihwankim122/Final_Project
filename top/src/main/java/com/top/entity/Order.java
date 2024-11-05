@@ -20,7 +20,7 @@ public class Order extends BaseEntity{
     @Column(name = "order_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER) // 241105 은열 수정 패치타입을 LAZY> EAGER 즉시 불러오는걸로 변경
     @JoinColumn(name = "member_id")
     private Member member;
 

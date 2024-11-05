@@ -88,8 +88,8 @@
       <h4>
         <p th:text="'주문번호 ' + ${order.orderId}"></p>
         <p th:text="${order.orderDate}"></p>
-        <p th:text="${order.member.id} + '님의 주문'"></p>
-<!--        order.member.name이 기존설정이었으나 name으로 사용시 오류발생. id를 제외한 다른 필드는 안불러와짐-->
+        <p th:text="${order.member.name} + '님의 주문'"></p>
+
       </h4>
 
       <div class="ml-3">
@@ -115,14 +115,16 @@
         <div class="align-self-center w-75">
           <span th:text="${orderItem.itemNm}" class="fs24 font-weight-bold"></span>
           <div class="fs18 font-weight-light">
-            <span th:text="${orderItem.orderPrice} +'원'"></span>
-            <span th:text="${orderItem.count} +'개'"></span>
+            <div>상품가격 : <span th:text="${orderItem.orderPrice} +'원'"></span></div>
+            <div> 주문 갯수 : <span th:text="${orderItem.count} +'개'"></span></div>
           </div>
         </div>
       </div>
+      <div>VIP 할인 가격 : <span th:text="${order.discount} +'원'"></span></div>
+      <div>최종 가격 : <span th:text="${order.finalPrice} +'원'"></span></div>
     </div>
-
   </div>
+
 
   <!-- 페이지네이션 -->
   <div th:with="start=${(orders.number/maxPage)*maxPage + 1}, end=(${(orders.totalPages == 0) ? 1 : (start + (maxPage - 1) < orders.totalPages ? start + (maxPage - 1) : orders.totalPages)})" >
