@@ -1,6 +1,7 @@
 package com.top.controller;
 
 import com.top.dto.MemberFormDto;
+import com.top.repository.MemberRepository;
 import com.top.security.dto.MemberUpdateFormDto;
 import com.top.entity.Member;
 import com.top.service.MemberServiceImpl;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
+import java.security.Principal;
+
 @RequestMapping("/members")
 @Controller
 @RequiredArgsConstructor
@@ -23,22 +26,18 @@ public class MemberController extends MemberBasicController {
 
     private final MemberServiceImpl memberService;
     private final PasswordEncoder passwordEncoder;
-    private final HttpSession session; // 세션 주입
+    private final HttpSession session;
+    private final MemberRepository memberRepository;
 
-    // 회원가입 페이지 이동 시 인증된 전화번호 포함
     @GetMapping(value = "/new")
     public String memberForm(Model model) {
         MemberFormDto memberFormDto = new MemberFormDto();
-
-        // 세션에서 인증된 전화번호 가져와서 설정
         String verifiedPhone = (String) session.getAttribute("verifiedPhone");
-        System.out.println("Verified phone: " + verifiedPhone);
+
         if (verifiedPhone == null) {
-            // 인증된 전화번호가 없는 경우 휴대폰 인증 페이지로 리다이렉트
             return "redirect:/sms/verify";
         }
 
-        // 인증된 전화번호가 있을 경우 폼에 설정
         memberFormDto.setPhone(verifiedPhone);
         model.addAttribute("memberFormDto", memberFormDto);
         return "member/memberForm";
@@ -72,49 +71,66 @@ public class MemberController extends MemberBasicController {
         return "/member/memberLoginForm";
     }
 
-    // SecurityContextHolder 사용해 로그인된 사용자의 이메일 가져오기
     private String getCurrentUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
     }
 
-    // 비밀번호 확인 페이지로 이동
     @GetMapping(value = "/check-password")
-    public String checkPasswordForm() {
-        return "member/checkPassword";
+    public String checkPasswordForm(HttpSession session, Principal principal) {
+        // 세션에서 isSocialUser 플래그를 확인
+        System.out.println(principal.getName());
+        Member member=memberRepository.findByEmail(principal.getName());
+
+
+//        Boolean isSocialUser = (Boolean) session.getAttribute("isSocialUser");
+        // 소셜 회원이라면 비밀번호 입력 없이 바로 추가 정보 입력 페이지로 리다이렉트
+        if (member.isSocial()) {
+            return "redirect:/members/add-social-info";
+        }
+        return "member/checkPassword"; // 일반 회원은 비밀번호 확인 페이지로 이동
     }
 
+    // 비밀번호 확인 처리
     @PostMapping(value = "/check-password")
-    public String checkPassword(@RequestParam("password") String password, Model model) {
+    public String checkPassword(@RequestParam(value = "password", required = false) String password, Model model, HttpSession session) {
+        Boolean isSocialUser = (Boolean) session.getAttribute("isSocialUser");
+
+        if (Boolean.TRUE.equals(isSocialUser)) {
+            return "redirect:/members/add-social-info";
+        }
+
         String email = getCurrentUserEmail();
         Member member = memberService.findByEmail(email);
 
-        if (member == null || !passwordEncoder.matches(password, member.getPassword())) {
+        if (member == null) {
+            model.addAttribute("errorMessage", "회원 정보를 찾을 수 없습니다.");
+            return "member/checkPassword";
+        }
+
+        if (!passwordEncoder.matches(password, member.getPassword())) {
             model.addAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
             return "member/checkPassword";
         }
 
-        // 비밀번호가 일치하면 세션에 확인 상태 저장 후 회원 정보 수정 페이지로 이동
         session.setAttribute("passwordVerified", true);
-        if (member.isSocial()) {
-            return "redirect:/members/add-social-info"; // 소셜 회원 경로
-        } else {
-            return "redirect:/members/update"; // 로컬 회원 경로
-        }
+        return "redirect:/members/update";
     }
 
+    @GetMapping("/update")
+    public String updateMemberForm(Model model, HttpSession session) {
+        Boolean isSocialUser = (Boolean) session.getAttribute("isSocialUser");
+        String email = getCurrentUserEmail();
+        Member member = memberService.findByEmail(email);
 
+        if (Boolean.TRUE.equals(isSocialUser)) {
+            return "redirect:/members/add-social-info";
+        }
 
-
-    @GetMapping(value = "/update")
-    public String updateMemberForm(Model model) {
         Boolean passwordVerified = (Boolean) session.getAttribute("passwordVerified");
         if (passwordVerified == null || !passwordVerified) {
             return "redirect:/members/check-password";
         }
-
-        String email = getCurrentUserEmail();
-        Member member = memberService.findByEmail(email);
 
         MemberUpdateFormDto formDto = new MemberUpdateFormDto();
         formDto.setName(member.getName());
@@ -128,6 +144,8 @@ public class MemberController extends MemberBasicController {
         model.addAttribute("memberUpdateFormDto", formDto);
         return "member/updateMemberForm";
     }
+
+
 
     @PostMapping(value = "/update")
     public String updateMember(@Valid MemberUpdateFormDto formDto, BindingResult bindingResult, Model model) {
@@ -154,12 +172,10 @@ public class MemberController extends MemberBasicController {
             return "member/updateMemberForm";
         }
 
-        // 수정 완료 후 세션의 비밀번호 확인 상태 초기화
         session.removeAttribute("passwordVerified");
         return "redirect:/";
     }
 
-    //1104 유진 수정
     @GetMapping("/add-social-info")
     public String addSocialInfoForm(Model model) {
         model.addAttribute("memberUpdateFormDto", new MemberUpdateFormDto());
@@ -167,10 +183,11 @@ public class MemberController extends MemberBasicController {
     }
 
     @PostMapping("/add-social-info")
-    public String addSocialInfo(@Valid MemberUpdateFormDto formDto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "member/addSocialInfoForm";
-        }
+//    public String addSocialInfo(@Valid MemberUpdateFormDto formDto, BindingResult bindingResult, Model model) {
+    public String addSocialInfo(MemberUpdateFormDto formDto, Model model) {
+//        if (bindingResult.hasErrors()) {
+//            return "member/addSocialInfoForm";
+//        }
 
         String email = getCurrentUserEmail();
         Member member = memberService.findByEmail(email);
@@ -183,5 +200,4 @@ public class MemberController extends MemberBasicController {
 
         return "redirect:/";
     }
-
 }

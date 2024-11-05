@@ -32,7 +32,8 @@ public class ClubAuthMemberDto implements OAuth2User {
     @Override
     public String getName() {
         // 카카오 로그인일 경우 닉네임 반환, 아니면 이메일 반환
-        return isSocial ? nickname : email;
+//        return isSocial ? nickname : email;
+        return email;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.top.service;
 
+import com.top.constant.Grade;
 import com.top.entity.Member;
 import com.top.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -23,6 +26,20 @@ public class MemberServiceImpl implements MemberService {
     public Member saveMember(Member member) {
         validateDuplicateMember(member); // 중복 회원 검증
         return memberRepository.save(member);
+    }
+
+    //    241104은열 추가 모든 회원 조회
+    @Override
+    public List<Member> getAllMembers() {
+        return memberRepository.findAll(); // JpaRepository의 findAll() 사용
+    }
+//    241104은열 추가 Grade변경
+    @Override
+    public void updateMemberGrade(Long memberId, String grade) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+        member.setGrade(Grade.valueOf(grade)); // Enum 변환
+        memberRepository.save(member); // 변경사항 저장
     }
 
     // 중복 회원 검증

@@ -46,7 +46,7 @@ public class Member extends BaseEntity {
     private Role role; // 회원 권한 필드
 
     //241101 은열 추가
-    private double totalSpentAmount; // 누적 주문 금액 필드
+    private Long totalSpentAmount; // 누적 주문 금액 필드
 
     private boolean isSocial; // 소셜 로그인 여부 필드
 
@@ -83,6 +83,16 @@ public class Member extends BaseEntity {
         member.setGrade(Grade.BRONZE); // 기본 등급 설정
         member.setRole(Role.ADMIN); // 기본 권한 설정
         member.setSocial(false); // 일반 회원으로 생성
+        return member;
+    }
+
+    public static Member createSocialMember(String email, String name, String nickname) {
+        Member member = new Member();
+        member.setEmail(email);
+        member.setName(name);
+        member.setNickname(nickname);
+        member.setRole(Role.USER);
+        member.setSocial(true); // 소셜 회원으로 생성
         return member;
     }
 

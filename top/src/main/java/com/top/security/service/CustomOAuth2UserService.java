@@ -1,5 +1,6 @@
 package com.top.security.service;
 
+import com.top.constant.Grade;
 import com.top.constant.Role;
 import com.top.entity.Member;
 import com.top.repository.MemberRepository;
@@ -80,13 +81,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return extractName(provider, attributes);
     }
 
+    // CustomOAuth2UserService.java
     private Member findOrCreateMember(String email, String name, String nickname) {
         Member member = memberRepository.findByEmail(email);
 
         if (member == null) {
-            member = createNewMember(email, name, nickname);
+            // 소셜 회원 생성 메서드 사용
+            member = Member.createSocialMember(email, name, nickname);
+            member.setSocial(true);
             memberRepository.save(member);
-            System.out.println("Creating new member with email: " + email);
+            System.out.println("Creating new social member with email: " + email);
         }
 
         return member;
@@ -97,6 +101,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         member.setEmail(email);
         member.setName(name);
         member.setNickname(nickname);
+        //241105 은열 추가
+        member.setGrade(Grade.BRONZE);
         member.setRole(Role.USER);
         member.setPassword(null);
         member.setAddress(null);
