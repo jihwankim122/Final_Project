@@ -12,6 +12,7 @@ import com.top.entity.Qna;
 import com.top.repository.MemberRepository;
 import com.top.repository.QnaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ import java.util.function.Function;
 
 @Service
 @Log4j2
+@Transactional
 @RequiredArgsConstructor
 public class QnaServiceImpl implements QnaService {
 
