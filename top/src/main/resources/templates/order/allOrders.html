@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
+      layout:decorate="~{layouts/adminLayout}">
 
 <head>
   <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -88,7 +88,8 @@
       <h4>
         <p th:text="'주문번호 ' + ${order.orderId}"></p>
         <p th:text="${order.orderDate}"></p>
-        <p th:text="${order.member.name} + '님의 주문'"></p>
+        <p th:text="${order.member.id} + '님의 주문'"></p>
+<!--        order.member.name이 기존설정이었으나 name으로 사용시 오류발생. id를 제외한 다른 필드는 안불러와짐-->
       </h4>
 
       <div class="ml-3">
