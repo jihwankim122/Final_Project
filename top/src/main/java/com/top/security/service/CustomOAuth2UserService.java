@@ -1,5 +1,6 @@
 package com.top.security.service;
 
+import com.top.constant.Grade;
 import com.top.constant.Role;
 import com.top.entity.Member;
 import com.top.repository.MemberRepository;
@@ -94,4 +95,24 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         return member;
     }
+<<<<<<< HEAD
+=======
+
+    private Member createNewMember(String email, String name, String nickname) {
+        Member member = new Member();
+        member.setEmail(email);
+        member.setName(name);
+        member.setNickname(nickname);
+        //241105 은열 추가
+        member.setGrade(Grade.BRONZE);
+        member.setRole(Role.USER);
+        member.setPassword(null);
+        member.setAddress(null);
+        member.setCreatedBy(null);
+        member.setModifiedBy(null);
+        member.setSocial(true);
+        return member;
+    }
+
+>>>>>>> 365b9709afd86102be6fe9df6089353872beac92
 }

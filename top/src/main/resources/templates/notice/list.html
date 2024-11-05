@@ -5,7 +5,7 @@
       layout:decorate="~{layouts/layout1}">
 
 <!--  <th:block th:fragment="content">-->
-<div layout:fragment="content">
+  <div layout:fragment="content">
 <h1 class="mt-4">NOTICE
     <span sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
     <a th:href="@{/notice/register}">

@@ -46,7 +46,7 @@ public class Member extends BaseEntity {
     private Role role; // 회원 권한 필드
 
     //241101 은열 추가
-    private double totalSpentAmount; // 누적 주문 금액 필드
+    private Long totalSpentAmount; // 누적 주문 금액 필드
 
     private boolean isSocial; // 소셜 로그인 여부 필드
 

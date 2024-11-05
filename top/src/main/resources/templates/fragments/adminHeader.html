@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:fragment="adminHeader">
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-sm">
+
+            <div class="Logo">
+                <a href="/"><img th:src="@{/img/Logo.png}" /></a> <!-- 메인으로 이동하는 링크 추가 -->
+            </div>
+
+
+            <div id="maincetegori" class="container-fluid">
+                <div class="container" style="width:98%">
+                    <div class="btn-group">
+                        <button type="button" class="btn login" onclick="location.href='/admin/item/new'">상품등록</button>
+                        <button type="button" class="btn login" onclick="location.href='/admin/items'">상품관리</button>
+                        <button type="button" class="btn login" onclick="location.href='/admin/memberinfo'">회원정보관리</button>
+                        <button type="button" class="btn login" onclick="location.href='/admin/orders'">회원주문이력</button>
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+</html>
