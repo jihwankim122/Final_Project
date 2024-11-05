@@ -95,8 +95,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         return member;
     }
-<<<<<<< HEAD
-=======
 
     private Member createNewMember(String email, String name, String nickname) {
         Member member = new Member();
@@ -113,6 +111,4 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         member.setSocial(true);
         return member;
     }
-
->>>>>>> 365b9709afd86102be6fe9df6089353872beac92
 }

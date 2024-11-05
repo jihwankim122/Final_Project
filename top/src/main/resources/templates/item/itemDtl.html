@@ -419,6 +419,7 @@
 </th:block>
 
 <div layout:fragment="content">
+
     <input type="hidden" id="itemId" th:value="${item.no}">
     <input type="hidden" id="itemNm" th:value="${item.itemNm}">
 
@@ -458,6 +459,7 @@
             <div th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}" class="text-left">
                 <button type="button" class="btn-buy paybt" onclick="addCart()">장바구니 담기</button>
                 <button type="button" class="btn-buy paybt" onclick="order()">주문하기</button>
+
             </div>
         </div>
     </div>

@@ -3,6 +3,8 @@ package com.top.controller;
 import com.top.entity.Member;
 import com.top.service.MemberService;
 import lombok.Getter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
@@ -37,8 +39,16 @@ public class ItemController extends MemberBasicController {
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
 
         // 세션에서 Member 객체를 가져옴 (로그인하지 않은 경우 null일 수 있음)
-        Member member = (Member) httpSession.getAttribute("member");
+        //Member member = (Member) httpSession.getAttribute("member");
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Member member = null;
+        if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getName())) {
+            String email = authentication.getName();
+            member = memberService.findByEmail(email);
+        }
+
+        
         model.addAttribute("member", member);
         model.addAttribute("item", itemFormDto);
         return "item/itemDtl";

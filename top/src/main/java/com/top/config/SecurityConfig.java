@@ -48,7 +48,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
-                        .requestMatchers("/", "/members/**", "/item/**", "/images/**","/reviews/**","/notice/**").permitAll()
+                        .requestMatchers("/", "/members/**", "/item/**", "/images/**","/reviews/**","/notice/**","/starrr.js").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/sms/**", "/members/login").permitAll() // 새로 추가된 접근 허용 경로
                         .anyRequest().authenticated()
