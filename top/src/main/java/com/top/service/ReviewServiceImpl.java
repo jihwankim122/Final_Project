@@ -21,8 +21,9 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final MemberRepository memberRepository;  // MemberRepository 추가
-    private final ItemRepository itemRepository;
+    private final MemberRepository memberRepository; // 1105 유진 추가
+    private final ItemRepository itemRepository; // 1105 유진 추가
+
 
 
     @Override
@@ -36,6 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .collect(Collectors.toList());
     }
 
+    // 1105 유진 수정
     @Override
     public Long register(ReviewDto itemReviewDto) {
         // member와 item을 조회하여 Review 객체에 설정
@@ -57,7 +59,6 @@ public class ReviewServiceImpl implements ReviewService {
                 .text(dto.getText())
                 .build();
     }
-
 
     @Override
     public void modify(ReviewDto itemReviewDto) {

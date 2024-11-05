@@ -41,14 +41,17 @@ public class ItemController extends MemberBasicController {
         // 세션에서 Member 객체를 가져옴 (로그인하지 않은 경우 null일 수 있음)
         //Member member = (Member) httpSession.getAttribute("member");
 
+        // 1105 성아 수정
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Member member = null;
         if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getName())) {
             String email = authentication.getName();
             member = memberService.findByEmail(email);
+        } else {
+            // 세션에서 Member 객체를 가져옴 (로그인하지 않은 경우 null일 수 있음)
+            member = (Member) httpSession.getAttribute("member");
         }
 
-        
         model.addAttribute("member", member);
         model.addAttribute("item", itemFormDto);
         return "item/itemDtl";

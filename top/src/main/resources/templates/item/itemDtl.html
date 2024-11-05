@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layouts/layout1}" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout1}">
 
 <head>
     <meta name="_csrf" th:content="${_csrf.token}" />
@@ -87,7 +86,9 @@
                     var str = "";
 
                     $.each(arr, function (idx, review) {
-                        str += '<div style="cursor:pointer" class="card-body" data-reviewnum=' + review.reviewnum + '>';
+<!--                        str += '<div style="cursor:pointer" class="card-body" data-reviewnum=' + review.reviewnum + '>';-->
+                        // 1105 성아 수정 // data-id 속성 추가
+                        str += '<div style="cursor:pointer" class="card-body" data-reviewnum="' + review.reviewnum + '" data-id="' + review.id + '">';
                         str += '<h5 class="card-title">' + review.text + ' <span class="reviewgrade" data-grade2=' + review.grade + '></span></h5>';
                         str += '<h6 class="card-subtitle mb-2 text-muted">' + review.name + '</h6>';
                         str += '<p class="card-text">' + new Date(review.regTime).toLocaleString() + '</p>';
@@ -105,30 +106,38 @@
 
             var reviewnum;
 
+            // 1105 성아 수정
             $(".reviewList").on("click", ".card-body", function () {
-                $(".reviewSaveBtn").hide();
-                $(".removeBtn, .modifyBtn").show();
+                var targetReview = $(this); // 클릭한 리뷰
+                var reviewId = targetReview.data("id");
+                if(id === reviewId) {
+                    $(".reviewSaveBtn").hide();
+                    $(".removeBtn, .modifyBtn").show();
 
-                var targetReview = $(this);
+                    var targetReview = $(this);
 
-                reviewnum = targetReview.data("reviewnum");
-                inputText.val(targetReview.find('.card-title').text().trim());
-                var grade2 = $(this).find(".reviewgrade").data("grade2");
+                    reviewnum = targetReview.data("reviewnum");
+                    inputText.val(targetReview.find('.card-title').text().trim());
+                    var grade2 = $(this).find(".reviewgrade").data("grade2");
 
-                var star = $(".starrr").clone();
-                $(".starrr").remove();
-                $("#divGrade").append(star);
+                    var star = $(".starrr").clone();
+                    $(".starrr").remove();
+                    $("#divGrade").append(star);
 
-                $(".starrr").starrr({
-                    rating: grade2,
-                    change: function (e, value) {
-                        if (value) {
-                            grade = value;
+                    $(".starrr").starrr({
+                        rating: grade2,
+                        change: function (e, value) {
+                            if (value) {
+                                grade = value;
+                            }
                         }
-                    }
-                });
+                    });
 
-                $('.reviewModal').modal('show');
+                    $('.reviewModal').modal('show');
+                }  else {
+                    // memberId와 reviewId가 다를 경우 처리할 로직 (예: 경고 메시지 표시)
+                    alert("리뷰 작성자만 수정 및 삭제가 가능합니다.");
+                }
             });
 
             $(".modifyBtn").on("click", function () {
@@ -170,10 +179,13 @@
                 reviewModal.modal('hide');
             });
 
-            $('#closeModal1, #closeModal2').on('click', function () {
+            $('#closeModal1, #closeModal2').on('click', function() {
                 $('#myModal').modal('hide'); // 모달 강제 닫기
             });
         });
+
+
+
         function calculateTotalPrice() {
             var count = $("#count").val();
             var price = $("#price").val();
@@ -485,9 +497,9 @@
             <span class="badge badge-light" th:text="${item.avg}">0</span>
         </button>
 
-        <sec:authorize access="isAuthenticated()">
-            <button type="button" class="btn addReviewBtn">리뷰 작성</button>
-        </sec:authorize>
+        <!-- 1105 성아 수정 -->
+        <button type="button" class="btn addReviewBtn" th:if="${member != null}">리뷰 작성</button>
+
         <div class="list-group reviewList"></div>
     </div>
 
