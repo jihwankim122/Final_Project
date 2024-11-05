@@ -1,5 +1,8 @@
 package com.top.service;
 
+import com.top.entity.Member;
+import com.top.repository.ItemRepository;
+import com.top.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,8 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final MemberRepository memberRepository; // 1105 유진 추가
+    private final ItemRepository itemRepository; // 1105 유진 추가
 
 
     @Override
@@ -31,11 +36,27 @@ public class ReviewServiceImpl implements ReviewService {
                 .collect(Collectors.toList());
     }
 
+    // 1105 유진 수정
     @Override
     public Long register(ReviewDto itemReviewDto) {
-        Review itemReview = dtoToEntity(itemReviewDto);
+        // member와 item을 조회하여 Review 객체에 설정
+        Member member = memberRepository.findById(itemReviewDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 회원 ID입니다."));
+        Item item = itemRepository.findById(itemReviewDto.getNo())
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 상품 ID입니다."));
+
+        Review itemReview = dtoToEntity(itemReviewDto, member, item);
         reviewRepository.save(itemReview);
         return itemReview.getReviewnum();
+    }
+
+    private Review dtoToEntity(ReviewDto dto, Member member, Item item) {
+        return Review.builder()
+                .member(member)
+                .item(item)
+                .grade(dto.getGrade())
+                .text(dto.getText())
+                .build();
     }
 
     @Override

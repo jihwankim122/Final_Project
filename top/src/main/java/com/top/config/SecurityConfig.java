@@ -47,7 +47,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/img/**", "/starrr.js").permitAll() // 1105 성아 추가
                         .requestMatchers("/", "/members/**", "/item/**", "/images/**","/reviews/**","/notice/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/sms/**", "/members/login").permitAll() // 새로 추가된 접근 허용 경로

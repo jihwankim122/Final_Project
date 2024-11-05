@@ -75,7 +75,7 @@ public class ItemServiceImpl implements ItemService {
         // 1101 성아 리뷰 평균과 개수 쿼리 추가
         Double avg = itemRepository.getAverageRating(itemId);
         Integer reviewCnt = itemRepository.getReviewCount(itemId);
-        itemFormDto.setAvg(avg != null ? avg : 0.0);
+        itemFormDto.setAvg((avg != null) ? Math.round(avg * 100) / 100.0 : 0.0); // 1105 성아 수정 // 소수점 둘째 자리까지 반올림
         itemFormDto.setReviewCnt(reviewCnt != null ? reviewCnt : 0);
 
         return itemFormDto;
