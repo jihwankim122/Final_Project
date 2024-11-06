@@ -294,6 +294,44 @@
                 }
             });
         }
+
+        <!--      05Nov            의빈추가-->
+        function addWishlist() {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            var url = "/wishlist";  // 위시리스트 추가 요청 URL
+            var paramData = {
+                itemId: $("#itemId").val(),  // 상품 ID
+                itemNm: $("#itemNm").val()   // 상품명
+            };
+
+            var param = JSON.stringify(paramData);  // 요청 데이터는 반드시 JSON 형식이어야 합니다.
+
+            // AJAX 요청
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/json",  // 서버에 JSON 형식으로 전송
+                data: param,  // 데이터는 JSON 형식으로 보냄
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);  // CSRF 토큰 설정
+                },
+                dataType: "json",  // 응답 데이터 타입을 JSON으로 설정
+                success: function (response) {
+                    alert("찜하기가 완료되었습니다!");  // 찜하기 성공 메시지
+                    location.href = '/wishlist';
+                },
+                error: function (jqXHR) {
+                    if (jqXHR.status == 200) {
+                        alert("로그인 후 찜하실 수 있습니다.");
+                        location.href = '/members/login';  // 로그인 페이지로 리다이렉트
+                    } else {
+                        alert("찜하기 처리 중 오류가 발생했습니다.");
+                    }
+                }
+            });
+        }
     </script>
 </th:block>
 
@@ -493,6 +531,7 @@
                 <h3 name="totalPrice" id="totalPrice" class="font-weight-bold text-danger"></h3>
             </div>
             <div th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}" class="text-left">
+                <button type="button" class="btn-buy paybt" onclick="addWishlist()">찜하기</button>
                 <button type="button" class="btn-buy paybt" onclick="addCart()">장바구니 담기</button>
                 <!-- 1106 성아 주석 처리 -->
 <!--                <button type="button" class="btn-buy paybt" onclick="order()">주문하기</button>-->
