@@ -23,8 +23,7 @@
           <div class="login" style="display: flex; position: absolute; right: 1rem;top: 2rem;">
 
             <!--            241101 은열추가-->
-            <div style="font-size: small;  width: 100%; text-align: right;" id="member-grade" th:if="${member != null}"
-              th:text="'회원님의 등급은 ' + ${member.grade} + '입니다❤'"></div>
+            <div style="font-size: small;  width: 100%;"  th:if="${member != null}" th:text="${member.name} + '회원님 등급은' + ${member.grade} + '입니다❤' "></div>
             <button type="button" class="btn login" onclick="location.href='/cart/list'"><i
                 class="fi fi-rr-shopping-cart"></i></button>
             <div class="dropdown" id="temple">
