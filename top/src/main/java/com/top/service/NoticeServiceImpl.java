@@ -11,6 +11,8 @@ import com.top.entity.Notice;
 import com.top.entity.QNotice;
 import com.top.repository.MemberRepository;
 import com.top.repository.NoticeRepository;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ import java.util.function.Function;
 
 @Service
 @Log4j2
+@Transactional
 @RequiredArgsConstructor
 public class NoticeServiceImpl implements NoticeService {
 
@@ -35,7 +38,7 @@ public class NoticeServiceImpl implements NoticeService {
     public Long register(NoticeDTO dto) {
         log.info("DTO------------------------");
         log.info(dto);
-//        /////////////////////////
+
         Member member = memberRepository.findByEmail(dto.getWriter());
         if (member == null) {
             throw new RuntimeException("Member not found");
@@ -48,7 +51,7 @@ public class NoticeServiceImpl implements NoticeService {
         repository.save(entity); // Regist
         return entity.getNno(); // List Number
     }
-    ////////////////////////////////
+
 
     @Override
     public NpageResultDTO<NoticeDTO, Notice> getList(NpageRequestDTO requestDTO) {
