@@ -427,6 +427,21 @@
             padding-bottom: 1rem;
             padding-top: 1rem;
         }
+
+        #avgStarRating {
+            display: flex; /* 별 아이콘을 가로로 배치 */
+            width : 25px;
+        }
+
+        #avgStarRating .fa-star {
+            display: inline-block; /* 별 아이콘이 가로로 나열되도록 설정 */
+            font-size: 24px; /* 아이콘 크기 조절 */
+            color: #ddd; /* 기본 별 색상 */
+        }
+
+        #avgStarRating .fa-star.checked {
+            color: #EBE700; /* 채워진 별 색상 */
+        }
     </style>
 </th:block>
 
@@ -439,14 +454,24 @@
             <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
         </div>
         <div class="wd50">
-            
-            <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}"
-                class="badge badge-primary mgb-15" style="background-color: red; width: 4rem;">판매중</span>
-            <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}"
-                class="badge btn-danger mgb-15" style="background-color: red; width: 4rem;">품절</span>
-                <button type="button" class="btn" th:text="'별점 ' + ${item.avg}">
+            <div class="container-fluid" style="display:flex;">
+                <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}"
+                    class="badge badge-primary mgb-15" style="background-color: red; width: 4rem;">판매중</span>
+                <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}"
+                    class="badge btn-danger mgb-15" style="background-color: red; width: 4rem;">품절</span>
+
+                <!-- 1106 성아 추가 -->
+                <div id="avgStarRating" style="margin-left:0.5rem;">
+                    <span class="fa fa-star" th:classappend="${item.avg >= 1 ? 'checked' : ''}"></span>
+                    <span class="fa fa-star" th:classappend="${item.avg >= 2 ? 'checked' : ''}"></span>
+                    <span class="fa fa-star" th:classappend="${item.avg >= 3 ? 'checked' : ''}"></span>
+                    <span class="fa fa-star" th:classappend="${item.avg >= 4 ? 'checked' : ''}"></span>
+                    <span class="fa fa-star" th:classappend="${item.avg >= 5 ? 'checked' : ''}"></span>
+                </div>
+                <div style="margin-left:6rem;" type="button" th:text="${item.avg} + ' / 5.0'"> <!-- 1106 성아 수정 -->
                     <span class="badge badge-light" th:text="${item.avg}">0</span>
-                </button>
+                </div>
+            </div>
             <div class="h4" th:text="${item.itemNm}"></div>
             <hr class="my-4">
 
@@ -492,7 +517,7 @@
         <button type="button" class="btn" th:text="'리뷰수 ' + ${item.reviewCnt}">
             <span class="badge badge-light" th:text="${item.reviewCnt}">0</span>
         </button>
-        <button type="button" class="btn" th:text="'별점 평균 ' + ${item.avg}">
+        <button type="button" class="btn" th:text="'별점 평균 ' + ${item.avg} + ' / 5.0'"> <!-- 1106 성아 수정 -->
             <span class="badge badge-light" th:text="${item.avg}">0</span>
         </button>
 
