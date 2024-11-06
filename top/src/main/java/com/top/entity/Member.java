@@ -50,9 +50,17 @@ public class Member extends BaseEntity {
 
     private boolean isSocial; // 소셜 로그인 여부 필드
 
-    // 주문 금액을 누적하고 회원의 등급을 업데이트하는 메서드
+    // 주문 금액을 누적하고 회원의 등급을 업데이트하는 메서드 // 1106 성아 수정
     public void addOrderPrice(int finalPrice) {
+        // totalSpentAmount가 null인 경우 0으로 초기화
+        if (this.totalSpentAmount == null) {
+            this.totalSpentAmount = 0L;
+        }
+
+        // 누적 금액 추가
         this.totalSpentAmount += finalPrice;
+
+        // 등급 업데이트
         updateRank();
     }
 

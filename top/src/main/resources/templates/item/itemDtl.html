@@ -469,7 +469,8 @@
             </div>
             <div th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}" class="text-left">
                 <button type="button" class="btn-buy paybt" onclick="addCart()">장바구니 담기</button>
-                <button type="button" class="btn-buy paybt" onclick="order()">주문하기</button>
+                <!-- 1106 성아 주석 처리 -->
+<!--                <button type="button" class="btn-buy paybt" onclick="order()">주문하기</button>-->
             </div>
         </div>
     </div>
@@ -547,7 +548,8 @@
                     </h2>
                 </div>
                 <div class="col-sm-4">
-                    <button type="button" class="btn-buy paybt" onclick="order()">결제하기</button>
+                    <!-- 1106 성아 주석 처리 -->
+<!--                    <button type="button" class="btn-buy paybt" onclick="order()">결제하기</button>-->
                     <button type="button" class="btn-buy paybt" onclick="addCart()">장바구니 담기</button>
                 </div>
             </div>
