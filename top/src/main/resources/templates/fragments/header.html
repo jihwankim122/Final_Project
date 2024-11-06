@@ -68,20 +68,21 @@
               <button type="button" class="btn login" onclick="location.href='/qna/list'">QnA</button>
             </div>
           </div>
-            <div class="btn-group">
-              <div class="container-fluid">
-                <button class="btn header-btn-item" href="/category/television">TV</button>
-                <button class="btn header-btn-item" href="/category/computer">노트북</button>
-                <button class="btn header-btn-item" href="#">모니터</button>
-                <button class="btn header-btn-item" href="#">세탁기</button>
-                <button class="btn header-btn-item" href="/category/refrigerator">냉장고</button>
-                <button class="btn header-btn-item" href="#">청소기</button>
-                <button class="btn header-btn-item" href="/category/circulation">에어컨</button>
-                <button class="btn header-btn-item" href="#">공기청정기</button>
-                <button class="btn header-btn-item" href="/category/circulation">에어컨</button>
-                <button class="btn header-btn-item" href="#">공기청정기</button>
-            </div>
+          <!--06Nov 의빈추가       -->
+          <div class="btn-group">
+            <div class="container-fluid">
+              <a class="btn header-btn-item" href="/category/mobilePhone">모바일</a>
+              <a class="btn header-btn-item" href="/category/computer">컴퓨터</a>
+              <a class="btn header-btn-item" href="/category/television">모니터</a>
+              <a class="btn header-btn-item" href="/category/refrigerator">냉장고</a>
+              <a class="btn header-btn-item" href="/category/circulation">에어컨</a>
+              <a class="btn header-btn-item" href="/category/washingMachine">세탁기</a>
+              <a class="btn header-btn-item" href="/category/clothesDryer">건조기</a>
+              <a class="btn header-btn-item" href="/category/vacuum">청소기</a>
+              <a class="btn header-btn-item" href="/category/dishwasher">식기세척기</a>
+              <a class="btn header-btn-item" href="/category/induction">인덕션</a>
           </div>
+        </div>
         </div>
         <form class="search-form form-inline my-2 my-lg-0" th:action="@{/}" method="get">
               <input name="searchQuery" class="form-control" type="search" placeholder="Search" aria-label="Search"

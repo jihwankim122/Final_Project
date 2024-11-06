@@ -22,19 +22,17 @@ public class CateController extends MemberBasicController {
 
     private final ItemServiceImpl itemService;
 
+    // 06Nov 의빈추가
     @GetMapping(value = "/category/computer")
-    public String Computer(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model){
+    public String Computer(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
 
 
-        // 1018 은열 수정
-        // 기본적으로 SELL과 SOLD_OUT 상태로 필터링할 수 있도록 설정
         if (itemSearchDto.getSearchSellStatus() == null) {
             itemSearchDto.setSearchSellStatus(ItemSellStatus.SELL);// 기본값 설정
             itemSearchDto.setSearchSellStatus(ItemSellStatus.SOLD_OUT);// 기본값 설정
 
         }
-        //241022 은열 추가
-        //카테고리 번호 입력
+
         itemSearchDto.setCategory(0L);
 
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
@@ -48,7 +46,7 @@ public class CateController extends MemberBasicController {
     }
 
     @GetMapping(value = "/category/television")
-    public String Television(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model){
+    public String Television(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
 
 
         // 1018 은열 수정
@@ -73,7 +71,7 @@ public class CateController extends MemberBasicController {
     }
 
     @GetMapping(value = "/category/refrigerator")
-    public String Refrigerator(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model){
+    public String Refrigerator(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
 
 
         // 1018 은열 수정
@@ -96,8 +94,9 @@ public class CateController extends MemberBasicController {
 
         return "/category/refrigerator";
     }
+
     @GetMapping(value = "/category/circulation")
-    public String Circulation(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model){
+    public String Circulation(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
 
 
         // 1018 은열 수정
@@ -120,5 +119,143 @@ public class CateController extends MemberBasicController {
 
         return "/category/circulation";
     }
+
+    // 06Nov 의빈추가
+    @GetMapping(value = "/category/washingMachine")
+    public String WashingMachine(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
+
+
+        if (itemSearchDto.getSearchSellStatus() == null) {
+            itemSearchDto.setSearchSellStatus(ItemSellStatus.SELL);// 기본값 설정
+            itemSearchDto.setSearchSellStatus(ItemSellStatus.SOLD_OUT);// 기본값 설정
+
+        }
+
+        itemSearchDto.setCategory(4L);
+
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
+        Page<MainItemDto> items = itemService.getCateItemPage(itemSearchDto, pageable);
+
+        model.addAttribute("items", items);
+        model.addAttribute("itemSearchDto", itemSearchDto);
+        model.addAttribute("maxPage", 5);
+
+        return "/category/washingMachine";
+    }
+
+    // 06Nov 의빈추가
+    @GetMapping(value = "/category/clothesDryer")
+    public String ClothesDryer(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
+
+
+        if (itemSearchDto.getSearchSellStatus() == null) {
+            itemSearchDto.setSearchSellStatus(ItemSellStatus.SELL);// 기본값 설정
+            itemSearchDto.setSearchSellStatus(ItemSellStatus.SOLD_OUT);// 기본값 설정
+
+        }
+
+        itemSearchDto.setCategory(5L);
+
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
+        Page<MainItemDto> items = itemService.getCateItemPage(itemSearchDto, pageable);
+
+        model.addAttribute("items", items);
+        model.addAttribute("itemSearchDto", itemSearchDto);
+        model.addAttribute("maxPage", 5);
+
+        return "/category/clothesDryer";
+    }
+
+    // 06Nov 의빈추가
+    @GetMapping(value = "/category/mobilePhone")
+    public String MobilePhone(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
+
+
+        if (itemSearchDto.getSearchSellStatus() == null) {
+            itemSearchDto.setSearchSellStatus(ItemSellStatus.SELL);// 기본값 설정
+            itemSearchDto.setSearchSellStatus(ItemSellStatus.SOLD_OUT);// 기본값 설정
+
+        }
+
+        itemSearchDto.setCategory(6L);
+
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
+        Page<MainItemDto> items = itemService.getCateItemPage(itemSearchDto, pageable);
+
+        model.addAttribute("items", items);
+        model.addAttribute("itemSearchDto", itemSearchDto);
+        model.addAttribute("maxPage", 5);
+
+        return "/category/mobilePhone";
+    }
+
+    // 06Nov 의빈추가
+    @GetMapping(value = "/category/vacuum")
+    public String Vacuum(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
+
+
+        if (itemSearchDto.getSearchSellStatus() == null) {
+            itemSearchDto.setSearchSellStatus(ItemSellStatus.SELL);// 기본값 설정
+            itemSearchDto.setSearchSellStatus(ItemSellStatus.SOLD_OUT);// 기본값 설정
+
+        }
+
+        itemSearchDto.setCategory(7L);
+
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
+        Page<MainItemDto> items = itemService.getCateItemPage(itemSearchDto, pageable);
+
+        model.addAttribute("items", items);
+        model.addAttribute("itemSearchDto", itemSearchDto);
+        model.addAttribute("maxPage", 5);
+
+        return "/category/vacuum";
+    }
+
+    // 06Nov 의빈추가
+    @GetMapping(value = "/category/dishwasher")
+    public String Dishwasher(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
+
+
+        if (itemSearchDto.getSearchSellStatus() == null) {
+            itemSearchDto.setSearchSellStatus(ItemSellStatus.SELL);// 기본값 설정
+            itemSearchDto.setSearchSellStatus(ItemSellStatus.SOLD_OUT);// 기본값 설정
+
+        }
+
+        itemSearchDto.setCategory(8L);
+
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
+        Page<MainItemDto> items = itemService.getCateItemPage(itemSearchDto, pageable);
+
+        model.addAttribute("items", items);
+        model.addAttribute("itemSearchDto", itemSearchDto);
+        model.addAttribute("maxPage", 5);
+
+        return "/category/dishwasher";
+    }
+
+            // 06Nov 의빈추가
+            @GetMapping(value = "/category/induction")
+            public String Induction(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
+
+
+                if (itemSearchDto.getSearchSellStatus() == null) {
+                    itemSearchDto.setSearchSellStatus(ItemSellStatus.SELL);// 기본값 설정
+                    itemSearchDto.setSearchSellStatus(ItemSellStatus.SOLD_OUT);// 기본값 설정
+
+                }
+
+                itemSearchDto.setCategory(9L);
+
+                Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
+                Page<MainItemDto> items = itemService.getCateItemPage(itemSearchDto, pageable);
+
+                model.addAttribute("items", items);
+                model.addAttribute("itemSearchDto", itemSearchDto);
+                model.addAttribute("maxPage", 5);
+
+                return "/category/induction";
+            }
 
 }
