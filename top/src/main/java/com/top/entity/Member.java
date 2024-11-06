@@ -63,6 +63,18 @@ public class Member extends BaseEntity {
         // 등급 업데이트
         updateRank();
     }
+     //241106 은열 추가
+    // 취소된 주문 금액을 다시 감소시켜 등급을 업데이트하는 메서드
+    public void subtractOrderPrice(int finalPrice) {
+        // totalSpentAmount가 null인 경우 0으로 초기화
+        if (this.totalSpentAmount == null) {
+            this.totalSpentAmount = 0L;
+        }
+        // 금액 차감
+        this.totalSpentAmount -= finalPrice;
+        // 등급 업데이트
+        updateRank();
+    }
 
     // 누적 주문 금액에 따라 회원의 등급을 업데이트하는 메서드
     public void updateRank() {
