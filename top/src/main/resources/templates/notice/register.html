@@ -1,33 +1,53 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout1}">
 
+<th:block layout:fragment="css">
+    <style>
+        .Notice-register-label {
+            font-weight: bold;
+            font-size: large;
+            margin: 1rem;
+        }
+
+        .Notice-register-h1 {
+            margin-bottom: 2rem;
+        }
+
+        .Notice-register-text {
+            width: 80%;
+        }
+        .btn-primary{
+            margin-top: 0.5rem;
+        }
+    </style>
+</th:block>
 
 <th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">
 
     <div layout:fragment="content">
+        <div class="container">
+            <h1 class="mt-4 Notice-register-h1">공지사항 작성</h1>
 
-        <h1 class="mt-4">NOTICE</h1>
+            <form th:action="@{/notice/register}" th:method="post">
+                <div class="form-group">
+                    <label class="Notice-register-label">제목</label>
+                    <input type="text" class="form-control Notice-register-text" name="title" placeholder="제목을 입력해주세요.">
+                </div>
+                <div class="form-group">
+                    <label class="Notice-register-label">내용</label>
+                    <textarea class="form-control Notice-register-text" rows="5" name="content" placeholder="내용을 입력해주세요."></textarea>
+                </div>
+                <!--            Writer ----------  ----------------------------------------------------------------------->
+                <!--            <div class="form-group">-->
+                <!--                <label >Writer</label>-->
+                <!--                <input type="text" class="form-control" name="writer" placeholder="Enter Writer">-->
+                <!--            </div>-->
 
-        <form th:action="@{/notice/register}" th:method="post">
-            <div class="form-group">
-                <label >Title</label>
-                <input type="text" class="form-control" name="title" placeholder="Enter Title">
-            </div>
-            <div class="form-group">
-                <label >Content</label>
-                <textarea class="form-control" rows="5" name="content"></textarea>
-            </div>
-<!--            Writer ----------  ----------------------------------------------------------------------->
-<!--            <div class="form-group">-->
-<!--                <label >Writer</label>-->
-<!--                <input type="text" class="form-control" name="writer" placeholder="Enter Writer">-->
-<!--            </div>-->
-
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+                <button type="submit" class="btn btn-primary">작성</button>
+            </form>
+        </div>
     </div>
-    </th:block>
+</th:block>
 
 </html>

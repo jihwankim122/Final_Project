@@ -1,54 +1,105 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout1}">
+
+<th:block layout:fragment="css">
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .Notice-read-body {
+            border: none;
+            border-bottom: solid 0.1px rgb(215, 215, 215);
+            margin: 0.4rem;
+            padding: 0.4rem;
+        }
+
+        .Notice-read-title {
+            font-weight: bold;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+        }
+
+        .Notice-read-h1 {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .Notice-read-day {
+            float: right;
+        }
+
+        .Notice-container {
+            width: 60%;
+        }
+
+        .Noticebtn {
+            background-color: rgb(237, 237, 237);
+            border-bottom: solid 0.1px gray;
+        }
+
+        .Noticebtn:hover {
+            background-color: rgb(212, 212, 212);
+            border-bottom: solid 0.1px rgb(86, 86, 86);
+        }
+    </style>
+</th:block>
 
 <th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">
 
     <div layout:fragment="content">
+        <div class="container">
+            <h1 class="mt-4 Notice-read-h1">공지사항</h1>
 
-        <h1 class="mt-4">NOTICE</h1>
+            <div class="form-group">
+                <label class="Notice-read-title">글번호</label>
+                <input type="text" class="form-control Notice-read-body" name="nno" th:value="${dto.nno}" readonly>
+            </div>
 
-        <div class="form-group">
-            <label >nno</label>
-            <input type="text" class="form-control" name="nno" th:value="${dto.nno}" readonly >
+            <div class="form-group">
+                <label class="Notice-read-title">제목</label>
+                <input type="text" class="form-control Notice-read-body" name="title" th:value="${dto.title}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label class="Notice-read-title">내용</label>
+                <textarea class="form-control Notice-read-body" rows="5" name="content"
+                    readonly>[[${dto.content}]]</textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="Notice-read-title">작성자</label>
+                <input type="text" class="form-control Notice-read-body" name="writer" th:value="${dto.writerName}"
+                    readonly>
+            </div>
+
+            <div class="form-group">
+                <label class="Notice-read-title">작성일</label>
+                <input type="text" class="form-control Notice-read-body" name="regDate"
+                    th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label class="Notice-read-title">수정일</label>
+                <input type="text" class="form-control Notice-read-body" name="modDate"
+                    th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+            </div>
+
+            <a th:href="@{/notice/modify(nno=${dto.nno}, page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}"
+                sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                <button type="button" class="btn Noticebtn">수정</button>
+            </a>
+
+            <a
+                th:href="@{/notice/list(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}">
+                <button type="button" class="btn Noticebtn">목록</button>
+            </a>
         </div>
-
-        <div class="form-group">
-            <label >Title</label>>
-            <input type="text" class="form-control" name="title" th:value="${dto.title}" readonly >
-        </div>
-        <div class="form-group">
-            <label >Content</label>
-            <textarea class="form-control" rows="5" name="content" readonly>[[${dto.content}]]</textarea>
-        </div>
-        <div class="form-group">
-            <label >Writer</label>
-            <input type="text" class="form-control" name="writer" th:value="${dto.writerName}" readonly>
-        </div>
-        <div class="form-group">
-            <label >RegDate</label>
-            <input type="text" class="form-control" name="regDate" th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-        </div>
-        <div class="form-group">
-            <label >ModDate</label>
-            <input type="text" class="form-control" name="modDate" th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-        </div>
-
-        <!--        <a th:href="@{/guestbook/modify(nno = ${dto.nno}, page=${requestDTO.page})}"><button type="button" class="btn btn-primary">Modify</button></a>-->
-
-        <!--        <a th:href="@{/guestbook/list(page=${requestDTO.page})}"><button type="button" class="btn btn-info">List</button></a>-->
-
-        <a th:href="@{/notice/modify(nno = ${dto.nno}, page=${requestDTO.page}, type=${requestDTO.type}, keyword =${requestDTO.keyword})}" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-            <button type="button" class="btn btn-primary">Modify</button>
-        </a>
-
-        <a th:href="@{/notice/list(page=${requestDTO.page} , type=${requestDTO.type}, keyword =${requestDTO.keyword})}">
-            <button type="button" class="btn btn-info">List</button>
-        </a>
-
     </div>
 
 </th:block>
+
 </html>
