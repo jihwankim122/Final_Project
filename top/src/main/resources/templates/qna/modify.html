@@ -1,92 +1,138 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout1}">
+
+<th:block layout:fragment="css">
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .Qna-modify-body {
+            border: none;
+            border-bottom: solid 0.1px rgb(215, 215, 215);
+            margin: 0.4rem;
+            padding: 0.4rem;
+        }
+
+        .Qna-modify-title {
+            font-weight: bold;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+        }
+
+        .Qna-modify-h1 {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .Qna-container {
+            width: 60%;
+        }
+
+        .Qnabtn {
+            background-color: rgb(237, 237, 237);
+            border-bottom: solid 0.1px gray;
+        }
+
+        .Qnabtn:hover {
+            background-color: rgb(212, 212, 212);
+            border-bottom: solid 0.1px rgb(86, 86, 86);
+        }
+    </style>
+</th:block>
+
 
 <th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">
 
     <div layout:fragment="content">
+        <div class="container">
+            <h1 class="mt-4 Qna-modify-h1">Qna 수정</h1>
 
-        <h1 class="mt-4">Qna Modify Page</h1>
+            <form action="/qna/modify" method="post">
 
-        <form action="/qna/modify" method="post">
-
-            <!--페이지 번호  -->
-            <input type="hidden" name="page" th:value="${requestDTO.page}">
-            <input type="hidden" name="type" th:value="${requestDTO.type}" >
-            <input type="hidden" name="keyword" th:value="${requestDTO.keyword}" >
-
-
-            <div class="form-group">
-                <label ></label>
-                <input type="text" class="form-control" name="qno" th:value="${dto.qno}" readonly >
-            </div>
-
-            <div class="form-group">
-                <label >Title</label>>
-                <input type="text" class="form-control" name="title" th:value="${dto.title}" >
-            </div>
-            <div class="form-group">
-                <label >Content</label>
-                <textarea class="form-control" rows="5" name="content">[[${dto.content}]]</textarea>
-            </div>
-            <div class="form-group">
-                <label >Writer</label>
-                <input type="text" class="form-control" name="writer" th:value="${dto.writer}" readonly>
-            </div>
-            <div class="form-group">
-                <label >RegDate</label>
-                <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-            </div>
-            <div class="form-group">
-                <label >ModDate</label>
-                <input type="text" class="form-control" th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-            </div>
-
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-
-        </form>
-
-        <button type="button" class="btn btn-primary modifyBtn">Modify</button>
-
-        <button type="button" class="btn btn-info listBtn">List</button>
+                <!--페이지 번호  -->
+                <input type="hidden" name="page" th:value="${requestDTO.page}">
+                <input type="hidden" name="type" th:value="${requestDTO.type}">
+                <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
 
 
-        <script th:inline="javascript">
-            var actionForm = $("form"); //form 태그 객체
+                <div class="form-group">
+                    <label class="Qna-modify-title">글번호</label>
+                    <input type="text" class="form-control Qna-modify-body" name="qno" th:value="${dto.qno}" readonly>
+                </div>
 
-            $(".modifyBtn").click(function() {
-                if(!confirm("수정하시겠습니까?")){
-                    return ;
-                }
+                <div class="form-group">
+                    <label class="Qna-modify-title">제목</label>>
+                    <input type="text" class="form-control Qna-modify-body" name="title" th:value="${dto.title}">
+                </div>
+                <div class="form-group">
+                    <label class="Qna-modify-title">내용</label>
+                    <textarea class="form-control" rows="5" name="content">[[${dto.content}]]</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="Qna-modify-title">작성자</label>
+                    <input type="text" class="form-control Qna-modify-body" name="writer" th:value="${dto.writer}"
+                        readonly>
+                </div>
+                <div class="form-group">
+                    <label class="Qna-modify-title">작성날짜</label>
+                    <input type="text" class="form-control Qna-modify-body"
+                        th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="Qna-modify-title">수정날짜</label>
+                    <input type="text" class="form-control Qna-modify-body"
+                        th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+                </div>
 
-                actionForm
-                    .attr("action", "/qna/modify")
-                    .attr("method","post")
-                    .submit();
-            });
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-            $(".listBtn").click(function() {
-                //var pageInfo = $("input[name='page']");
-                var page = $("input[name='page']");
-                var type = $("input[name='type']");
-                var keyword = $("input[name='keyword']");
+            </form>
 
-                actionForm.empty(); //form 태그의 모든 내용을 지우고
-                actionForm.append(page);
-                actionForm.append(type);
-                actionForm.append(keyword);
+            <button type="button" class="btn modifyBtn Qnabtn">수정</button>
 
-                actionForm
-                    .attr("action", "/qna/list")
-                    .attr("method","get");
-
-               actionForm.submit();
-            })
-        </script>
+            <button type="button" class="btn listBtn Qnabtn">목록</button>
 
 
+            <script th:inline="javascript">
+                var actionForm = $("form"); //form 태그 객체
+
+                $(".modifyBtn").click(function () {
+                    if (!confirm("수정하시겠습니까?")) {
+                        return;
+                    }
+
+                    actionForm
+                        .attr("action", "/qna/modify")
+                        .attr("method", "post")
+                        .submit();
+                });
+
+                $(".listBtn").click(function () {
+                    //var pageInfo = $("input[name='page']");
+                    var page = $("input[name='page']");
+                    var type = $("input[name='type']");
+                    var keyword = $("input[name='keyword']");
+
+                    actionForm.empty(); //form 태그의 모든 내용을 지우고
+                    actionForm.append(page);
+                    actionForm.append(type);
+                    actionForm.append(keyword);
+
+                    actionForm
+                        .attr("action", "/qna/list")
+                        .attr("method", "get");
+
+                    actionForm.submit();
+                })
+            </script>
+
+        </div>
     </div>
 
 </th:block>
+
 </html>

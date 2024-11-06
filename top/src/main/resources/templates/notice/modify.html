@@ -1,102 +1,147 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout1}">
+
+<th:block layout:fragment="css">
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .Notice-modify-body {
+            border: none;
+            border-bottom: solid 0.1px rgb(215, 215, 215);
+            margin: 0.4rem;
+            padding: 0.4rem;
+        }
+
+        .Notice-modify-title {
+            font-weight: bold;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+        }
+
+        .Notice-modify-h1 {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .Notice-container {
+            width: 60%;
+        }
+
+        .Noticebtn {
+            background-color: rgb(237, 237, 237);
+            border-bottom: solid 0.1px gray;
+        }
+
+        .Noticebtn:hover {
+            background-color: rgb(212, 212, 212);
+            border-bottom: solid 0.1px rgb(86, 86, 86);
+        }
+    </style>
+</th:block>
 
 <th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">
 
     <div layout:fragment="content">
+        <div class="container">
+            <h1 class="mt-4 Notice-modify-h1">Notice Modify Page</h1>
 
-        <h1 class="mt-4">Notice Modify Page</h1>
+            <form action="/notice/modify" method="post">
+                <input type="hidden" name="page" th:value="${requestDTO.page}">
+                <input type="hidden" name="type" th:value="${requestDTO.type}">
+                <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
 
-        <form action="/notice/modify" method="post">
+                <div class="form-group">
+                    <label class="Notice-modify-title">글번호</label>
+                    <input type="text" class="form-control Notice-modify-body" name="nno" th:value="${dto.nno}"
+                        readonly>
+                </div>
 
-            <!--페이지 번호  -->
-            <input type="hidden" name="page" th:value="${requestDTO.page}">
-            <input type="hidden" name="type" th:value="${requestDTO.type}" >
-            <input type="hidden" name="keyword" th:value="${requestDTO.keyword}" >
+                <div class="form-group">
+                    <label class="Notice-modify-title">Title</label>
+                    <input type="text" class="form-control Notice-modify-body" name="title" th:value="${dto.title}">
+                </div>
 
+                <div class="form-group">
+                    <label class="Notice-modify-title">Content</label>
+                    <textarea class="form-control Notice-modify-body" rows="5"
+                        name="content">[[${dto.content}]]</textarea>
+                </div>
 
-            <div class="form-group">
-                <label ></label>
-                <input type="text" class="form-control" name="nno" th:value="${dto.nno}" readonly >
-            </div>
+                <div class="form-group">
+                    <label class="Notice-modify-title">Writer</label>
+                    <input type="text" class="form-control Notice-modify-body" name="writer" th:value="${dto.writer}"
+                        readonly>
+                </div>
 
-            <div class="form-group">
-                <label >Title</label>>
-                <input type="text" class="form-control" name="title" th:value="${dto.title}" >
-            </div>
-            <div class="form-group">
-                <label >Content</label>
-                <textarea class="form-control" rows="5" name="content">[[${dto.content}]]</textarea>
-            </div>
-            <div class="form-group">
-                <label >Writer</label>
-                <input type="text" class="form-control" name="writer" th:value="${dto.writer}" readonly>
-            </div>
-            <div class="form-group">
-                <label >RegDate</label>
-                <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-            </div>
-            <div class="form-group">
-                <label >ModDate</label>
-                <input type="text" class="form-control" th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-            </div>
+                <div class="form-group">
+                    <label class="Notice-modify-title">RegDate</label>
+                    <input type="text" class="form-control Notice-modify-body"
+                        th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+                </div>
 
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <div class="form-group">
+                    <label class="Notice-modify-title">ModDate</label>
+                    <input type="text" class="form-control Notice-modify-body"
+                        th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+                </div>
 
-        </form>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            </form>
 
-        <button type="button" class="btn btn-primary modifyBtn">Modify</button>
+            <button type="button" class="btn Noticebtn modifyBtn">수정</button>
+            <button type="button" class="btn Noticebtn listBtn">목록</button>
+            <button type="button" class="btn Noticebtn removeBtn">삭제</button>
 
-        <button type="button" class="btn btn-info listBtn">List</button>
-
-        <button type="button" class="btn btn-danger removeBtn">Remove</button>
-
-        <script th:inline="javascript">
-            var actionForm = $("form"); //form 태그 객체
-            $(".removeBtn").click(function(){
+            <script th:inline="javascript">
+                var actionForm = $("form"); //form 태그 객체
+                $(".removeBtn").click(function () {
                     if (!confirm("정말로 삭제하시겠습니까?")) {
-            return;
-            }
-                actionForm
-                    .attr("action", "/notice/remove")
-                    .attr("method","post");
-                actionForm.submit();
-            });
+                        return;
+                    }
+                    actionForm
+                        .attr("action", "/notice/remove")
+                        .attr("method", "post");
+                    actionForm.submit();
+                });
 
-            $(".modifyBtn").click(function() {
-                if(!confirm("수정하시겠습니까?")){
-                    return ;
-                }
+                $(".modifyBtn").click(function () {
+                    if (!confirm("수정하시겠습니까?")) {
+                        return;
+                    }
 
-                actionForm
-                    .attr("action", "/notice/modify")
-                    .attr("method","post")
-                    .submit();
-            });
+                    actionForm
+                        .attr("action", "/notice/modify")
+                        .attr("method", "post")
+                        .submit();
+                });
 
-            $(".listBtn").click(function() {
-                //var pageInfo = $("input[name='page']");
-                var page = $("input[name='page']");
-                var type = $("input[name='type']");
-                var keyword = $("input[name='keyword']");
+                $(".listBtn").click(function () {
+                    //var pageInfo = $("input[name='page']");
+                    var page = $("input[name='page']");
+                    var type = $("input[name='type']");
+                    var keyword = $("input[name='keyword']");
 
-                actionForm.empty(); //form 태그의 모든 내용을 지우고
-                actionForm.append(page);
-                actionForm.append(type);
-                actionForm.append(keyword);
+                    actionForm.empty(); //form 태그의 모든 내용을 지우고
+                    actionForm.append(page);
+                    actionForm.append(type);
+                    actionForm.append(keyword);
 
-                actionForm
-                    .attr("action", "/notice/list")
-                    .attr("method","get");
+                    actionForm
+                        .attr("action", "/notice/list")
+                        .attr("method", "get");
 
-               actionForm.submit();
-            })
-        </script>
+                    actionForm.submit();
+                })
+            </script>
 
-
+        </div>
     </div>
 
 </th:block>
+
 </html>

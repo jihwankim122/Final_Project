@@ -15,6 +15,9 @@
         .Qna-register-text{
             width: 80%;
         }
+        .btn-primary{
+            margin-top: 0.5rem;
+        }
     </style>
 </th:block>
 <!--<th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">-->
@@ -26,11 +29,11 @@
             <form th:action="@{/qna/register}" th:method="post">
                 <div class="form-group">
                     <label class="Qna-register-label">제목</label>
-                    <input type="text" class="form-control Qna-register-text" name="title" placeholder=" Title">
+                    <input type="text" class="form-control Qna-register-text" name="title" placeholder="제목을 입력해주세요.">
                 </div>
                 <div class="form-group" style="margin-bottom: 3rem;">
                     <label class="Qna-register-label">내용</label>
-                    <textarea class="form-control Qna-register-text" rows="5" name="content" placeholder="content"></textarea>
+                    <textarea class="form-control Qna-register-text" rows="5" name="content" placeholder="내용을 입력해주세요."></textarea>
                 </div>
                 <!--            Writer ----------  ----------------------------------------------------------------------->
                 <!--            <div class="form-group">-->
@@ -38,7 +41,7 @@
                 <!--                <input type="text" class="form-control" name="writer" placeholder="Enter Writer">-->
                 <!--            </div>-->
 
-                <button type="submit" class="btn btn-primary">이게 버튼이냐</button>
+                <button type="submit" class="btn btn-primary">작성</button>
             </form>
         </div>
     </div>
