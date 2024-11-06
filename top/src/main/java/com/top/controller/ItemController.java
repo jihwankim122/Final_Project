@@ -2,6 +2,8 @@ package com.top.controller;
 
 import com.top.entity.Member;
 import com.top.service.MemberService;
+import com.top.service.OrderService;
+
 import lombok.Getter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,25 +34,34 @@ public class ItemController extends MemberBasicController {
     private final ItemService itemService;
     private final MemberService memberService;
     private final HttpSession httpSession;
+    private final OrderService orderService; // 1106 성아 추가
 
-    // 메인 상품 상세보기
+    // 메인 상품 상세보기 // 1106 성아 수정
     @GetMapping(value = "/item/{itemId}")
-    public String itemDtl(Model model, @PathVariable("itemId") Long itemId) {
+    public String itemDtl(Model model, @PathVariable("itemId") Long itemId, HttpSession httpSession) {
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
 
-        // 1105 성아 수정
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Member member = null;
+        boolean hasOrdered = false;
+
         if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getName())) {
             String email = authentication.getName();
             member = memberService.findByEmail(email);
+            if (member != null) {
+                hasOrdered = orderService.hasOrderedItem(member.getId(), itemId);
+            }
         } else {
-            // 세션에서 Member 객체를 가져옴 (로그인하지 않은 경우 null일 수 있음)
             member = (Member) httpSession.getAttribute("member");
+            if (member != null) {
+                hasOrdered = orderService.hasOrderedItem(member.getId(), itemId);
+            }
         }
 
         model.addAttribute("member", member);
         model.addAttribute("item", itemFormDto);
+        model.addAttribute("hasOrdered", hasOrdered); // 주문 여부 추가
+
         return "item/itemDtl";
     }
 

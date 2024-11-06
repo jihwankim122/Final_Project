@@ -17,4 +17,6 @@ public interface OrderService {
     Page<OrderHistDto> getOrderListByAdmin(Pageable pageable);
 
     void requestCancelOrder(Long orderId); // 주문 취소 요청
+
+    boolean hasOrderedItem(Long memberId, Long itemId); // 1106 성아 추가
 }

@@ -174,4 +174,13 @@ public class OrderServiceImpl implements OrderService {
 
         return new PageImpl<>(orderHistDtos, pageable, totalCount);
     }
+
+    // 1106 성아 추가 리뷰 작성용 구매이력 확인
+    @Override
+    public boolean hasOrderedItem(Long memberId, Long itemId) {
+        boolean result = orderRepository.existsByMemberAndItem(memberId, itemId);
+        System.out.println("Order exists for memberId=" + memberId + ", itemId=" + itemId + ": " + result);
+        return result;
+    }    
+
 }
