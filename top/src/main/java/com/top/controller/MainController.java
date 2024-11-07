@@ -8,6 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.top.constant.ItemSellStatus;
 import com.top.dto.ItemSearchDto;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -57,9 +60,19 @@ public class MainController extends MemberBasicController {
 
         model.addAttribute("items", items);
         model.addAttribute("itemSearchDto", itemSearchDto);
-        model.addAttribute("maxPage", 5);
+        // model.addAttribute("maxPage", 5);
+        model.addAttribute("page", page.isPresent() ? page.get() : 0); // 현재 페이지 // 1107 성아 추가
 
         return "main";
+    }
+
+    // 1107 성아 추가
+    @GetMapping("/load-items")
+    @ResponseBody
+    public List<MainItemDto> loadItems(@RequestParam int page, ItemSearchDto itemSearchDto) {
+        Pageable pageable = PageRequest.of(page, 6);  // 페이지당 6개씩 불러옴
+        Page<MainItemDto> items = itemService.getMainItemPage(itemSearchDto, pageable);
+        return items.getContent();  // 실제 데이터만 반환
     }
 
 }

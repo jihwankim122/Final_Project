@@ -7,15 +7,17 @@ import com.top.repository.MemberRepository;
 import com.top.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.top.entity.QMember.member;
 
@@ -26,6 +28,7 @@ import static com.top.entity.QMember.member;
 public class NoticeController extends MemberBasicController {
     private final NoticeService service;
     private final MemberRepository memberRepository;
+    private final NoticeService noticeService;
 
     @GetMapping("/")
     public String index(){
@@ -96,6 +99,21 @@ public class NoticeController extends MemberBasicController {
         service.remove(nno);
         redirectAttributes.addFlashAttribute("msg", nno);
         return "redirect:/notice/list";
+    }
+
+    // Pinned
+    @PostMapping("/togglePinned/{nno}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> togglePinned(@PathVariable Long nno) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            service.togglePinned(nno);
+            response.put("success", true);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
     }
 }
 

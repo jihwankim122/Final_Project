@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout1}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout1}">
 
 <th:block layout:fragment="css">
   <style>
@@ -15,7 +15,7 @@
     }
 
     .custom-select {
-      height: 100%
+      height: 100%;
     }
 
     .Noticesearch {
@@ -23,19 +23,37 @@
       border-bottom: solid 0.1px rgb(190, 190, 190);
       border-radius: 5%;
     }
+
+    /* 공지 뱃지 스타일 */
+    .notice-badge {
+      background-color: #000000; /* 검정색 배경 */
+      color: white; /* 흰색 글씨 */
+      padding: 2px 8px;
+      font-size: 12px;
+      border-radius: 12px;
+      margin-right: 10px; /* 제목과 뱃지 사이 간격 */
+    }
+
+    /* 고정된 공지사항 강조 */
+    .pinned-notice {
+      font-weight: bold;
+    }
+
+    /* 파란색 줄 제거 */
+    .pinned-notice a {
+      text-decoration: none;
+      color: black;
+    }
+
   </style>
 </th:block>
-
 
 <!--  <th:block th:fragment="content">-->
 <div layout:fragment="content">
   <div class="container">
-    <h1 class="mt-4">공지사항
+    <h1 class="mt-4">FAQ
       <span sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-        <a th:href="@{/notice/register}">
-          <button type="button" class="btn btn-outline-primary">등록
-          </button>
-        </a>
+        <a th:href="@{/notice/register}"><button type="button" class="btn btn-outline-primary">등록</button></a>
       </span>
     </h1>
 
@@ -65,44 +83,60 @@
     <!-- 목록 --------------------------------------------------------------------------------------->
     <table class="table">
       <thead class="table-primary">
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">제목</th>
-          <th scope="col">작성자</th>
-          <th scope="col">작성일</th>
-        </tr>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">제목</th>
+        <th scope="col">작성자</th>
+        <th scope="col">작성일</th>
+      </tr>
       </thead>
       <tbody>
 
-        <tr th:each="dto : ${result.dtoList}">
-          <td>[[${dto.nno}]]</td>
-          <th scope="row">
-            <a th:href="@{/notice/read(nno = ${dto.nno},
+      <!-- 고정된 공지사항을 상단에 표시 -->
+      <tr th:each="dto : ${result.dtoList}" th:if="${dto.pinned}">
+        <td>[[${dto.nno}]]</td>
+        <th scope="row" class="pinned-notice">
+          <!-- 공지 뱃지 추가 (제목 왼쪽으로 이동) -->
+          <span class="notice-badge">공지</span>
+          <a th:href="@{/notice/read(nno = ${dto.nno},
                     page= ${result.page},
                     type=${npageRequestDTO.type} ,
                     keyword = ${npageRequestDTO.keyword})}">
-              [[${dto.title}]]
-            </a>
-          </th>
-          <!--        25 Oct-->
-          <td>[[${dto.writerName}]]</td>
-          <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
-        </tr>
+            [[${dto.title}]]
+          </a>
+        </th>
+        <td>[[${dto.writerName}]]</td>
+        <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
+      </tr>
+
+      <!-- 일반 공지사항 -->
+      <tr th:each="dto : ${result.dtoList}" th:if="${!dto.pinned}">
+        <td>[[${dto.nno}]]</td>
+        <th scope="row">
+          <a th:href="@{/notice/read(nno = ${dto.nno},
+                    page= ${result.page},
+                    type=${npageRequestDTO.type} ,
+                    keyword = ${npageRequestDTO.keyword})}">
+            [[${dto.title}]]
+          </a>
+        </th>
+        <td>[[${dto.writerName}]]</td>
+        <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
+      </tr>
 
       </tbody>
     </table>
     <!-- 목록 end -->
 
-    <!-- 페이징 -------------------------------------------------------------------------->
+    <!-- 페이징 ------------------------------------------------------------------------->
     <ul class="pagination h-100 justify-content-center align-items-center">
-
-      <li class="page-item " th:if="${result.prev}">
+      <li class="page-item" th:if="${result.prev}">
         <a class="page-link" th:href="@{/notice/list(page= ${result.start -1},
                     type=${npageRequestDTO.type} ,
                     keyword = ${npageRequestDTO.keyword} ) }" tabindex="-1">Previous</a>
       </li>
 
-      <li th:class=" 'page-item ' + ${result.page == page?'active':''} " th:each="page: ${result.pageList}">
+      <li th:class=" 'page-item ' + ${result.page == page?'active':''}" th:each="page: ${result.pageList}">
         <a class="page-link" th:href="@{/notice/list(page = ${page} ,
                    type=${npageRequestDTO.type} ,
                    keyword = ${npageRequestDTO.keyword}  )}">
@@ -134,7 +168,6 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <!--                        <button type="button" class="btn btn-primary">Save changes</button>-->
           </div>
         </div>
       </div>
@@ -156,9 +189,7 @@
       });
     </script>
 
-    </th:block>
   </div>
-  <!--</th:block>-->
 </div>
 
 </html>

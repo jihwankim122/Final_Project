@@ -28,6 +28,9 @@ public class Notice extends BaseEntity{
     @Column(length = 50, nullable = false)
     private String writer;
 
+    @Column(nullable = false)
+    private boolean pinned; //고정여부
+
     // title modify
     public void changeTitle(String title){
         this.title = title;
@@ -36,5 +39,10 @@ public class Notice extends BaseEntity{
     // content modify
     public void changeContent(String content){
         this.content = content;
+    }
+
+    // pinned 상태 변경 메서드
+    public void togglePinned() {
+        this.pinned = !this.pinned;
     }
 }

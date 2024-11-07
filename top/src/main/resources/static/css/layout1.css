@@ -5,6 +5,10 @@
     font-family: 'IBM Plex Sans KR', sans-serif;
 }
 
+.form-select{
+    box-shadow: none;
+}
+
 a {
     text-decoration: none;
 }
@@ -104,7 +108,7 @@ span {
     display: flex;
     justify-content: center;
     margin-top: 80px;
-    gap: 30px;
+    gap: 1.5rem;
 }
 
 #categori button,

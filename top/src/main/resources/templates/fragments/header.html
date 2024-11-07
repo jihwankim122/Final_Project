@@ -23,10 +23,19 @@
           <div class="login" style="display: flex; position: absolute; right: 1rem;top: 2rem;">
 
             <!--            241101 은열추가-->
-            <div style="font-size: small;  width: 100%;"  th:if="${member != null}" th:text="${member.name} + '회원님 등급은' + ${member.grade} + '입니다❤' "></div>
-            <button type="button" class="btn login" onclick="location.href='/wishlist'"><i class="fi fi-rr-heart"></i></button>
+            <div style="font-size: small;  width: 100%;" th:if="${member != null}"
+              th:text="${member.name} + '회원님 등급은' + ${member.grade} + '입니다❤' "></div>
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">고객지원</button>
+              <ul class="dropdown-menu">
+                <li class="dropdown-item"><a class="nav-link" href="/notice/list">FAQ</a></li>
+                <li class="dropdown-item"><a class="nav-link" href="/qna/list">QnA</a></li>
+              </ul>
+            </div>
+            <button type="button" class="btn login" onclick="location.href='/wishlist'"><i
+                class="fi fi-rr-heart"></i></button>
             <button type="button" class="btn login" onclick="location.href='/cart'"><i
-                    class="fi fi-rr-shopping-cart"></i></button>
+                class="fi fi-rr-shopping-cart"></i></button>
             <div class="dropdown" id="temple">
               <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fi fi-rr-user"></i>
@@ -63,12 +72,6 @@
               </ul>
             </div>
           </div>
-          <div class="btn-group" style="width: 100%;">
-            <div class="container-fluid">
-              <button style="float: left;" type="button" class="btn login" onclick="location.href='/notice/list'">FAQ</button>
-              <button style="float: left;" type="button" class="btn login" onclick="location.href='/qna/list'">QnA</button>
-            </div>
-          </div>
           <!--06Nov 의빈추가       -->
           <div class="btn-group">
             <div class="container-fluid">
@@ -82,15 +85,15 @@
               <a class="btn header-btn-item" href="/category/vacuum">청소기</a>
               <a class="btn header-btn-item" href="/category/dishwasher">식기세척기</a>
               <a class="btn header-btn-item" href="/category/induction">인덕션</a>
+            </div>
           </div>
         </div>
-        </div>
         <form class="search-form form-inline my-2 my-lg-0" th:action="@{/}" method="get">
-              <input name="searchQuery" class="form-control" type="search" placeholder="Search" aria-label="Search"
-                style="width: 200px;">
+          <input name="searchQuery" class="form-control" type="search" placeholder="Search" aria-label="Search"
+            style="width: 200px;">
 
-              <button id="search" class="btn" type="submit"><i class="fi fi-rr-search"></i></button>
-            </form>
+          <button id="search" class="btn" type="submit"><i class="fi fi-rr-search"></i></button>
+        </form>
       </div>
     </nav>
   </div>

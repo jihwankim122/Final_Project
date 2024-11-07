@@ -20,4 +20,5 @@ public class NoticeDTO {
     private Long memberId;  // 25 Oct
     private LocalDateTime regDate;
     private LocalDateTime modDate;
+    private boolean pinned; // Pinned Status
 }
