@@ -12,4 +12,5 @@ public class ItemSearchDto {
     private ItemSellStatus searchSellStatus;
     private String searchBy;
     private String searchQuery="";
+    private String sortCondition; // 1107 성아 정렬 조건 필드 추가 ('priceDesc', 'priceAsc', 'newest', 'oldest')
 }
