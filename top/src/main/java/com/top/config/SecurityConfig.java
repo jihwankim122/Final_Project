@@ -47,14 +47,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-<<<<<<< HEAD
+
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/starrr.js").permitAll()
-                        .requestMatchers("/", "/members/**", "/item/**", "/images/**","/reviews/**","/notice/**").permitAll()
+                        .requestMatchers("/", "/members/**", "/item/**", "/images/**", "/reviews/**", "/notice/**").permitAll()
                         .requestMatchers("/members/foundId", "/sms/**", "/members/login", "/members/find-password").permitAll() // 명시적으로 허용 경로 추가
-=======
+
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/starrr.js").permitAll() // 1105 성아 추가
-                        .requestMatchers("/", "/members/**", "/item/**", "/images/**","/reviews/**","/notice/**","/category/**").permitAll()
->>>>>>> 3578eeb7042046d8799fb4e548d5eab9cb06330a
+                        .requestMatchers("/", "/members/**", "/item/**", "/images/**", "/reviews/**", "/notice/**", "/category/**").permitAll()
+
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -109,8 +109,10 @@ public class SecurityConfig {
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
         tokenRepository.setDataSource(dataSource);
-
+        tokenRepository.setCreateTableOnStartup(false);
         return tokenRepository;
     }
+
+
 }
 
