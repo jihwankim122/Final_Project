@@ -81,6 +81,8 @@ public class Order extends BaseEntity{
             for (OrderItem orderItem : orderItems) {
                 orderItem.cancel();
             }
+            // 취소된 금액을 Member에서 차감하고, 등급을 업데이트
+            member.subtractOrderPrice(finalPrice); // 취소된 금액을 차감
         }
     }
 

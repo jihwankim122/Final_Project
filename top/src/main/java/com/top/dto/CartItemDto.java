@@ -2,11 +2,13 @@ package com.top.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class CartItemDto {
 
     @NotNull(message = "상품 아이디를 입력하세요")

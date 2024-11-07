@@ -33,5 +33,12 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("select count(o) from Order o ")
     Long countOrderByAdmin();
 
+    // 1106 성아 추가 // 주문 이력 확인
+    @Query("SELECT CASE WHEN COUNT(oi) > 0 THEN true ELSE false END " +
+            "FROM OrderItem oi JOIN oi.order o " +
+            "WHERE o.member.id = :memberId AND oi.item.id = :itemId AND o.orderStatus = 'ORDER'")
+    boolean existsByMemberAndItem(@Param("memberId") Long memberId, @Param("itemId") Long itemId);
+    
+
 
 }

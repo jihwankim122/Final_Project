@@ -8,6 +8,7 @@ import com.top.repository.AnswerRepository;
 import com.top.repository.MemberRepository;
 import com.top.repository.QnaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Log4j2
+@Transactional
 @RequiredArgsConstructor
 public class AnswerServiceImpl implements AnswerService {
 

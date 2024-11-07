@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout1}">
+
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <script src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
+</head>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            $("input[name=wishlistChkBox]").change(function () {
+            });
+        });
+
+        /* 상품 삭제 */
+        function deleteWishlistItem(obj) {
+            var wishlistItemId = obj.dataset.id;
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            var url = "/wishlistItem/" + wishlistItemId;
+
+            $.ajax({
+                url: url,
+                type: "DELETE",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                dataType: "json",
+                cache: false,
+                success: function (result, status) {
+                    alert('찜목록에서 삭제되었습니다');
+                    location.href = '/wishlist';  // 삭제 후 위시리스트 페이지로 리다이렉트
+                },
+                error: function (jqXHR, status, error) {
+                    if (jqXHR.status == '200') {
+                        alert('로그인 후 이용해주세요');
+                        location.href = '/members/login';
+                    } else {
+                        alert(jqXHR.responseJSON.message);
+                    }
+                }
+            });
+        }
+
+        // **새로 추가된 부분**: 위시리스트에서 장바구니로 이동하는 함수
+        function moveItemToCart(obj) {
+            var wishlistItemId = obj.dataset.id;
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            var url = "/wishlistItem/" + wishlistItemId + "/moveToCart";
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                dataType: "json",
+                cache: false,
+                success: function (result, status) {
+                    alert('아이템이 장바구니로 이동되었습니다.');
+                    location.href = '/cart';
+                },
+                error: function (jqXHR, status, error) {
+                    if (jqXHR.status == '200') {
+                        alert('로그인 후 이용해주세요');
+                        location.href = '/members/login';
+                    } else {
+                        alert(jqXHR.responseJSON.message);
+                    }
+                }
+            });
+        }
+    </script>
+</th:block>
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        .content-mg {
+            margin-left: 25%;
+            margin-right: 25%;
+            margin-top: 2%;
+            margin-bottom: 100px;
+        }
+
+        .repImgDiv {
+            margin-right: 15px;
+            margin-left: 15px;
+            height: auto;
+        }
+
+        .repImg {
+            height: 100px;
+            width: 100px;
+        }
+
+        .fs18 {
+            font-size: 18px;
+        }
+        .mr-2{
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+        .fs24 {
+            font-size: larger;
+            font-weight: bold;
+            display: flex;
+            width: 5rem;
+        }
+        .wish-item-delete{
+            background: none;
+            border: none;
+            border-radius: 20%;
+        }
+    </style>
+</th:block>
+
+<div layout:fragment="content" class="content-mg">
+    <h2 class="mb-4">위시리스트</h2>
+
+    <div>
+        <table class="table">
+            <colgroup>
+                <col width="15%" />
+                <col width="70%" />
+                <col width="15%" />
+            </colgroup>
+            <thead>
+                <tr class="text-center">
+                    <td>상품정보</td>
+                    <td>상품금액</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr th:each="wishlistItem : ${wishlistItems}">
+
+                    <td class="d-flex">
+                        <button type="button" class="close wish-item-delete" aria-label="Close">
+                            <span aria-hidden="true" th:data-id="${wishlistItem.wishlistItemId}"
+                                onclick="deleteWishlistItem(this)"><i class="fi fi-rr-cross"></i></span>
+                        </button>
+                        <div class="repImgDiv align-self-center">
+                            <img th:src="${wishlistItem.imgUrl}" class="rounded repImg" th:alt="${wishlistItem.itemNm}">
+                        </div>
+                        <div class="align-self-center">
+                            <span th:text="${wishlistItem.itemNm}" class="fs24"></span>
+                            <div class="fs18 font-weight-light">
+                                <!-- <span th:id="'price_' + ${wishlistItem.wishlistItemId}"
+                                    th:data-price="${wishlistItem.price}" th:text="${wishlistItem.price} + '원'"
+                                    class="mr-2">
+                                </span> -->
+                                
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center align-middle wishprice">
+                        <h4 th:id="'totalPrice_' + ${wishlistItem.wishlistItemId}" name="totalPrice"
+                            th:text="${wishlistItem.price} + '원'">
+                        </h4>
+                    </td>
+
+                    <!--                 06Nov 의빈추가-->
+                    <td class="text-center align-middle">
+                        <button class="btn btn-danger" type="button" th:data-id="${wishlistItem.wishlistItemId}"
+                            onclick="moveItemToCart(this)">장바구니+</button>
+                    </td>
+
+
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+</html>

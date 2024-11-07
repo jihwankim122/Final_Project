@@ -38,6 +38,17 @@
             var reviewModal = $(".reviewModal");
 
             $(".addReviewBtn").click(function () {
+                // 1106 성아 수정
+                var hasOrdered = $(this).data("hasordered") === true || $(this).data("hasordered") === "true"; // 문자열을 Boolean으로 변환
+
+                console.log("hasOrdered 값:", hasOrdered); // 값 확인용 로그
+
+                // 주문 이력이 없는 경우 모달을 열지 않음
+                if (!hasOrdered) { // Boolean 값으로 평가
+                    alert("리뷰를 작성하려면 해당 상품을 구매하셔야 합니다.");
+                    return;
+                }
+
                 grade = 0;
                 inputText.val("");
 
@@ -110,6 +121,17 @@
             $(".reviewList").on("click", ".card-body", function () {
                 var targetReview = $(this); // 클릭한 리뷰
                 var reviewId = targetReview.data("id");
+
+                // 주문 이력이 있는지 확인 (hasOrdered 값이 true일 때만 모달을 열 수 있음)
+                var hasOrdered = targetReview.data("hasordered") === true || targetReview.data("hasordered") === "true"; // 문자열을 Boolean으로 변환
+                console.log("hasOrdered 값:", hasOrdered); // 값 확인용 로그
+
+                if (!hasOrdered) { // 주문 이력이 없으면 경고 메시지 표시
+                    alert("리뷰를 작성하려면 해당 상품을 구매하셔야 합니다.");
+                    return; // 리뷰 작성할 수 없도록 중지
+                }
+
+                // 주문 이력이 있으면 리뷰 수정 모달을 열도록 처리                
                 if(id === reviewId) {
                     $(".reviewSaveBtn").hide();
                     $(".removeBtn, .modifyBtn").show();
@@ -294,6 +316,44 @@
                 }
             });
         }
+
+        <!--      05Nov            의빈추가-->
+        function addWishlist() {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            var url = "/wishlist";  // 위시리스트 추가 요청 URL
+            var paramData = {
+                itemId: $("#itemId").val(),  // 상품 ID
+                itemNm: $("#itemNm").val()   // 상품명
+            };
+
+            var param = JSON.stringify(paramData);  // 요청 데이터는 반드시 JSON 형식이어야 합니다.
+
+            // AJAX 요청
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/json",  // 서버에 JSON 형식으로 전송
+                data: param,  // 데이터는 JSON 형식으로 보냄
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);  // CSRF 토큰 설정
+                },
+                dataType: "json",  // 응답 데이터 타입을 JSON으로 설정
+                success: function (response) {
+                    alert("찜하기가 완료되었습니다!");  // 찜하기 성공 메시지
+                    location.href = '/wishlist';
+                },
+                error: function (jqXHR) {
+                    if (jqXHR.status == 200) {
+                        alert("로그인 후 찜하실 수 있습니다.");
+                        location.href = '/members/login';  // 로그인 페이지로 리다이렉트
+                    } else {
+                        alert("찜하기 처리 중 오류가 발생했습니다.");
+                    }
+                }
+            });
+        }
     </script>
 </th:block>
 
@@ -427,6 +487,21 @@
             padding-bottom: 1rem;
             padding-top: 1rem;
         }
+
+        #avgStarRating {
+            display: flex; /* 별 아이콘을 가로로 배치 */
+            width : 25px;
+        }
+
+        #avgStarRating .fa-star {
+            display: inline-block; /* 별 아이콘이 가로로 나열되도록 설정 */
+            font-size: 24px; /* 아이콘 크기 조절 */
+            color: #ddd; /* 기본 별 색상 */
+        }
+
+        #avgStarRating .fa-star.checked {
+            color: #EBE700; /* 채워진 별 색상 */
+        }
     </style>
 </th:block>
 
@@ -440,14 +515,24 @@
             <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
         </div>
         <div class="wd50">
-            
-            <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}"
-                class="badge badge-primary mgb-15" style="background-color: red; width: 4rem;">판매중</span>
-            <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}"
-                class="badge btn-danger mgb-15" style="background-color: red; width: 4rem;">품절</span>
-                <button type="button" class="btn" th:text="'별점 ' + ${item.avg}">
+            <div class="container-fluid" style="display:flex;">
+                <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}"
+                    class="badge badge-primary mgb-15" style="background-color: red; width: 4rem;">판매중</span>
+                <span th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}"
+                    class="badge btn-danger mgb-15" style="background-color: red; width: 4rem;">품절</span>
+
+                <!-- 1106 성아 추가 -->
+                <div id="avgStarRating" style="margin-left:0.5rem;">
+                    <span class="fa fa-star" th:classappend="${item.avg >= 1 ? 'checked' : ''}"></span>
+                    <span class="fa fa-star" th:classappend="${item.avg >= 2 ? 'checked' : ''}"></span>
+                    <span class="fa fa-star" th:classappend="${item.avg >= 3 ? 'checked' : ''}"></span>
+                    <span class="fa fa-star" th:classappend="${item.avg >= 4 ? 'checked' : ''}"></span>
+                    <span class="fa fa-star" th:classappend="${item.avg >= 5 ? 'checked' : ''}"></span>
+                </div>
+                <div style="margin-left:6rem;" type="button" th:text="${item.avg} + ' / 5.0'"> <!-- 1106 성아 수정 -->
                     <span class="badge badge-light" th:text="${item.avg}">0</span>
-                </button>
+                </div>
+            </div>
             <div class="h4" th:text="${item.itemNm}"></div>
             <hr class="my-4">
 
@@ -469,9 +554,15 @@
                 <h3 name="totalPrice" id="totalPrice" class="font-weight-bold text-danger"></h3>
             </div>
             <div th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}" class="text-left">
+                <button type="button" class="btn-buy paybt" onclick="addWishlist()">찜하기</button>
                 <button type="button" class="btn-buy paybt" onclick="addCart()">장바구니 담기</button>
+<<<<<<< HEAD
                 <button type="button" class="btn-buy paybt" onclick="order()">주문하기</button>
 
+=======
+                <!-- 1106 성아 주석 처리 -->
+<!--                <button type="button" class="btn-buy paybt" onclick="order()">주문하기</button>-->
+>>>>>>> 3578eeb7042046d8799fb4e548d5eab9cb06330a
             </div>
         </div>
     </div>
@@ -493,12 +584,12 @@
         <button type="button" class="btn" th:text="'리뷰수 ' + ${item.reviewCnt}">
             <span class="badge badge-light" th:text="${item.reviewCnt}">0</span>
         </button>
-        <button type="button" class="btn" th:text="'별점 평균 ' + ${item.avg}">
+        <button type="button" class="btn" th:text="'별점 평균 ' + ${item.avg} + ' / 5.0'"> <!-- 1106 성아 수정 -->
             <span class="badge badge-light" th:text="${item.avg}">0</span>
         </button>
 
-        <!-- 1105 성아 수정 -->
-        <button type="button" class="btn addReviewBtn" th:if="${member != null}">리뷰 작성</button>
+        <!-- 1106 성아 수정 -->
+        <button type="button" class="btn addReviewBtn" th:if="${member != null}" th:data-hasOrdered="${hasOrdered ? 'true' : 'false'}">리뷰 작성</button>
 
         <div class="list-group reviewList"></div>
     </div>
@@ -549,7 +640,8 @@
                     </h2>
                 </div>
                 <div class="col-sm-4">
-                    <button type="button" class="btn-buy paybt" onclick="order()">결제하기</button>
+                    <!-- 1106 성아 주석 처리 -->
+<!--                    <button type="button" class="btn-buy paybt" onclick="order()">결제하기</button>-->
                     <button type="button" class="btn-buy paybt" onclick="addCart()">장바구니 담기</button>
                 </div>
             </div>
