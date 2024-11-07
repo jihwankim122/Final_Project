@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout1}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout1}">
 
 <head>
     <meta name="_csrf" th:content="${_csrf.token}" />
@@ -97,7 +98,7 @@
                     var str = "";
 
                     $.each(arr, function (idx, review) {
-<!--                        str += '<div style="cursor:pointer" class="card-body" data-reviewnum=' + review.reviewnum + '>';-->
+                        <!--                        str += '<div style="cursor:pointer" class="card-body" data-reviewnum=' + review.reviewnum + '>';-->
                         // 1105 성아 수정 // data-id 속성 추가
                         str += '<div style="cursor:pointer" class="card-body" data-reviewnum="' + review.reviewnum + '" data-id="' + review.id + '">';
                         str += '<h5 class="card-title">' + review.text + ' <span class="reviewgrade" data-grade2=' + review.grade + '></span></h5>';
@@ -132,7 +133,7 @@
                 }
 
                 // 주문 이력이 있으면 리뷰 수정 모달을 열도록 처리                
-                if(id === reviewId) {
+                if (id === reviewId) {
                     $(".reviewSaveBtn").hide();
                     $(".removeBtn, .modifyBtn").show();
 
@@ -156,7 +157,7 @@
                     });
 
                     $('.reviewModal').modal('show');
-                }  else {
+                } else {
                     // memberId와 reviewId가 다를 경우 처리할 로직 (예: 경고 메시지 표시)
                     alert("리뷰 작성자만 수정 및 삭제가 가능합니다.");
                 }
@@ -201,7 +202,7 @@
                 reviewModal.modal('hide');
             });
 
-            $('#closeModal1, #closeModal2').on('click', function() {
+            $('#closeModal1, #closeModal2').on('click', function () {
                 $('#myModal').modal('hide'); // 모달 강제 닫기
             });
         });
@@ -317,43 +318,43 @@
             });
         }
 
-        <!--      05Nov            의빈추가-->
-        function addWishlist() {
-            var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
+        // < !--      05Nov            의빈추가-- >
+            function addWishlist() {
+                var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
 
-            var url = "/wishlist";  // 위시리스트 추가 요청 URL
-            var paramData = {
-                itemId: $("#itemId").val(),  // 상품 ID
-                itemNm: $("#itemNm").val()   // 상품명
-            };
+                var url = "/wishlist";  // 위시리스트 추가 요청 URL
+                var paramData = {
+                    itemId: $("#itemId").val(),  // 상품 ID
+                    itemNm: $("#itemNm").val()   // 상품명
+                };
 
-            var param = JSON.stringify(paramData);  // 요청 데이터는 반드시 JSON 형식이어야 합니다.
+                var param = JSON.stringify(paramData);  // 요청 데이터는 반드시 JSON 형식이어야 합니다.
 
-            // AJAX 요청
-            $.ajax({
-                url: url,
-                type: "POST",
-                contentType: "application/json",  // 서버에 JSON 형식으로 전송
-                data: param,  // 데이터는 JSON 형식으로 보냄
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader(header, token);  // CSRF 토큰 설정
-                },
-                dataType: "json",  // 응답 데이터 타입을 JSON으로 설정
-                success: function (response) {
-                    alert("찜하기가 완료되었습니다!");  // 찜하기 성공 메시지
-                    location.href = '/wishlist';
-                },
-                error: function (jqXHR) {
-                    if (jqXHR.status == 200) {
-                        alert("로그인 후 찜하실 수 있습니다.");
-                        location.href = '/members/login';  // 로그인 페이지로 리다이렉트
-                    } else {
-                        alert("찜하기 처리 중 오류가 발생했습니다.");
+                // AJAX 요청
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    contentType: "application/json",  // 서버에 JSON 형식으로 전송
+                    data: param,  // 데이터는 JSON 형식으로 보냄
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);  // CSRF 토큰 설정
+                    },
+                    dataType: "json",  // 응답 데이터 타입을 JSON으로 설정
+                    success: function (response) {
+                        alert("찜하기가 완료되었습니다!");  // 찜하기 성공 메시지
+                        location.href = '/wishlist';
+                    },
+                    error: function (jqXHR) {
+                        if (jqXHR.status == 200) {
+                            alert("로그인 후 찜하실 수 있습니다.");
+                            location.href = '/members/login';  // 로그인 페이지로 리다이렉트
+                        } else {
+                            alert("찜하기 처리 중 오류가 발생했습니다.");
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
     </script>
 </th:block>
 
@@ -489,18 +490,40 @@
         }
 
         #avgStarRating {
-            display: flex; /* 별 아이콘을 가로로 배치 */
-            width : 25px;
+            display: flex;
+            /* 별 아이콘을 가로로 배치 */
+            width: 25px;
         }
 
         #avgStarRating .fa-star {
-            display: inline-block; /* 별 아이콘이 가로로 나열되도록 설정 */
-            font-size: 24px; /* 아이콘 크기 조절 */
-            color: #ddd; /* 기본 별 색상 */
+            display: inline-block;
+            /* 별 아이콘이 가로로 나열되도록 설정 */
+            font-size: 24px;
+            /* 아이콘 크기 조절 */
+            color: #ddd;
+            /* 기본 별 색상 */
         }
 
         #avgStarRating .fa-star.checked {
-            color: #EBE700; /* 채워진 별 색상 */
+            color: #EBE700;
+            /* 채워진 별 색상 */
+        }
+        .itembtn{
+            position: fixed;
+            right: 10rem;
+            bottom: 15rem;
+            display: grid;
+        }
+        #detailBtn, #reviewBtn{
+            margin: 1rem;
+            border: none;
+            background: none;
+            border-bottom: solid 0.1px rgb(196, 196, 196);
+            border-radius: 5%;
+        }
+        #upBtn{
+            border: none;
+            background: none;
         }
     </style>
 </th:block>
@@ -508,8 +531,12 @@
 <div layout:fragment="content">
     <input type="hidden" id="itemId" th:value="${item.no}">
     <input type="hidden" id="itemNm" th:value="${item.itemNm}">
-
-    <div class="d-flex container">
+    <div class="itembtn">
+        <button id="upBtn" type="button">▲</button>
+        <button id="detailBtn" type="button">상세보기</button>
+        <button id="reviewBtn" type="button">리뷰</button>
+    </div>
+    <div class="d-flex container" id="upSection">
         <div class="repImgDiv">
             <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
         </div>
@@ -528,7 +555,7 @@
                     <span class="fa fa-star" th:classappend="${item.avg >= 4 ? 'checked' : ''}"></span>
                     <span class="fa fa-star" th:classappend="${item.avg >= 5 ? 'checked' : ''}"></span>
                 </div>
-                <div style="margin-left:6rem;" type="button" th:text="${item.avg} + ' / 5.0'"> <!-- 1106 성아 수정 -->
+                <div style="margin-left:6rem;" type="button" th:text="${item.avg}"> <!-- 1106 성아 수정 -->
                     <span class="badge badge-light" th:text="${item.avg}">0</span>
                 </div>
             </div>
@@ -556,14 +583,14 @@
                 <button type="button" class="btn-buy paybt" onclick="addWishlist()">찜하기</button>
                 <button type="button" class="btn-buy paybt" onclick="addCart()">장바구니 담기</button>
                 <!-- 1106 성아 주석 처리 -->
-<!--                <button type="button" class="btn-buy paybt" onclick="order()">주문하기</button>-->
+                <!--                <button type="button" class="btn-buy paybt" onclick="order()">주문하기</button>-->
             </div>
         </div>
     </div>
 
     <div class="jumbotron jumbotron-fluid container mgt-30">
         <div class="container">
-            <h4 class="display-5">상품 상세 설명</h4>
+            <h4 class="display-5" id="detailSection">상품 상세 설명</h4>
             <hr class="my-4">
             <p class="lead" th:text="${item.itemDetail}"></p>
         </div>
@@ -574,16 +601,17 @@
             width="800">
     </div>
 
-    <div class="container reviewtable">
-        <button type="button" class="btn" th:text="'리뷰수 ' + ${item.reviewCnt}">
+    <div class="container reviewtable" id="reviewSection">
+        <button style="font-weight: bold;" type="button" class="btn" th:text="'리뷰수 ' + ${item.reviewCnt}">
             <span class="badge badge-light" th:text="${item.reviewCnt}">0</span>
         </button>
-        <button type="button" class="btn" th:text="'별점 평균 ' + ${item.avg} + ' / 5.0'"> <!-- 1106 성아 수정 -->
+        <button style="font-weight: bold;" type="button" class="btn" th:text="'별점 평균 ' + ${item.avg} + ' / 5.0'"> <!-- 1106 성아 수정 -->
             <span class="badge badge-light" th:text="${item.avg}">0</span>
         </button>
 
         <!-- 1106 성아 수정 -->
-        <button type="button" class="btn addReviewBtn" th:if="${member != null}" th:data-hasOrdered="${hasOrdered ? 'true' : 'false'}">리뷰 작성</button>
+        <button type="button" class="btn addReviewBtn" th:if="${member != null}"
+            th:data-hasOrdered="${hasOrdered ? 'true' : 'false'}">리뷰 작성</button>
 
         <div class="list-group reviewList"></div>
     </div>
@@ -592,7 +620,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">상품 리뷰</h5>
+                    <h5 class="modal-title box2">상품 리뷰</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModal2">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -635,11 +663,29 @@
                 </div>
                 <div class="col-sm-4">
                     <!-- 1106 성아 주석 처리 -->
-<!--                    <button type="button" class="btn-buy paybt" onclick="order()">결제하기</button>-->
+                    <!--                    <button type="button" class="btn-buy paybt" onclick="order()">결제하기</button>-->
                     <button type="button" class="btn-buy paybt" onclick="addCart()">장바구니 담기</button>
                 </div>
             </div>
         </div>
+        <div>
+
+        </div>
+        <script>
+            document.getElementById('detailBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('detailSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        
+            document.getElementById('reviewBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('reviewSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            document.getElementById('upBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('upSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        </script>
     </div>
 </div>
 

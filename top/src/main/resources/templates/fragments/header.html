@@ -24,6 +24,14 @@
 
             <!--            241101 은열추가-->
             <div style="font-size: small;  width: 100%;"  th:if="${member != null}" th:text="${member.name} + '회원님 등급은' + ${member.grade} + '입니다❤' "></div>
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">고객지원
+              <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li><a href="/notice/list">FAQ</a></li>
+                <li><a href="/qna/list">QnA</a></li>
+              </ul>
+            </div>
             <button type="button" class="btn login" onclick="location.href='/wishlist'"><i class="fi fi-rr-heart"></i></button>
             <button type="button" class="btn login" onclick="location.href='/cart'"><i
                     class="fi fi-rr-shopping-cart"></i></button>
@@ -61,12 +69,6 @@
                   <a class="nav-link" href="/members/logout">로그아웃</a>
                 </li>
               </ul>
-            </div>
-          </div>
-          <div class="btn-group" style="width: 100%;">
-            <div class="container-fluid">
-              <button style="float: left;" type="button" class="btn login" onclick="location.href='/notice/list'">FAQ</button>
-              <button style="float: left;" type="button" class="btn login" onclick="location.href='/qna/list'">QnA</button>
             </div>
           </div>
           <!--06Nov 의빈추가       -->
