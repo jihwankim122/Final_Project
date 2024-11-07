@@ -35,11 +35,11 @@
 </div>
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
         const csrfToken = $('meta[name="_csrf"]').attr('content');
         const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
-        $('#sendCodeBtn').on('click', function(){
+        $('#sendCodeBtn').on('click', function() {
             const phoneNum = $('#phone').val();
             if (phoneNum.match(/^010-\d{3,4}-\d{4}$/)) {
                 $.ajax({
@@ -47,9 +47,9 @@
                     type: 'POST',
                     contentType: 'application/json',
                     beforeSend: function(xhr) {
-                        xhr.setRequestHeader(csrfHeader, csrfToken); // CSRF 토큰 설정
+                        xhr.setRequestHeader(csrfHeader, csrfToken);
                     },
-                    data: JSON.stringify({ phoneNum: phoneNum }),
+                    data: JSON.stringify({ phoneNum: phoneNum, redirectPath: '/members/new' }),  // 적절한 경로 설정
                     success: function(response) {
                         alert(response);
                         $('#codeSection').show();
@@ -66,7 +66,7 @@
             }
         });
 
-        $('#verifyCodeBtn').on('click', function(){
+        $('#verifyCodeBtn').on('click', function() {
             const verificationCode = $('#verificationCode').val();
             if (verificationCode.length === 6) {
                 $.ajax({
@@ -78,8 +78,11 @@
                     },
                     data: JSON.stringify({ verificationCode: verificationCode }),
                     success: function(response) {
-                        alert('인증 성공! 회원가입 페이지로 이동합니다.');
-                        window.location.href = '/members/new';
+                        if (response.startsWith('/')) {
+                            window.location.href = response;  // 경로로 이동
+                        } else {
+                            alert(response);
+                        }
                     },
                     error: function() {
                         $('#codeError').show();
@@ -91,6 +94,7 @@
         });
     });
 </script>
+
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
