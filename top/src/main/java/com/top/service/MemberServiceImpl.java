@@ -89,9 +89,30 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member); // 수정된 회원 정보 저장
     }
 
-    // 회원의 존재 여부를 확인하는 메서드 추가
-    public boolean memberExists(String email) {
-        return memberRepository.existsByEmail(email);
+
+    // 새로운 비밀번호 설정 메서드
+    public boolean resetPassword(String email, String newPassword) {
+        Member member = memberRepository.findByEmail(email);
+        if (member == null) {
+            return false;
+        }
+        // 새 비밀번호 설정
+        member.setPassword(passwordEncoder.encode(newPassword));
+        memberRepository.save(member);
+        return true;
     }
 
+    // 전화번호로 회원 조회 메서드
+    public Member findByPhone(String phone) {
+        List<Member> members = memberRepository.findByPhone(phone);
+        if (members.isEmpty()) {
+            throw new UsernameNotFoundException("해당 전화번호로 가입된 회원이 없습니다.");
+        }
+        return members.get(0); // 첫 번째 회원만 반환
+    }
+
+    public Member verifyMemberByEmailAndPhone(String email, String phone) {
+        return (Member) memberRepository.findByEmailAndPhone(email, phone).orElseThrow(() ->
+                new UsernameNotFoundException("해당 정보로 가입된 회원이 없습니다."));
+    }
 }

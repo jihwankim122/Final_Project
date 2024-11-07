@@ -47,11 +47,19 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
+
+                        .requestMatchers("/css/**", "/js/**", "/img/**", "/starrr.js").permitAll()
+                        .requestMatchers("/", "/members/**", "/item/**", "/images/**", "/reviews/**", "/notice/**").permitAll()
+                        .requestMatchers("/members/foundId", "/sms/**", "/members/login", "/members/find-password").permitAll() // 명시적으로 허용 경로 추가
+
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/starrr.js").permitAll() // 1105 성아 추가
-                        .requestMatchers("/", "/members/**", "/item/**", "/images/**","/reviews/**","/notice/**","/category/**", "/load-items").permitAll()
+                        .requestMatchers("/", "/members/**", "/item/**", "/images/**", "/reviews/**", "/notice/**", "/category/**").permitAll()
+
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/sms/**", "/members/login").permitAll() // 새로 추가된 접근 허용 경로
                         .anyRequest().authenticated()
+                )
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/sms/send", "/sms/verifyCode") // SMS 인증 관련 CSRF 무시
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/members/login")
@@ -101,8 +109,10 @@ public class SecurityConfig {
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
         tokenRepository.setDataSource(dataSource);
-
+        tokenRepository.setCreateTableOnStartup(false);
         return tokenRepository;
     }
+
+
 }
 

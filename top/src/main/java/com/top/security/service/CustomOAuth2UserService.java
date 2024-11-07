@@ -111,5 +111,4 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         member.setSocial(true);
         return member;
     }
-
 }

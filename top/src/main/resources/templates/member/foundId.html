@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>아이디 찾기 결과</title>
+</head>
+<body>
+<div>
+  <h1>아이디 찾기 결과</h1>
+  <p th:if="${email != null}">
+    가입된 이메일: <span th:text="${email}"></span>
+  </p>
+  <p th:if="${email == null}">
+    해당 전화번호로 가입된 회원이 없습니다.
+  </p>
+  <button onclick="window.location.href='/members/login'">로그인 페이지로 이동</button>
+</div>
+</body>
+</html>

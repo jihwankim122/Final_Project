@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +30,7 @@ public class MemberController extends MemberBasicController {
     private final HttpSession session;
     private final MemberRepository memberRepository;
 
+    // 회원가입 폼
     @GetMapping(value = "/new")
     public String memberForm(Model model) {
         MemberFormDto memberFormDto = new MemberFormDto();
@@ -43,6 +45,7 @@ public class MemberController extends MemberBasicController {
         return "member/memberForm";
     }
 
+    // 회원가입
     @PostMapping(value = "/new")
     public String newMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -60,30 +63,32 @@ public class MemberController extends MemberBasicController {
         return "redirect:/members/login";
     }
 
+    // 로그인 페이지
     @GetMapping(value = "/login")
     public String loginMember() {
         return "/member/memberLoginForm";
     }
 
+    // 로그인 에러 페이지
     @GetMapping(value = "/login/error")
     public String loginError(Model model) {
         model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
         return "/member/memberLoginForm";
     }
 
+    // 현재 로그인된 사용자 이메일 가져오기
     private String getCurrentUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
     }
 
+    // 비밀번호 확인 폼
     @GetMapping(value = "/check-password")
     public String checkPasswordForm(HttpSession session, Principal principal) {
         // 세션에서 isSocialUser 플래그를 확인
         System.out.println(principal.getName());
         Member member=memberRepository.findByEmail(principal.getName());
 
-
-//        Boolean isSocialUser = (Boolean) session.getAttribute("isSocialUser");
         // 소셜 회원이라면 비밀번호 입력 없이 바로 추가 정보 입력 페이지로 리다이렉트
         if (member.isSocial()) {
             return "redirect:/members/add-social-info";
@@ -117,6 +122,7 @@ public class MemberController extends MemberBasicController {
         return "redirect:/members/update";
     }
 
+    // 회원 정보 수정 폼
     @GetMapping("/update")
     public String updateMemberForm(Model model, HttpSession session) {
         Boolean isSocialUser = (Boolean) session.getAttribute("isSocialUser");
@@ -145,8 +151,7 @@ public class MemberController extends MemberBasicController {
         return "member/updateMemberForm";
     }
 
-
-
+    // 회원 정보 수정 처리
     @PostMapping(value = "/update")
     public String updateMember(@Valid MemberUpdateFormDto formDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -176,19 +181,16 @@ public class MemberController extends MemberBasicController {
         return "redirect:/";
     }
 
+    // 소셜 회원 추가 정보 입력 폼
     @GetMapping("/add-social-info")
     public String addSocialInfoForm(Model model) {
         model.addAttribute("memberUpdateFormDto", new MemberUpdateFormDto());
         return "member/addSocialInfoForm";
     }
 
+    // 소셜 회원 추가 정보 입력 처리
     @PostMapping("/add-social-info")
-//    public String addSocialInfo(@Valid MemberUpdateFormDto formDto, BindingResult bindingResult, Model model) {
     public String addSocialInfo(MemberUpdateFormDto formDto, Model model) {
-//        if (bindingResult.hasErrors()) {
-//            return "member/addSocialInfoForm";
-//        }
-
         String email = getCurrentUserEmail();
         Member member = memberService.findByEmail(email);
 
@@ -199,5 +201,70 @@ public class MemberController extends MemberBasicController {
         );
 
         return "redirect:/";
+    }
+
+    // 아이디 찾기 폼
+    @GetMapping("/findIdForm")
+    public String findIdForm() {
+        return "member/findIdForm";
+    }
+
+    // 아이디 찾기 처리
+    @PostMapping("/foundId")
+    public String findIdByPhone(@RequestParam("phone") String phone, Model model) {
+        try {
+            Member member = memberService.findByPhone(phone);
+            model.addAttribute("email", member.getEmail());
+            return "member/foundId";
+        } catch (UsernameNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "member/findIdForm";
+        }
+    }
+
+    // 비밀번호 찾기 폼
+    @GetMapping("/find-password")
+    public String findPasswordForm() {
+        return "member/findPasswordForm";
+    }
+
+    // 비밀번호 재설정 요청 처리
+    @PostMapping("/request-password-reset")
+    public String requestPasswordReset(@RequestParam("email") String email, @RequestParam("phone") String phone, Model model) {
+        try {
+            Member member = memberService.verifyMemberByEmailAndPhone(email, phone);
+            session.setAttribute("resetEmail", member.getEmail());
+            return "redirect:/members/reset-password";
+        } catch (UsernameNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "member/findPasswordForm";
+        }
+    }
+
+    // 새로운 비밀번호 입력 폼
+    @GetMapping("/reset-password")
+    public String resetPasswordForm() {
+        return "member/resetPasswordForm";
+    }
+
+    // 비밀번호 재설정 처리
+    @PostMapping("/reset-password")
+    public String resetPassword(@RequestParam("newPassword") String newPassword, Model model) {
+        String email = (String) session.getAttribute("resetEmail");
+
+        if (email == null) {
+            model.addAttribute("errorMessage", "비밀번호 재설정 세션이 만료되었습니다.");
+            return "member/findPasswordForm";
+        }
+
+        boolean result = memberService.resetPassword(email, newPassword);
+        session.removeAttribute("resetEmail");
+
+        if (!result) {
+            model.addAttribute("errorMessage", "비밀번호 재설정 중 오류가 발생했습니다.");
+            return "member/resetPasswordForm";
+        }
+
+        return "redirect:/members/login";
     }
 }

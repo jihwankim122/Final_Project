@@ -40,6 +40,8 @@ public class Member extends BaseEntity {
     private String createdBy; // 생성자 정보
     private String modifiedBy; // 수정자 정보
     private String nickname; // 닉네임 필드
+
+    @Column(unique = true)
     private String phone; // 전화번호 필드
 
     @Enumerated(EnumType.STRING)

@@ -25,6 +25,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ItemRepository itemRepository; // 1105 유진 추가
 
 
+
     @Override
     public List<ReviewDto> getListOfItem(Long itemId) { // 1101 성아 Long id -> Long itemId 수정
         Item item = new Item(); // 새로운 Item 객체 생성

@@ -41,6 +41,13 @@ public class ItemController extends MemberBasicController {
     public String itemDtl(Model model, @PathVariable("itemId") Long itemId, HttpSession httpSession) {
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
 
+
+        // 세션에서 Member 객체를 가져옴 (로그인하지 않은 경우 null일 수 있음)
+        //Member member = (Member) httpSession.getAttribute("member");
+
+        // 1105 성아 수정
+
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Member member = null;
         boolean hasOrdered = false;
