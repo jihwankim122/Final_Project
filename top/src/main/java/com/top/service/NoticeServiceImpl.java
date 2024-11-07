@@ -75,32 +75,32 @@ public class NoticeServiceImpl implements NoticeService {
 
 
 
-    private BooleanBuilder getSearch(NpageRequestDTO requestDTO) {
-        String type = requestDTO.getType(); // 검색필드
-        BooleanBuilder booleanBuilder = new BooleanBuilder(); // where
-        QNotice qnotice = QNotice.notice;
-        String keyword = requestDTO.getKeyword(); // 검색어
-        BooleanExpression expression = qnotice.nno.gt(0L); // nno > 0 조건만 생성
-        booleanBuilder.and(expression); // where nno > 0
-        if (type == null || type.trim().length() == 0) { //검색 조건이 없는 경우
-            return booleanBuilder;
-        }
-
-
-        BooleanBuilder conditionBuilder = new BooleanBuilder();
-        if (type.contains("t")) {
-            conditionBuilder.or(qnotice.title.contains(keyword)); // or title like '%검색어%'
-        }
-        if (type.contains("c")) {
-            conditionBuilder.or(qnotice.content.contains(keyword)); // or content like '%검색어%'
-        }
-        if (type.contains("w")) {
-            conditionBuilder.or(qnotice.writer.contains(keyword)); // or writer like '%검색어%'
-        }
-
-        booleanBuilder.and(conditionBuilder);
-        return booleanBuilder;
-    }
+//    private BooleanBuilder getSearch(NpageRequestDTO requestDTO) {
+//        String type = requestDTO.getType(); // 검색필드
+//        BooleanBuilder booleanBuilder = new BooleanBuilder(); // where
+//        QNotice qnotice = QNotice.notice;
+//        String keyword = requestDTO.getKeyword(); // 검색어
+//        BooleanExpression expression = qnotice.nno.gt(0L); // nno > 0 조건만 생성
+//        booleanBuilder.and(expression); // where nno > 0
+//        if (type == null || type.trim().length() == 0) { //검색 조건이 없는 경우
+//            return booleanBuilder;
+//        }
+//
+//
+//        BooleanBuilder conditionBuilder = new BooleanBuilder();
+//        if (type.contains("t")) {
+//            conditionBuilder.or(qnotice.title.contains(keyword)); // or title like '%검색어%'
+//        }
+//        if (type.contains("c")) {
+//            conditionBuilder.or(qnotice.content.contains(keyword)); // or content like '%검색어%'
+//        }
+//        if (type.contains("w")) {
+//            conditionBuilder.or(qnotice.writer.contains(keyword)); // or writer like '%검색어%'
+//        }
+//
+//        booleanBuilder.and(conditionBuilder);
+//        return booleanBuilder;
+//    }
 
     // Read
     @Override
@@ -125,6 +125,45 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public void remove(Long nno) {
         repository.deleteById(nno);
+    }
+
+    // 고정 상태 변경
+    @Override
+    public void togglePinned(Long nno) {
+        Optional<Notice> result = repository.findById(nno);
+        if (result.isPresent()) {
+            Notice entity = result.get();
+            entity.togglePinned(); // pinned 상태 변경
+            repository.save(entity);
+        } else {
+            throw new RuntimeException("Notice not found");
+        }
+    }
+
+    private BooleanBuilder getSearch(NpageRequestDTO requestDTO) {
+        String type = requestDTO.getType();
+        BooleanBuilder booleanBuilder = new BooleanBuilder(); // where
+        QNotice qnotice = QNotice.notice;
+        String keyword = requestDTO.getKeyword();
+        BooleanExpression expression = qnotice.nno.gt(0L); // nno > 0 조건만 생성
+        booleanBuilder.and(expression); // where nno > 0
+        if (type == null || type.trim().length() == 0) {
+            return booleanBuilder;
+        }
+
+        BooleanBuilder conditionBuilder = new BooleanBuilder();
+        if (type.contains("t")) {
+            conditionBuilder.or(qnotice.title.contains(keyword)); // or title like '%검색어%'
+        }
+        if (type.contains("c")) {
+            conditionBuilder.or(qnotice.content.contains(keyword)); // or content like '%검색어%'
+        }
+        if (type.contains("w")) {
+            conditionBuilder.or(qnotice.writer.contains(keyword)); // or writer like '%검색어%'
+        }
+
+        booleanBuilder.and(conditionBuilder);
+        return booleanBuilder;
     }
 
 }

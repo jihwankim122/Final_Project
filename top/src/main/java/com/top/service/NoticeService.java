@@ -14,6 +14,9 @@ public interface NoticeService {
     void modify(NoticeDTO dto);
     void remove(Long nno);
 
+    // Changing Pinned Status
+    void togglePinned(Long nno);
+
     // Changing DTO to ENTITY
     default Notice dtoToEntity(NoticeDTO dto, Member member) {
         return Notice.builder()
@@ -22,6 +25,7 @@ public interface NoticeService {
                 .content(dto.getContent())
                 .writer(member.getEmail()) // Writer Email
                 .member(member) // Connecting Member
+                .pinned(dto.isPinned()) // Pinned Status
                 .build();
     }
 
@@ -35,6 +39,7 @@ public interface NoticeService {
                 .writerName(entity.getMember().getName()) // Getting Name from Member
                 .regDate(entity.getRegTime())
                 .modDate(entity.getUpdateTime())
+                .pinned(entity.isPinned()) // Pinned Status
                 .build();
     }
 }
