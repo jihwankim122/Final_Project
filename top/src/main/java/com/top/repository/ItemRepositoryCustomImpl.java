@@ -2,6 +2,7 @@ package com.top.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -63,26 +64,52 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         return null;
     }
 
+    // 1107 성아 카테고리 검색 추가
+    private BooleanExpression searchCategoryEq(Long category) {
+        if (category == null) {
+            return null;
+        }
+        return QItem.item.category.eq(category);
+    }
+
+    // 1107 성아 메인페이지 정렬 조건 추가
+    private OrderSpecifier<?> getSortOrder(String sortCondition) {
+        if ("priceDesc".equals(sortCondition)) {
+            return QItem.item.price.desc(); // 가격 높은 순
+        } else if ("priceAsc".equals(sortCondition)) {
+            return QItem.item.price.asc(); // 가격 낮은 순
+        } else if ("newest".equals(sortCondition)) {
+            return QItem.item.regTime.desc(); // 최신순
+        } else if ("oldest".equals(sortCondition)) {
+            return QItem.item.regTime.asc(); // 오래된순
+        }
+        return QItem.item.no.desc(); // 기본 정렬: 최신순(내림차순)
+    }
+
     @Override
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
 
         List<Item> content = queryFactory
                 .selectFrom(QItem.item)
-                .where(regDtsAfter(itemSearchDto.getSearchDateType()),
+                .where(
+                        regDtsAfter(itemSearchDto.getSearchDateType()),
                         searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
-                        searchByLike(itemSearchDto.getSearchBy(),
-                                itemSearchDto.getSearchQuery()))
+                        searchByLike(itemSearchDto.getSearchBy(), itemSearchDto.getSearchQuery()),
+                        searchCategoryEq(itemSearchDto.getCategory())  // 1107 성아 카테고리 조건 추가
+                )
                 .orderBy(QItem.item.no.desc()) // 1101 성아 수정
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         long total = queryFactory.select(Wildcard.count).from(QItem.item)
-                .where(regDtsAfter(itemSearchDto.getSearchDateType()),
+                .where(
+                        regDtsAfter(itemSearchDto.getSearchDateType()),
                         searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
-                        searchByLike(itemSearchDto.getSearchBy(), itemSearchDto.getSearchQuery()))
-                .fetchOne()
-                ;
+                        searchByLike(itemSearchDto.getSearchBy(), itemSearchDto.getSearchQuery()),
+                        searchCategoryEq(itemSearchDto.getCategory())  // 1107 성아 카테고리 조건 추가
+                )
+                .fetchOne();
 
         return new PageImpl<>(content, pageable, total);
     }
@@ -122,7 +149,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .where(builder)//은열 1018 수정
                 //                .where(itemImg.repimgYn.eq("Y"))
                 //                .where(itemNmLike(itemSearchDto.getSearchQuery()))
-                .orderBy(item.no.desc()) // 1101 성아 수정
+                .orderBy(getSortOrder(itemSearchDto.getSortCondition())) // 1107 성아 정렬 조건 수정
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

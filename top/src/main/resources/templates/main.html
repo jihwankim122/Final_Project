@@ -314,6 +314,19 @@
             const chatbot = document.getElementById('chatbot');
             chatbot.style.display = 'none'; // 챗봇 숨기기
         }
+
+        // 1107 성아 추가 // 상품 정렬 함수
+        function changeSortOrder() {
+            // 드롭다운에서 선택한 정렬 옵션을 가져오기
+            const sortOrder = document.getElementById("sortOrder").value;
+            const url = new URL(window.location.href);
+
+            // 기존의 sortCondition 파라미터를 제거하고, 새로운 값을 추가
+            url.searchParams.set("sortCondition", sortOrder);
+
+            // 현재 검색 쿼리와 기타 파라미터도 유지하면서 페이지 새로고침
+            window.location.href = url.toString();
+        }
     </script>
 </th:block>
 
@@ -418,6 +431,15 @@
 
     <div class="row" style="padding: 50px; margin-bottom: 90px;;">
         <div class="section-title">최신 상품</div>
+        <!-- 1107 성아 추가 정렬 드롭다운 메뉴 -->
+        <div class="container">
+            <select id="sortOrder" class="form-select" onchange="changeSortOrder()" style="width: 150px;">
+                <option value="newest" th:selected="${itemSearchDto.sortCondition == 'newest'}">최신순</option>
+                <option value="oldest" th:selected="${itemSearchDto.sortCondition == 'oldest'}">오래된순</option>
+                <option value="priceDesc" th:selected="${itemSearchDto.sortCondition == 'priceDesc'}">가격 높은순</option>
+                <option value="priceAsc" th:selected="${itemSearchDto.sortCondition == 'priceAsc'}">가격 낮은순</option>
+            </select>
+        </div>
         <th:block th:each="item, status: ${items.getContent()}">
             <div class="col-md-4 margin">
                 <div class="card">
