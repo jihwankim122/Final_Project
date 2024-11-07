@@ -24,9 +24,9 @@
 
             <!--            241101 은열추가-->
             <div style="font-size: small;  width: 100%;"  th:if="${member != null}" th:text="${member.name} + '회원님 등급은' + ${member.grade} + '입니다❤' "></div>
-            <button type="button" class="btn login" onclick="location.href='/cart'"><i
-                class="fi fi-rr-shopping-cart"></i></button>
             <button type="button" class="btn login" onclick="location.href='/wishlist'"><i class="fi fi-rr-heart"></i></button>
+            <button type="button" class="btn login" onclick="location.href='/cart'"><i
+                    class="fi fi-rr-shopping-cart"></i></button>
             <div class="dropdown" id="temple">
               <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fi fi-rr-user"></i>
@@ -63,10 +63,10 @@
               </ul>
             </div>
           </div>
-          <div class="btn-group">
+          <div class="btn-group" style="width: 100%;">
             <div class="container-fluid">
-              <button type="button" class="btn login" onclick="location.href='/notice/list'">FAQ</button>
-              <button type="button" class="btn login" onclick="location.href='/qna/list'">QnA</button>
+              <button style="float: left;" type="button" class="btn login" onclick="location.href='/notice/list'">FAQ</button>
+              <button style="float: left;" type="button" class="btn login" onclick="location.href='/qna/list'">QnA</button>
             </div>
           </div>
           <!--06Nov 의빈추가       -->
