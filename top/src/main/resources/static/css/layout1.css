@@ -9,6 +9,11 @@
     box-shadow: none;
 }
 
+.form-control{
+    box-shadow: none;
+}
+
+
 a {
     text-decoration: none;
 }
