@@ -66,10 +66,22 @@ public class Item extends BaseEntity {
                     "(quantity: " + this.stockNumber + ")");
         }
         this.stockNumber = restStock;
+
+        // 1108 성아 추가
+        // 재고가 0이면 itemSellStatus를 SOLD_OUT으로 설정
+        updateItemSellStatus();
     }
 
     public void addStock(int stockNumber){
         this.stockNumber += stockNumber;
+    }
+
+    // 1108 성아 추가
+    // 재고가 0일 때 itemSellStatus를 SOLD_OUT으로 변경하는 메서드
+    public void updateItemSellStatus() {
+        if (this.stockNumber == 0) {
+            this.itemSellStatus = ItemSellStatus.SOLD_OUT;
+        }
     }
 
 }
