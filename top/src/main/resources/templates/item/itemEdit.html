@@ -77,8 +77,8 @@
 </th:block>
 
 <div layout:fragment="content">
+  <div class="container">
   <form role="form" method="post" enctype="multipart/form-data" th:object="${itemFormDto}" class="itemcreate">
-    <div class="container">
       <p class="h2">상품 수정</p>
 
       <!-- 1101 성아 수정 -->
@@ -170,8 +170,8 @@
       </div>
 
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-    </div>
-  </form>
+    </form>
+  </div>
 </div>
 
 </html>

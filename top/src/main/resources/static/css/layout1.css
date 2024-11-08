@@ -9,9 +9,9 @@
     box-shadow: none;
 }
 
-.form-control{
+.form-control:focus {
     box-shadow: none;
-}
+  }
 
 a {
     text-decoration: none;
