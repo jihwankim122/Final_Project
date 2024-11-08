@@ -12,4 +12,5 @@ public interface WishlistService {
     boolean validateWishlistItem(Long wishlistItemId, String email);
     void deleteWishlistItem(Long wishlistItemId);
     void deleteWishlistItemByItemId(Long itemId);
+    boolean isItemAlreadyWished(Long itemId, String email);
 }

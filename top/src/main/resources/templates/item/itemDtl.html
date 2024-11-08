@@ -14,6 +14,28 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         $(document).ready(function () {
+                        // 스크롤 이동 함수
+            function goToScroll(targetId) {
+                $('html, body').animate({
+                    scrollTop: $("#" + targetId).offset().top
+                }, 400);
+            }
+
+            // 리뷰 버튼 클릭 이벤트
+            $("#reviewBtn").click(function () {
+                goToScroll('reviewSection'); // 리뷰 섹션으로 이동
+            });
+
+            // 상세보기 버튼 클릭 이벤트
+            $("#detailBtn").click(function () {
+                goToScroll('detailSection'); // 상세보기 섹션으로 이동
+            });
+
+            // 맨위로 버튼 클릭 이벤트
+            $("#topBtn").click(function () {
+                goToScroll('topSection'); // 상세보기 섹션으로 이동
+            });
+
             calculateTotalPrice();
 
             $("#count").change(function () {
@@ -122,16 +144,16 @@
                 var targetReview = $(this); // 클릭한 리뷰
                 var reviewId = targetReview.data("id");
 
-                // 주문 이력이 있는지 확인 (hasOrdered 값이 true일 때만 모달을 열 수 있음)
-                var hasOrdered = targetReview.data("hasordered") === true || targetReview.data("hasordered") === "true"; // 문자열을 Boolean으로 변환
-                console.log("hasOrdered 값:", hasOrdered); // 값 확인용 로그
+<!--                // 주문 이력이 있는지 확인 (hasOrdered 값이 true일 때만 모달을 열 수 있음)-->
+<!--                var hasOrdered = targetReview.data("hasordered") === true || targetReview.data("hasordered") === "true"; // 문자열을 Boolean으로 변환-->
+<!--                console.log("hasOrdered 값:", hasOrdered); // 값 확인용 로그-->
 
-                if (!hasOrdered) { // 주문 이력이 없으면 경고 메시지 표시
-                    alert("리뷰를 작성하려면 해당 상품을 구매하셔야 합니다.");
-                    return; // 리뷰 작성할 수 없도록 중지
-                }
+<!--                if (!hasOrdered) { // 주문 이력이 없으면 경고 메시지 표시-->
+<!--                    alert("리뷰를 작성하려면 해당 상품을 구매하셔야 합니다.");-->
+<!--                    return; // 리뷰 작성할 수 없도록 중지-->
+<!--                }-->
 
-                // 주문 이력이 있으면 리뷰 수정 모달을 열도록 처리                
+                // 리뷰 작성자와 로그인한 유저가 같으면 모달 열기
                 if(id === reviewId) {
                     $(".reviewSaveBtn").hide();
                     $(".removeBtn, .modifyBtn").show();
@@ -317,7 +339,7 @@
             });
         }
 
-        <!--      05Nov            의빈추가-->
+        <!--      08Nov            의빈추가-->
         function addWishlist() {
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
@@ -345,7 +367,9 @@
                     location.href = '/wishlist';
                 },
                 error: function (jqXHR) {
-                    if (jqXHR.status == 200) {
+                    if (jqXHR.status == 409) {  // 이미 찜한 경우
+                        alert("이미 찜한 상품입니다.");
+                    } else if (jqXHR.status == 200) {
                         alert("로그인 후 찜하실 수 있습니다.");
                         location.href = '/members/login';  // 로그인 페이지로 리다이렉트
                     } else {
@@ -354,6 +378,7 @@
                 }
             });
         }
+
     </script>
 </th:block>
 
@@ -502,6 +527,24 @@
         #avgStarRating .fa-star.checked {
             color: #EBE700; /* 채워진 별 색상 */
         }
+
+        .itemManu{
+            z-index:1;
+            position: fixed;
+            bottom:20rem;
+            right:10rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap:1rem;
+        }
+        .itemManu>*{
+            margin-buttom:1rem;
+            border-bottom:solid 0.1px gray;
+        }
+        .itemManu>#topBtn{
+            border:none;
+        }
     </style>
 </th:block>
 
@@ -509,7 +552,11 @@
 
     <input type="hidden" id="itemId" th:value="${item.no}">
     <input type="hidden" id="itemNm" th:value="${item.itemNm}">
-
+    <div class="itemManu">
+        <button id="topBtn" class="btn">▲</button>
+        <button id="detailBtn" class="btn">상세보기</button>
+        <button id="reviewBtn" class="btn">리뷰</button>
+    </div>
     <div class="d-flex container">
         <div class="repImgDiv">
             <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
@@ -529,7 +576,7 @@
                     <span class="fa fa-star" th:classappend="${item.avg >= 4 ? 'checked' : ''}"></span>
                     <span class="fa fa-star" th:classappend="${item.avg >= 5 ? 'checked' : ''}"></span>
                 </div>
-                <div style="margin-left:6rem;" type="button" th:text="${item.avg} + ' / 5.0'"> <!-- 1106 성아 수정 -->
+                <div style="margin-left:6rem;" type="button" th:text="${item.avg} + ' / 5.0' + ' (' + ${item.reviewCnt} + ')'"> <!-- 1108 성아 수정 -->
                     <span class="badge badge-light" th:text="${item.avg}">0</span>
                 </div>
             </div>
@@ -553,22 +600,18 @@
                 <h5>결제 금액</h5>
                 <h3 name="totalPrice" id="totalPrice" class="font-weight-bold text-danger"></h3>
             </div>
-            <div th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}" class="text-left">
+            <div  class="text-left">
                 <button type="button" class="btn-buy paybt" onclick="addWishlist()">찜하기</button>
-                <button type="button" class="btn-buy paybt" onclick="addCart()">장바구니 담기</button>
-                <button type="button" class="btn-buy paybt" onclick="order()">주문하기</button>
-
-
+                <button type="button" class="btn-buy paybt" th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}" onclick="addCart()">장바구니 담기</button>
                 <!-- 1106 성아 주석 처리 -->
 <!--                <button type="button" class="btn-buy paybt" onclick="order()">주문하기</button>-->
-
             </div>
         </div>
     </div>
 
     <div class="jumbotron jumbotron-fluid container mgt-30">
         <div class="container">
-            <h4 class="display-5">상품 상세 설명</h4>
+            <h4 class="display-5" id="detailSection">상품 상세 설명</h4>
             <hr class="my-4">
             <p class="lead" th:text="${item.itemDetail}"></p>
         </div>
@@ -579,7 +622,7 @@
             width="800">
     </div>
 
-    <div class="container reviewtable">
+    <div class="container reviewtable" id="reviewSection">
         <button type="button" class="btn" th:text="'리뷰수 ' + ${item.reviewCnt}">
             <span class="badge badge-light" th:text="${item.reviewCnt}">0</span>
         </button>
@@ -641,7 +684,8 @@
                 <div class="col-sm-4">
                     <!-- 1106 성아 주석 처리 -->
 <!--                    <button type="button" class="btn-buy paybt" onclick="order()">결제하기</button>-->
-                    <button type="button" class="btn-buy paybt" onclick="addCart()">장바구니 담기</button>
+                    <button type="button" class="btn-buy paybt" onclick="addWishlist()">찜하기</button>
+                    <button type="button" class="btn-buy paybt" th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL}" onclick="addCart()">장바구니 담기</button>
                 </div>
             </div>
         </div>

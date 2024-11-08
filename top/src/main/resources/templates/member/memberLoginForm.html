@@ -74,6 +74,9 @@
       width: 34%;
       border-radius: 5%;
     }
+    #form-check{
+      margin-left: 2rem;
+    }
   </style>
 </th:block>
 
@@ -92,18 +95,18 @@
             <div class="form-group">
               <input type="password" name="password" id="password" class="form-control" placeholder="password">
             </div>
+            <!-- 로그인 오류 메시지 표시 -->
+            <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
+  
+            <div class="form-check" id="form-check">
+              <input type="checkbox" class="form-check-input" id="rememberMe" name="remember-me">
+              <label class="form-check-label" for="rememberMe">자동 로그인</label>
+            </div>
           </div>
-
-          <!-- 로그인 오류 메시지 표시 -->
-          <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
 
           <!-- 로그인 버튼 및 회원가입 버튼 -->
           <button type="submit" class="btn loginbtn">로그인</button>
 
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="rememberMe" name="remember-me">
-            <label class="form-check-label" for="rememberMe">자동 로그인</label>
-          </div>
 
           <button type="button" class="btn logbtn" onclick="location.href='/members/new'">회원가입</button>
           <button type="button" class="btn find-btn" onclick="location.href='/members/findIdForm'">아이디 찾기</button>

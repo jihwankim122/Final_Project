@@ -12,8 +12,8 @@
         }
 
         #categori {
-            margin-top: 2rem;
-            margin-bottom: 3rem;
+            margin-top: 4rem;
+            margin-bottom: 4rem;
         }
 
         .carousel-inner>.item {
@@ -96,6 +96,7 @@
             /* 그림자 추가 */
             transition: background-color 0.3s;
             /* 배경 색상 전환 효과 */
+            z-index: 1;
         }
 
         .chatbot-icon:hover {
@@ -125,6 +126,7 @@
             /* 모서리 둥글게 */
             overflow: hidden;
             /* 내용이 넘치지 않도록 숨김 */
+            z-index: 99;
         }
 
         .chatbot-header {
@@ -245,12 +247,51 @@
             border-bottom: solid 0.1px rgb(218, 218, 218);
             box-shadow: none;
         }
+        .itemManu{
+            z-index:99;
+            position: fixed;
+            bottom:28rem;
+            right:3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap:1rem;
+            background-color: white;
+            border-radius: 5%;
+            border: solid 0.1px rgb(208, 208, 208);
+        }
+        .categoriBtn:hover{
+            box-shadow: 0px 0px 10px 10px rgba(148, 148, 255, 0.455);
+            transition-duration: 0.5s;
+        }
+        .categoriBtn{
+            transition-duration: 0.5s;
+        }
+        .carousel{
+            z-index: 1;
+        }
     </style>
 </th:block>
 
 <!-- 1030 성아 챗봇 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        $(document).ready(function () {
+                       // 스크롤 이동 함수
+            function goToScroll(targetId) {
+                $('html, body').animate({
+                    scrollTop: $("#" + targetId).offset().top
+                }, 400);
+            }
+            // 맨위로 버튼 클릭 이벤트
+            $("#topBtn").click(function () {
+                goToScroll('topSection'); // 상세보기 섹션으로 이동
+            });
+            // 맨아래로 버튼 클릭 이벤트
+            $("#bottomBtn").click(function () {
+                goToScroll('bottomSection'); // 상세보기 섹션으로 이동
+            });
+        });
         let memberName = /*[[${memberName}]]*/ "";
 
         // 챗봇 토글 함수
@@ -399,7 +440,9 @@
                                         <div class="card-body">
                                             <h4 class="card-title Best3-item-title">${item.itemNm}</h4>
                                             <p class="card-text">${item.itemDetail}</p>
-                                            <h3 class="card-title text-danger">${item.price}원</h3>
+                                            <h3 class="card-title text-danger">
+                                                ${item.itemSellStatus === 'SOLD_OUT' ? '품절' : `${item.price}원`} <!-- 1108 성아 수정 -->
+                                            </h3>
                                         </div>
                                     </a>
                                 </div>
@@ -428,14 +471,17 @@
 
 
 <div layout:fragment="content">
-
+    <div class="itemManu">
+        <button id="topBtn" class="btn">▲</button>
+        <button id="bottomBtn" class="btn">▼</button>
+    </div>
     <input name="searchQuery" th:value="${itemSearchDto.searchQuery}" type="hidden">
     <div class="center" th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}">
         <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'"></p>
     </div>
 
     <div class="carousel slide margin" data-ride="carousel" id="carouselControls">
-        <div class="container-fluid">
+        <div class="container-fluid" id="topSection">
             <div class="carousel slide" data-bs-ride="carousel" id="demo">
                 <!-- 클릭 버튼 -->
                 <div class="carousel-indicators">
@@ -470,61 +516,61 @@
     <div class="container" id="categori">
         <div class="row">
             <div class="col-md-1">
-                <button>
+                <button class="categoriBtn" onclick="location.href='/category/television'">
                     <img src="/img/categori/categoriTV.avif">
                     <div>TV</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button href="/category/mobilePhone">
+                <button class="categoriBtn" onclick="location.href='/category/mobilePhone'">
                     <img src="/img/categori/categoriHandphone.avif">
-                    <div>핸드폰</div>
+                    <div>Mobile</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button>
+                <button class="categoriBtn" onclick="location.href='/category/computer'">
                     <img src="/img/categori/categoriMoniter.avif">
                     <div>컴퓨터</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button>
+                <button class="categoriBtn" onclick="location.href='/category/washingMachine'">
                     <img src="/img/categori/categoriSeatack.avif">
                     <div>세탁기</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button>
+                <button class="categoriBtn" onclick="location.href='/category/refrigerator'">
                     <img src="/img/categori/categoriNeang.avif">
                     <div>냉장고</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button>
+                <button class="categoriBtn" onclick="location.href='/category/vacuum'">
                     <img src="/img/categori/categoriClean.avif">
                     <div>청소기</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button>
+                <button class="categoriBtn" onclick="location.href='/category/circulation'">
                     <img src="/img/categori/categoriAircon.png">
                     <div>에어컨</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button>
+                <button class="categoriBtn" onclick="location.href='/category/dishwasher'">
                     <img src="/img/categori/categoriDisgwasher.jpeg">
                     <div>식기세척기</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button>
+                <button class="categoriBtn" onclick="location.href='/category/clothesDryer'">
                     <img src="/img/categori/categoriClothes.avif">
                     <div>건조기</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button>
+                <button class="categoriBtn" onclick="location.href='/category/induction'">
                     <img src="/img/categori/categoriInduction.jpeg">
                     <div>인덕션</div>
                 </button>
@@ -537,7 +583,6 @@
     <!----------------- 카테코리.end ------------------->
 
     <div class="row" style="padding: 50px; margin-bottom: 90px;;">
-        <div class="section-title">최신 상품</div>
         <!-- 1107 성아 추가 정렬 드롭다운 메뉴 -->
         <div class="container">
             <select id="sortOrder" class="form-select" onchange="changeSortOrder()" style="width: 150px;">
@@ -558,7 +603,15 @@
                                 <div class="card-body">
                                     <h4 class="card-title Best3-item-title">[[${item.itemNm}]]</h4>
                                     <p class="card-text">[[${item.itemDetail}]]</p>
-                                    <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                                    <h3 class="card-title text-danger" th:if="${item.itemSellStatus == 'SOLD_OUT'}">품절</h3>
+                                    <!-- 1108 성아 수정 -->
+                                    <!-- 품절일 때 -->
+                                    <h3 class="card-title text-danger" th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">품절</h3>
+
+                                    <!-- 품절이 아닐 때 가격 표시 -->
+                                    <h3 class="card-title text-danger" th:unless="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">
+                                        [[${item.price}]]원
+                                    </h3>
                                 </div>
                             </a>
                         </div>

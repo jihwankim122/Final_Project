@@ -9,6 +9,10 @@
     box-shadow: none;
 }
 
+.form-control:focus {
+    box-shadow: none;
+  }
+
 a {
     text-decoration: none;
 }
@@ -29,6 +33,16 @@ span {
     border-bottom: solid 0.1px rgba(206, 206, 206, 0.232);
     display: flex;
     justify-content: center;
+}
+
+.header-btn-item:hover{
+    background-color: black;
+    color: white;
+    transition-duration: 0.5s;
+}
+.header-btn-item{
+    transition-duration: 0.5s;
+    border-radius: 5%;
 }
 
 .navbar {

@@ -9,35 +9,33 @@
   </style>
 </head>
 <div th:fragment="header">
-  <div class="container-fluid">
+  <div class="container-fluid" id="topSection">
     <nav class="navbar navbar-expand-sm">
 
       <div class="Logo">
-        <a href="/"><img th:src="@{/img/Logo.png}" /></a>
+        <a href="/"><img style="width: 10rem; height: auto;" th:src="@{/img/Logo.png}" /></a>
       </div>
 
 
       <div id="maincetegori" class="container">
-        <div class="container" style="width:100%">
+        <div class="container-fluid">
 
-          <div class="login" style="display: flex; position: absolute; right: 1rem;top: 2rem;">
+          <div class="login" style="display: flex; position: absolute; right: 2rem;top: 2rem;">
 
             <!--            241101 은열추가-->
-            <div style="font-size: small;  width: 100%;" th:if="${member != null}"
-              th:text="${member.name} + '회원님 등급은' + ${member.grade} + '입니다❤' "></div>
-            <div class="dropdown">
-              <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">고객지원</button>
-              <ul class="dropdown-menu">
-                <li class="dropdown-item"><a class="nav-link" href="/notice/list">FAQ</a></li>
-                <li class="dropdown-item"><a class="nav-link" href="/qna/list">QnA</a></li>
-              </ul>
-            </div>
+
+            <form class="search-form form-inline my-2 my-lg-0" th:action="@{/}" method="get">
+              <input name="searchQuery" class="form-control" type="search" placeholder="Search" aria-label="Search"
+                style="width: 200px;">
+    
+              <button id="search" class="btn" type="submit"><i class="fi fi-rr-search"></i></button>
+            </form>
             <button type="button" class="btn login" onclick="location.href='/wishlist'"><i
                 class="fi fi-rr-heart"></i></button>
             <button type="button" class="btn login" onclick="location.href='/cart'"><i
                 class="fi fi-rr-shopping-cart"></i></button>
-            <div class="dropdown" id="temple">
-              <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
+            <div class="dropdown" id="temple" style="margin-right: 7rem;">
+              <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" style="width: 2rem;">
                 <i class="fi fi-rr-user"></i>
               </button>
               <ul class="dropdown-menu" style="width: 50%;">
@@ -57,8 +55,7 @@
                 </li>
                 <li class="dropdown-item">
                   <!-- ROLE_ADMIN 권한이 있는 경우 -->
-
-
+                   
                   <!-- 로그인된 상태이고 ROLE_ADMIN이 없는 경우 -->
                   <a class="nav-link" sec:authorize="!hasAuthority('ROLE_ADMIN') and isAuthenticated()"
                     href="/orders">구매 이력</a>
@@ -66,11 +63,16 @@
                 <li class="dropdown-item" sec:authorize="isAnonymous()">
                   <a class="nav-link" href="/members/login">로그인</a>
                 </li>
+                <li class="dropdown-item" sec:authorize="isAnonymous()">
+                  <a class="nav-link" href="/sms/verify">회원가입</a>
+                </li>
                 <li class="dropdown-item" sec:authorize="isAuthenticated()">
                   <a class="nav-link" href="/members/logout">로그아웃</a>
                 </li>
               </ul>
             </div>
+            <div style="font-size: small;  width: 100%;" th:if="${member != null}"
+            th:text="${member.name} + '회원님 등급은' + ${member.grade} + '입니다❤' "></div>
           </div>
           <!--06Nov 의빈추가       -->
           <div class="btn-group">
@@ -87,13 +89,15 @@
               <a class="btn header-btn-item" href="/category/induction">인덕션</a>
             </div>
           </div>
+          <div class="dropdown" style="float: right;">
+            <button style="float: right; margin-right: 10.5rem;" class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">고객지원</button>
+            <ul class="dropdown-menu" style="width: 3rem;">
+              <li class="dropdown-item"><a class="nav-link" href="/notice/list">FAQ</a></li>
+              <li class="dropdown-item"><a class="nav-link" href="/qna/list">QnA</a></li>
+            </ul>
+          </div>
         </div>
-        <form class="search-form form-inline my-2 my-lg-0" th:action="@{/}" method="get">
-          <input name="searchQuery" class="form-control" type="search" placeholder="Search" aria-label="Search"
-            style="width: 200px;">
-
-          <button id="search" class="btn" type="submit"><i class="fi fi-rr-search"></i></button>
-        </form>
+        
       </div>
     </nav>
   </div>
