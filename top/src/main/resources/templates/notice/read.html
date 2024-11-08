@@ -13,37 +13,54 @@
             border: none;
             border-bottom: solid 0.1px rgb(215, 215, 215);
             margin: 0.4rem;
-            padding: 0.4rem;
+            padding: 0.6rem;
+            font-size: 1rem;
         }
 
         .Notice-read-title {
             font-weight: bold;
             margin-top: 1rem;
-            margin-bottom: 1rem;
-            margin-left: 1rem;
+            margin-bottom: 0.5rem;
+            margin-left: 0.5rem;
+            font-size: 1.1rem;
         }
 
         .Notice-read-h1 {
             margin-top: 2rem;
             margin-bottom: 2rem;
-        }
-
-        .Notice-read-day {
-            float: right;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
         }
 
         .Notice-container {
             width: 60%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+            margin-top: 2rem;
         }
 
         .Noticebtn {
-            background-color: rgb(237, 237, 237);
-            border-bottom: solid 0.1px gray;
+            background-color: rgb(52, 152, 219);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
         }
 
         .Noticebtn:hover {
-            background-color: rgb(212, 212, 212);
-            border-bottom: solid 0.1px rgb(86, 86, 86);
+            background-color: rgb(41, 128, 185);
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 1.5rem;
         }
 
         /* 공지사항으로 설정하는 체크박스 */
@@ -54,6 +71,23 @@
 
         .notice-checkbox-container input {
             margin-right: 0.5rem;
+        }
+
+        /* 공지사항으로 설정하는 버튼 */
+        .toggle-pinned-btn {
+            background-color: rgb(237, 237, 237);
+            color: black;
+            border: 1px solid rgb(200, 200, 200);
+            padding: 10px 20px;
+            margin-top: 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-pinned-btn:hover {
+            background-color: rgb(212, 212, 212);
         }
     </style>
 </th:block>
@@ -91,8 +125,8 @@
 <th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">
 
     <div layout:fragment="content">
-        <div class="container">
-            <h1 class="mt-4 Notice-read-h1">공지사항 보기</h1>
+        <div class="container Notice-container">
+            <h1 class="Notice-read-h1">공지사항 보기</h1>
 
             <div class="form-group">
                 <label class="Notice-read-title">글번호</label>
@@ -106,7 +140,7 @@
 
             <div class="form-group">
                 <label class="Notice-read-title">내용</label>
-                <textarea class="form-control Notice-read-body" rows="5" name="content" readonly>[[${dto.content}]]</textarea>
+                <textarea class="form-control Notice-read-body" rows="16" name="content" readonly>[[${dto.content}]]</textarea>
             </div>
 
             <div class="form-group">
@@ -131,23 +165,21 @@
 <!--                    <label for="isPinned" >공지사항으로 설정</label>-->
 <!--                </div>-->
 <!--            </div>-->
-            <!-- 수정 버튼: 공지사항 수정 가능 -->
-            <a th:href="@{/notice/modify(nno=${dto.nno}, page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}"
-               sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                <button type="button" class="btn Noticebtn">수정</button>
-            </a>
 
-            <!-- 목록 버튼 -->
-            <a th:href="@{/notice/list(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}">
-                <button type="button" class="btn Noticebtn">목록</button>
-            </a>
+            <div class="btn-container">
+                <a th:href="@{/notice/modify(nno=${dto.nno}, page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}"
+                   sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                    <button type="button" class="Noticebtn">수정</button>
+                </a>
 
-            <!-- 공지사항으로 설정하는 버튼 -->
-            <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                <button type="button" class="btn toggle-pinned-btn" id="togglePinnedBtn"
+                <a th:href="@{/notice/list(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}">
+                    <button type="button" class="Noticebtn">목록</button>
+                </a>
+
+                <button type="button" class="toggle-pinned-btn" id="togglePinnedBtn"
                         th:text="${dto.isPinned ? '공지해제' : '공지등록'}"
                         th:data-nno="${dto.nno}"
-                        onclick="togglePinned(this)">
+                        onclick="togglePinned(this)" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                 </button>
             </div>
         </div>
