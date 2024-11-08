@@ -25,8 +25,7 @@ public class WishlistController {
     @PostMapping(value = "/wishlist")
     public @ResponseBody ResponseEntity<?> addWishlistItem(
             @RequestBody @Valid WishlistItemDto wishlistItemDto,
-                                   BindingResult bindingResult, Principal principal) {
-
+            BindingResult bindingResult, Principal principal) {
 
         if (bindingResult.hasErrors()) {
             StringBuilder sb = new StringBuilder();
@@ -38,8 +37,15 @@ public class WishlistController {
         }
 
         String email = principal.getName();
-        Long wishlistItemId;
 
+        
+        boolean isAlreadyWished = wishlistService.isItemAlreadyWished(wishlistItemDto.getItemId(), email);
+        if (isAlreadyWished) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
+
+        Long wishlistItemId;
         try {
             wishlistItemId = wishlistService.addWishlist(wishlistItemDto, email);
         } catch (Exception e) {
@@ -48,6 +54,7 @@ public class WishlistController {
 
         return new ResponseEntity<Long>(wishlistItemId, HttpStatus.OK);
     }
+
 
 
     @GetMapping(value = "/wishlist")
