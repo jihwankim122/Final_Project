@@ -32,22 +32,27 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public Long addWishlist(WishlistItemDto wishlistItemDto, String email) {
+        // 상품 조회
         Item item = itemRepository.findById(wishlistItemDto.getItemId())
                 .orElseThrow(EntityNotFoundException::new);
+
+        // 회원 조회
         Member member = memberRepository.findByEmail(email);
 
+        // 사용자의 위시리스트 조회
         Wishlist wishlist = wishlistRepository.findByMemberId(member.getId());
         if (wishlist == null) {
             wishlist = Wishlist.createWishlist(member);
             wishlistRepository.save(wishlist);
         }
 
-
-        WishlistItem savedWishlistItem = wishlistItemRepository.findByIdAndItemNo(wishlist.getId(), item.getNo());
-
+        // 해당 상품이 이미 찜한 목록에 있는지 확인
+        WishlistItem savedWishlistItem = wishlistItemRepository.findByWishlistIdAndItemNo(wishlist.getId(), item.getNo());
         if (savedWishlistItem != null) {
+            // 이미 찜한 상품이라면 해당 상품 ID를 반환
             return savedWishlistItem.getId();
         } else {
+            // 찜 목록에 없으면 새로 추가
             WishlistItem wishlistItem = WishlistItem.createWishlistItem(wishlist, item);
             wishlistItemRepository.save(wishlistItem);
             return wishlistItem.getId();
@@ -107,5 +112,20 @@ public class WishlistServiceImpl implements WishlistService {
         // add to cart
         CartItemDto cartItemDto = new CartItemDto(item.getNo(), 1); // Setting default value 1
         return cartService.addCart(cartItemDto, email);
+    }
+    // 08Nov 의빈추가
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isItemAlreadyWished(Long itemId, String email) {
+        Member member = memberRepository.findByEmail(email);
+        Wishlist wishlist = wishlistRepository.findByMemberId(member.getId());
+
+        if (wishlist == null) {
+            return false;  // 위시리스트가 없다면, 당연히 중복 찜할 수 없습니다.
+        }
+
+        // 해당 상품이 이미 찜 목록에 있는지 확인
+        WishlistItem savedWishlistItem = wishlistItemRepository.findByWishlistIdAndItemNo(wishlist.getId(), itemId);
+        return savedWishlistItem != null;
     }
 }

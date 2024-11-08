@@ -19,7 +19,11 @@ public interface WishlistItemRepository extends JpaRepository<WishlistItem, Long
             "order by wi.regTime desc")
     List<WishlistDetailDto> findWishlistDetailDtoList(Long wishlistId);
 
-    List<WishlistItem> findByItemNo(Long itemId);
+    List<WishlistItem> findByItemNo(Long itemNo);
+
+    WishlistItem findByWishlistIdAndItemNo(Long wishlistId, Long itemNo);
+
+
 
     void deleteByitemNo(Long itemId);
 
