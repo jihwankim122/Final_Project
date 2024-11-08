@@ -13,4 +13,6 @@ public interface MemberService extends UserDetailsService {
        List<Member> getAllMembers();
 
        void updateMemberGrade(Long memberId, String grade);
+
+    boolean isEmailAvailable(String email);
 }
