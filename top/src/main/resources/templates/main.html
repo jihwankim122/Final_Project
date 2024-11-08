@@ -440,7 +440,9 @@
                                         <div class="card-body">
                                             <h4 class="card-title Best3-item-title">${item.itemNm}</h4>
                                             <p class="card-text">${item.itemDetail}</p>
-                                            <h3 class="card-title text-danger">${item.price}원</h3>
+                                            <h3 class="card-title text-danger">
+                                                ${item.itemSellStatus === 'SOLD_OUT' ? '품절' : `${item.price}원`} <!-- 1108 성아 수정 -->
+                                            </h3>
                                         </div>
                                     </a>
                                 </div>
@@ -602,7 +604,14 @@
                                     <h4 class="card-title Best3-item-title">[[${item.itemNm}]]</h4>
                                     <p class="card-text">[[${item.itemDetail}]]</p>
                                     <h3 class="card-title text-danger" th:if="${item.itemSellStatus == 'SOLD_OUT'}">품절</h3>
-                                    <h3 class="card-title text-danger" th:if="${item.itemSellStatus != 'SOLD_OUT'}">[[${item.price}]]원</h3>
+                                    <!-- 1108 성아 수정 -->
+                                    <!-- 품절일 때 -->
+                                    <h3 class="card-title text-danger" th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">품절</h3>
+
+                                    <!-- 품절이 아닐 때 가격 표시 -->
+                                    <h3 class="card-title text-danger" th:unless="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">
+                                        [[${item.price}]]원
+                                    </h3>
                                 </div>
                             </a>
                         </div>
