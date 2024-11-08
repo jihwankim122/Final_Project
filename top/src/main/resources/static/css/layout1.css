@@ -35,6 +35,16 @@ span {
     justify-content: center;
 }
 
+.header-btn-item:hover{
+    background-color: black;
+    color: white;
+    transition-duration: 0.5s;
+}
+.header-btn-item{
+    transition-duration: 0.5s;
+    border-radius: 5%;
+}
+
 .navbar {
     z-index: 1;
     border-bottom-width: 0.3px;

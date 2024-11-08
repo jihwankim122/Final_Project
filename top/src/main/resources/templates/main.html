@@ -12,8 +12,8 @@
         }
 
         #categori {
-            margin-top: 2rem;
-            margin-bottom: 3rem;
+            margin-top: 4rem;
+            margin-bottom: 4rem;
         }
 
         .carousel-inner>.item {
@@ -96,6 +96,7 @@
             /* 그림자 추가 */
             transition: background-color 0.3s;
             /* 배경 색상 전환 효과 */
+            z-index: 1;
         }
 
         .chatbot-icon:hover {
@@ -125,6 +126,7 @@
             /* 모서리 둥글게 */
             overflow: hidden;
             /* 내용이 넘치지 않도록 숨김 */
+            z-index: 99;
         }
 
         .chatbot-header {
@@ -246,14 +248,27 @@
             box-shadow: none;
         }
         .itemManu{
-            z-index:1;
+            z-index:99;
             position: fixed;
-            bottom:20rem;
-            right:10rem;
+            bottom:28rem;
+            right:3rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap:1rem;
+            background-color: white;
+            border-radius: 5%;
+            border: solid 0.1px rgb(208, 208, 208);
+        }
+        .categoriBtn:hover{
+            box-shadow: 0px 0px 10px 10px rgba(148, 148, 255, 0.455);
+            transition-duration: 0.5s;
+        }
+        .categoriBtn{
+            transition-duration: 0.5s;
+        }
+        .carousel{
+            z-index: 1;
         }
     </style>
 </th:block>
@@ -499,61 +514,61 @@
     <div class="container" id="categori">
         <div class="row">
             <div class="col-md-1">
-                <button onclick="location.href='/category/television'">
+                <button class="categoriBtn" onclick="location.href='/category/television'">
                     <img src="/img/categori/categoriTV.avif">
                     <div>TV</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button onclick="location.href='/category/mobilePhone'">
+                <button class="categoriBtn" onclick="location.href='/category/mobilePhone'">
                     <img src="/img/categori/categoriHandphone.avif">
-                    <div>핸드폰</div>
+                    <div>Mobile</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button onclick="location.href='/category/computer'">
+                <button class="categoriBtn" onclick="location.href='/category/computer'">
                     <img src="/img/categori/categoriMoniter.avif">
                     <div>컴퓨터</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button onclick="location.href='/category/washingMachine'">
+                <button class="categoriBtn" onclick="location.href='/category/washingMachine'">
                     <img src="/img/categori/categoriSeatack.avif">
                     <div>세탁기</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button onclick="location.href='/category/refrigerator'">
+                <button class="categoriBtn" onclick="location.href='/category/refrigerator'">
                     <img src="/img/categori/categoriNeang.avif">
                     <div>냉장고</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button onclick="location.href='/category/vacuum'">
+                <button class="categoriBtn" onclick="location.href='/category/vacuum'">
                     <img src="/img/categori/categoriClean.avif">
                     <div>청소기</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button onclick="location.href='/category/circulation'">
+                <button class="categoriBtn" onclick="location.href='/category/circulation'">
                     <img src="/img/categori/categoriAircon.png">
                     <div>에어컨</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button onclick="location.href='/category/dishwasher'">
+                <button class="categoriBtn" onclick="location.href='/category/dishwasher'">
                     <img src="/img/categori/categoriDisgwasher.jpeg">
                     <div>식기세척기</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button onclick="location.href='/category/clothesDryer'">
+                <button class="categoriBtn" onclick="location.href='/category/clothesDryer'">
                     <img src="/img/categori/categoriClothes.avif">
                     <div>건조기</div>
                 </button>
             </div>
             <div class="col-md-1">
-                <button onclick="location.href='/category/induction'">
+                <button class="categoriBtn" onclick="location.href='/category/induction'">
                     <img src="/img/categori/categoriInduction.jpeg">
                     <div>인덕션</div>
                 </button>
@@ -566,7 +581,6 @@
     <!----------------- 카테코리.end ------------------->
 
     <div class="row" style="padding: 50px; margin-bottom: 90px;;">
-        <div class="section-title">상품</div>
         <!-- 1107 성아 추가 정렬 드롭다운 메뉴 -->
         <div class="container">
             <select id="sortOrder" class="form-select" onchange="changeSortOrder()" style="width: 150px;">
