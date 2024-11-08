@@ -245,12 +245,38 @@
             border-bottom: solid 0.1px rgb(218, 218, 218);
             box-shadow: none;
         }
+        .itemManu{
+            z-index:1;
+            position: fixed;
+            bottom:20rem;
+            right:10rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap:1rem;
+        }
     </style>
 </th:block>
 
 <!-- 1030 성아 챗봇 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        $(document).ready(function () {
+                       // 스크롤 이동 함수
+            function goToScroll(targetId) {
+                $('html, body').animate({
+                    scrollTop: $("#" + targetId).offset().top
+                }, 400);
+            }
+            // 맨위로 버튼 클릭 이벤트
+            $("#topBtn").click(function () {
+                goToScroll('topSection'); // 상세보기 섹션으로 이동
+            });
+            // 맨아래로 버튼 클릭 이벤트
+            $("#bottomBtn").click(function () {
+                goToScroll('bottomSection'); // 상세보기 섹션으로 이동
+            });
+        });
         let memberName = /*[[${memberName}]]*/ "";
 
         // 챗봇 토글 함수
@@ -428,14 +454,17 @@
 
 
 <div layout:fragment="content">
-
+    <div class="itemManu">
+        <button id="topBtn" class="btn">▲</button>
+        <button id="bottomBtn" class="btn">▼</button>
+    </div>
     <input name="searchQuery" th:value="${itemSearchDto.searchQuery}" type="hidden">
     <div class="center" th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}">
         <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'"></p>
     </div>
 
     <div class="carousel slide margin" data-ride="carousel" id="carouselControls">
-        <div class="container-fluid">
+        <div class="container-fluid" id="topSection">
             <div class="carousel slide" data-bs-ride="carousel" id="demo">
                 <!-- 클릭 버튼 -->
                 <div class="carousel-indicators">
@@ -558,7 +587,8 @@
                                 <div class="card-body">
                                     <h4 class="card-title Best3-item-title">[[${item.itemNm}]]</h4>
                                     <p class="card-text">[[${item.itemDetail}]]</p>
-                                    <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                                    <h3 class="card-title text-danger" th:if="${item.itemSellStatus == 'SOLD_OUT'}">품절</h3>
+                                    <h3 class="card-title text-danger" th:if="${item.itemSellStatus != 'SOLD_OUT'}">[[${item.price}]]원</h3>
                                 </div>
                             </a>
                         </div>
