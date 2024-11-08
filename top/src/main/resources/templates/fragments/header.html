@@ -20,11 +20,10 @@
       <div id="maincetegori" class="container">
         <div class="container" style="width:100%">
 
-          <div class="login" style="display: flex; position: absolute; right: 1rem;top: 2rem;">
+          <div class="login" style="display: flex; position: absolute; right: 2rem;top: 2rem;">
 
             <!--            241101 은열추가-->
-            <div style="font-size: small;  width: 100%;" th:if="${member != null}"
-              th:text="${member.name} + '회원님 등급은' + ${member.grade} + '입니다❤' "></div>
+
             <div class="dropdown">
               <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">고객지원</button>
               <ul class="dropdown-menu">
@@ -37,7 +36,7 @@
             <button type="button" class="btn login" onclick="location.href='/cart'"><i
                 class="fi fi-rr-shopping-cart"></i></button>
             <div class="dropdown" id="temple">
-              <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
+              <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" style="width: 2rem;">
                 <i class="fi fi-rr-user"></i>
               </button>
               <ul class="dropdown-menu" style="width: 50%;">
@@ -74,6 +73,8 @@
                 </li>
               </ul>
             </div>
+            <div style="font-size: small;  width: 100%;" th:if="${member != null}"
+            th:text="${member.name} + '회원님 등급은' + ${member.grade} + '입니다❤' "></div>
           </div>
           <!--06Nov 의빈추가       -->
           <div class="btn-group">
