@@ -211,67 +211,124 @@
             cursor: pointer;
         }
 
+        .chatbot-buttons {
+            gap: 10px;
+            margin-top: 10px;
+        }
+
         .chatbot-message {
-            background-color: #ffffff;
-            /* 배경색 */
-            border-radius: 10px;
-            /* 둥근 모서리 */
             padding: 15px;
-            /* 패딩 */
-            margin: 10px 0;
-            /* 마진 */
-            font-size: 18px;
-            /* 폰트 크기 */
-            line-height: 1.5;
-            /* 줄 간격 */
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            /* 그림자 효과 */
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            line-height: 1.8;
+            font-size: 16px;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .chatbot-message h3 {
             margin: 0;
-            /* 제목 마진 제거 */
             font-size: 20px;
-            /* 제목 폰트 크기 */
             color: #007bff;
-            /* 제목 색상 */
+        }
+
+        .chatbot-info {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-left: 4px solid #007bff;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
         }
 
         .chatbot-message ul {
             padding-left: 20px;
-            /* 리스트 왼쪽 패딩 */
         }
-        #sortOrder{
+
+        #sortOrder {
             margin-bottom: 1rem;
             border: none;
             border-bottom: solid 0.1px rgb(218, 218, 218);
             box-shadow: none;
         }
-        .itemManu{
-            z-index:99;
+
+        .itemManu {
+            z-index: 99;
             position: fixed;
-            bottom:28rem;
-            right:3rem;
+            bottom: 28rem;
+            right: 3rem;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap:1rem;
+            gap: 1rem;
             background-color: white;
             border-radius: 5%;
             border: solid 0.1px rgb(208, 208, 208);
         }
-        .categoriBtn:hover{
+
+        .categoriBtn:hover {
             box-shadow: 0px 0px 10px 10px rgba(148, 148, 255, 0.455);
             transition-duration: 0.5s;
         }
-        .categoriBtn{
+
+        .categoriBtn {
             transition-duration: 0.5s;
         }
-        .carousel{
+
+        .carousel {
             z-index: 1;
         }
-        .soldouttext{
+
+        .soldouttext {
             text-decoration-line: line-through;
+        }
+
+        .chat-bot {
+            border: solid 0.1px rgb(211, 211, 211);
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            font-weight: bold;
+            margin: 5px 0;
+            line-height: 1.6;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        /* 모바일 스타일 */
+        @media (max-width: 426px) {
+            .card img {
+                height: 200px;
+            }
+
+            .carousel{
+                display: none;
+            }
+
+            .categoriBtn {
+                font-size: 14px;
+                padding: 5px;
+            }
+
+            .chatbot-container {
+                width: 90%;
+                bottom: 10px;
+                right: 5%;
+            }
+
+            .carousel-inner>.item {
+                height: 200px;
+            }
+
+            #categori {
+                display: none;
+            }
+            .itemManu{
+                bottom:6rem;
+                right:2.4rem;
+            }
         }
     </style>
 </th:block>
@@ -280,7 +337,7 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         $(document).ready(function () {
-                       // 스크롤 이동 함수
+            // 스크롤 이동 함수
             function goToScroll(targetId) {
                 $('html, body').animate({
                     scrollTop: $("#" + targetId).offset().top
@@ -307,18 +364,24 @@
                 chatbot.style.display = 'block';
                 // 초기 메시지 추가
                 chatbotBody.innerHTML = `
-                    <div><strong>안녕하세요, ${memberName} 님!</strong><br>
-                    TOP를 찾아주셔서 감사합니다.<br><br>
-                    어떤 문의 사항이 있으신가요?<br>
-                    자주 묻는 질문은 아래에서 바로 확인하실 수 있으며, <strong>배송, 주문취소, 쿠폰, 회원정보</strong> 등의 키워드를 입력하시면 관련 정보를 안내해 드립니다.<br><br>
-                    더 자세한 문의는 '1:1 문의하기' 버튼을 클릭하여 남겨주시면 운영시간 내 순차적으로 빠른 답변 드리겠습니다.<br><br>
-                    <strong>고객센터 운영시간</strong><br>
-                    평일 10:00~17:00 (주말 및 공휴일 휴무)<br>
-                    점심시간 12:00~13:00<br>
-                    ※ 전화 상담은 운영하지 않습니다. ※</div><br>
-                    <div>
-                        <button onclick="location.href='/notice/list'">자주 묻는 질문 확인하기</button>
-                        <button onclick="location.href='/qna/list'">1:1 문의하기</button>
+                    <div class="chatbot-message">
+                        <strong>안녕하세요, ${memberName} 님!</strong>
+                        <p>
+                            TOP를 찾아주셔서 감사합니다.<br><br>
+                            어떤 문의 사항이 있으신가요?<br>
+                            자주 묻는 질문은 아래에서 바로 확인하실 수 있으며, <strong>배송, 주문취소, 쿠폰, 회원정보</strong> 등의 키워드를 입력하시면 관련 정보를 안내해 드립니다.<br><br>
+                            더 자세한 문의는 '1:1 문의하기' 버튼을 클릭하여 남겨주시면 운영시간 내 순차적으로 빠른 답변 드리겠습니다.
+                        </p>
+                        <div class="chatbot-info">
+                            <strong>고객센터 운영시간</strong><br>
+                            평일 10:00~17:00 (주말 및 공휴일 휴무)<br>
+                            점심시간 12:00~13:00<br>
+                            ※ 전화 상담은 운영하지 않습니다. ※
+                        </div>
+                    </div>
+                    <div class="chatbot-buttons">
+                        <button class="chat-bot" onclick="location.href='/notice/list'">자주 묻는 질문 확인하기</button>
+                        <button class="chat-bot" onclick="location.href='/qna/list'">1:1 문의하기</button>
                     </div>
                 `;
             } else {
@@ -380,7 +443,7 @@
             // 현재 검색 쿼리와 기타 파라미터도 유지하면서 페이지 새로고침
             window.location.href = url.toString();
         }
-        window.onload = function() {
+        window.onload = function () {
             // 저장된 스크롤 위치가 있다면
             const savedScrollPosition = sessionStorage.getItem('scrollPosition');
 
@@ -588,7 +651,8 @@
     <div class="row" style="padding: 50px; margin-bottom: 90px;;">
         <!-- 1107 성아 추가 정렬 드롭다운 메뉴 -->
         <div class="container">
-            <select id="sortOrder" class="form-select" onchange="changeSortOrder()" style="width: 150px;">
+            <select id="sortOrder" class="form-select" onchange="changeSortOrder()"
+                style="width: 150px; font-size: xx-large;">
                 <option value="newest" th:selected="${itemSearchDto.sortCondition == 'newest'}">최신순</option>
                 <option value="oldest" th:selected="${itemSearchDto.sortCondition == 'oldest'}">오래된순</option>
                 <option value="priceDesc" th:selected="${itemSearchDto.sortCondition == 'priceDesc'}">가격 높은순</option>
@@ -606,13 +670,17 @@
                                 <div class="card-body">
                                     <h4 class="card-title Best3-item-title">[[${item.itemNm}]]</h4>
                                     <p class="card-text">[[${item.itemDetail}]]</p>
-                                    <h3 class="card-title text-danger soldouttext" th:if="${item.itemSellStatus == 'SOLD_OUT'}">품절</h3>
+                                    <h3 class="card-title text-danger soldouttext"
+                                        th:if="${item.itemSellStatus == 'SOLD_OUT'}">품절</h3>
                                     <!-- 1108 성아 수정 -->
                                     <!-- 품절일 때 -->
-                                    <h3 class="card-title text-danger soldouttext" th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">품절</h3>
+                                    <h3 class="card-title text-danger soldouttext"
+                                        th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">품절
+                                    </h3>
 
                                     <!-- 품절이 아닐 때 가격 표시 -->
-                                    <h3 class="card-title text-danger" th:unless="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">
+                                    <h3 class="card-title text-danger"
+                                        th:unless="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">
                                         [[${item.price}]]원
                                     </h3>
                                 </div>
@@ -625,7 +693,8 @@
             <div id="loadMore" class="text-center" style="display:none;">
                 <p>로딩 중...</p>
             </div>
-            <div id="noMoreDataMessage" style="display: none; text-align: center; padding: 20px; font-size: 18px; color: #999;">
+            <div id="noMoreDataMessage"
+                style="display: none; text-align: center; padding: 20px; font-size: 18px; color: #999;">
                 마지막 페이지입니다.
             </div>
         </div>
