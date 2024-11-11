@@ -60,14 +60,13 @@ public class MainController extends MemberBasicController {
 
         model.addAttribute("items", items);
         model.addAttribute("itemSearchDto", itemSearchDto);
-        // model.addAttribute("maxPage", 5);
         model.addAttribute("page", page.isPresent() ? page.get() : 0); // 현재 페이지 // 1107 성아 추가
 
         return "main";
     }
 
     // 1107 성아 추가
-    @GetMapping("/load-items")
+    @GetMapping("/load-main-items") // 1111 성아 경로 수정
     @ResponseBody
     public List<MainItemDto> loadItems(@RequestParam int page, ItemSearchDto itemSearchDto) {
         Pageable pageable = PageRequest.of(page, 6);  // 페이지당 6개씩 불러옴

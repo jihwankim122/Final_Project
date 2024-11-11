@@ -415,7 +415,7 @@
             document.getElementById("loadMore").style.display = "block";  // 로딩 메시지 표시
 
             // 새로운 데이터를 서버에서 받아오는 AJAX 요청
-            fetch(`/load-items?page=${currentPage + 1}`)
+            fetch(`/load-main-items?page=${currentPage + 1}`)
                 .then(response => response.json())
                 .then(data => {
                     console.log("서버 응답 데이터:", data);  // 서버에서 받은 전체 데이터 구조 출력
