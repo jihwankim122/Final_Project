@@ -99,6 +99,41 @@
     .memberform {
       margin-top: 4rem;
     }
+    @media (max-width: 426px) {
+        .container {
+            padding: 1rem;
+        }
+
+        .memberform h1 {
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            width: 100%;
+            margin: 0;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            font-size: 14px;
+        }
+
+        .addmember {
+            font-size: 14px;
+            padding: 0.8rem 1rem;
+        }
+
+        .input-group-append button {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        #passwordError, #emailError {
+            font-size: 12px;
+        }
+    }
   </style>
 </th:block>
 
@@ -117,7 +152,7 @@
         <div class="input-group">
           <input type="email" th:field="*{email}" id="email" class="form-control login-con" placeholder="이메일을 입력해주세요">
           <div class="input-group-append">
-            <button type="button" class="btn btn-secondary" onclick="checkEmail()">중복 확인</button>
+            <button type="button" class="btn addmember btn-secondary" onclick="checkEmail()">중복 확인</button>
           </div>
         </div>
         <p id="emailError" style="display: none;"></p>
@@ -146,7 +181,7 @@
         <div class="input-group">
           <input type="text" th:field="*{postcode}" id="sample6_postcode" class="form-control login-con" placeholder="우편번호">
           <div class="input-group-append">
-            <button type="button" class="btn btn-secondary" onclick="sample6_execDaumPostcode()">우편번호 찾기</button>
+            <button type="button" class="btn addmember btn-secondary" onclick="sample6_execDaumPostcode()">우편번호 찾기</button>
           </div>
         </div>
         <p th:if="${#fields.hasErrors('postcode')}" th:errors="*{postcode}" class="fieldError">올바르지 않은 데이터입니다</p>
@@ -165,7 +200,7 @@
       </div>
 
       <div style="text-align: center">
-        <button type="submit" class="btn btn-primary">회원가입</button>
+        <button type="submit" class="btn addmember btn-primary">회원가입</button>
       </div>
 
       <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">

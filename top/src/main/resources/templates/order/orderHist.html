@@ -160,6 +160,55 @@
     .total-price{
       text-align: right;
     }
+    @media (max-width: 426px) {
+        .content-mg {
+            width: 90%;
+            padding: 10px;
+        }
+
+        .card {
+            padding: 10px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        .fs24 {
+            font-size: 18px;
+        }
+
+        .fs18 {
+            font-size: 14px;
+        }
+
+        .repImgDiv {
+            width: 30%;
+            margin-right: 10px;
+        }
+
+        .repImg {
+            height: auto;
+            max-width: 100%;
+        }
+
+        .total-price h4 {
+            font-size: 14px;
+        }
+
+        .order-btn {
+            font-size: 12px;
+            padding: 8px;
+        }
+
+        .pagination {
+            font-size: 12px;
+        }
+
+        .pagination .page-link {
+            padding: 0.4rem 0.6rem;
+        }
+    }
   </style>
 </th:block>
 
@@ -181,7 +230,7 @@
 <!--          <h4>(취소 완료)</h4>-->
 <!--        </th:block>-->
         <th:block th:if="${order.orderStatus == T(com.top.constant.OrderStatus).ORDER}">
-          <button type="button" class="btn btn-outline-secondary" th:value="${order.orderId}" onclick="requestCancelOrder(this.value)">취소 요청</button>
+          <button type="button" class="btn order-btn btn-outline-secondary" th:value="${order.orderId}" onclick="requestCancelOrder(this.value)">취소 요청</button>
         </th:block>
         <th:block th:if="${order.orderStatus == T(com.top.constant.OrderStatus).CANCEL_REQUEST}">
           <h4>(취소 대기 중)</h4>
@@ -203,16 +252,15 @@
             <span th:text="${orderItem.orderPrice} +'원'"></span><br>
             <span th:text="${orderItem.count} +'개'"></span>
           </div>
-          <!--    241028 은열 추가-->
-          <div class="mt-3 total-price">
-            <h4>주문 총 금액: <span th:text="${order.totalPrice} + '원'"></span></h4>
-            <h4>할인 금액: <span style="text-decoration-line: line-through;" th:text="${order.discount} + '원'"></span></h4>
-            <h4>결제 금액: <span style="color: red; font-weight: bold;" th:text="${order.finalPrice} + '원'"></span></h4>
-          </div>
         </div>
       </div>
     </div>
-
+    <!--    241028 은열 추가-->
+    <div class="mt-3 total-price">
+      <h4>주문 총 금액: <span th:text="${order.totalPrice} + '원'"></span></h4>
+      <h4>할인 금액: <span style="text-decoration-line: line-through;" th:text="${order.discount} + '원'"></span></h4>
+      <h4>결제 금액: <span style="color: red; font-weight: bold;" th:text="${order.finalPrice} + '원'"></span></h4>
+    </div>
   </div>
 
   <div th:with="start=${(orders.number/maxPage)*maxPage + 1}, end=(${(orders.totalPages == 0) ? 1 : (start + (maxPage - 1) < orders.totalPages ? start + (maxPage - 1) : orders.totalPages)})" >

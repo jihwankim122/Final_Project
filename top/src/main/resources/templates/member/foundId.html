@@ -1,19 +1,88 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/layout1}">
+
 <head>
-  <title>아이디 찾기 결과</title>
+  <title>TOP</title>
 </head>
+
+<th:block layout:fragment="css">
+  <style>
+    .found-container {
+      margin-top: 3rem;
+      padding: 1.5rem;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .found-h1 {
+      font-size: 1.8rem;
+      color: #343a40;
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #495057;
+      margin-bottom: 1rem;
+    }
+
+    .found-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .found-btn:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 426px) {
+      .found-container {
+        padding: 1rem;
+        margin-top: 2rem;
+      }
+
+      .found-h1 {
+        font-size: 1.5rem;
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+
+      .found-btn {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  </style>
+</th:block>
+
 <body>
-<div>
-  <h1>아이디 찾기 결과</h1>
-  <p th:if="${email != null}">
-    <span th:text="${phone}"></span>
-    가입된 이메일: <span th:text="${email}"></span>
-  </p>
-  <p th:if="${email == null}">
-    해당 전화번호로 가입된 회원이 없습니다.
-  </p>
-  <button onclick="window.location.href='/members/login'">로그인 페이지로 이동</button>
-</div>
+  <div layout:fragment="content">
+    <div class="container found-container">
+      <h1 class="found-h1">아이디 찾기 결과</h1>
+      <p th:if="${email != null}">
+        <span th:text="${phone}"></span>
+        가입된 이메일: <span th:text="${email}"></span>
+      </p>
+      <p th:if="${email == null}">
+        해당 전화번호로 가입된 회원이 없습니다.
+      </p>
+      <button class="found-btn" onclick="window.location.href='/members/login'">로그인 페이지로 이동</button>
+    </div>
+  </div>
 </body>
+
 </html>
