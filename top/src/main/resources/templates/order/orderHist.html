@@ -86,32 +86,79 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
   <style>
-    .content-mg{
-        margin-left:30%;
-        margin-right:30%;
-        margin-top:2%;
-        margin-bottom:100px;
+    .content-mg {
+        margin: 3% auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        width: 70%;
     }
-    .repImgDiv{
-        margin-right:15px;
-        margin-left:15px;
-        height:auto;
+    h2 {
+        text-align: center;
+        color: #333333;
+        font-weight: bold;
+        margin-bottom: 20px;
     }
-    .repImg{
-        height:100px;
-        width:100px;
+    .card {
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
     }
-    .card{
-        width:750px;
-        height:100%;
-        padding:30px;
-        margin-bottom:20px;
+    .fs18 {
+        font-size: 18px;
+        color: #555555;
     }
-    .fs18{
-        font-size:18px
+    .fs18>p{
+      font-size:1.5rem;
     }
-    .fs24{
-        font-size:24px
+
+    .fs24 {
+        font-size: 24px;
+        color: #333333;
+    }
+    .repImgDiv {
+        margin-right: 15px;
+        width: 15%;
+    }
+    .repImg {
+        height: 100%;
+        width: 100%;
+        border-radius: 10px;
+        object-fit: contain;
+    }
+
+    .content-mg .btn {
+        font-size: 14px;
+        padding: 10px 20px;
+        color: #ffffff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .content-mg .btn:hover {
+        background-color: #0056b3;
+    }
+    .pagination {
+        margin-top: 20px;
+    }
+    .page-item.active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .text-center h4 {
+        color: #555555;
+        font-weight: 500;
+    }
+    .order-name{
+      font-size:2.5rem;
+    }
+    .total-price{
+      text-align: right;
     }
   </style>
 </th:block>
@@ -151,20 +198,21 @@
           <img th:src="${orderItem.imgUrl}" class = "rounded repImg" th:alt="${orderItem.itemNm}">
         </div>
         <div class="align-self-center w-75">
-          <span th:text="${orderItem.itemNm}" class="fs24 font-weight-bold"></span>
+          <span th:text="${orderItem.itemNm}" class="fs24 font-weight-bold order-name"></span>
           <div class="fs18 font-weight-light">
-            <span th:text="${orderItem.orderPrice} +'원'"></span>
+            <span th:text="${orderItem.orderPrice} +'원'"></span><br>
             <span th:text="${orderItem.count} +'개'"></span>
+          </div>
+          <!--    241028 은열 추가-->
+          <div class="mt-3 total-price">
+            <h4>주문 총 금액: <span th:text="${order.totalPrice} + '원'"></span></h4>
+            <h4>할인 금액: <span style="text-decoration-line: line-through;" th:text="${order.discount} + '원'"></span></h4>
+            <h4>결제 금액: <span style="color: red; font-weight: bold;" th:text="${order.finalPrice} + '원'"></span></h4>
           </div>
         </div>
       </div>
     </div>
-<!--    241028 은열 추가-->
-<div class="text-center mt-3">
-  <h4>주문 총 금액: <span th:text="${order.totalPrice} + '원'"></span></h4>
-  <h4>할인 금액: <span th:text="${order.discount} + '원'"></span></h4>
-  <h4>결제 금액: <span th:text="${order.finalPrice} + '원'"></span></h4>
-</div>
+
   </div>
 
   <div th:with="start=${(orders.number/maxPage)*maxPage + 1}, end=(${(orders.totalPages == 0) ? 1 : (start + (maxPage - 1) < orders.totalPages ? start + (maxPage - 1) : orders.totalPages)})" >

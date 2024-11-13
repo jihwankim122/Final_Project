@@ -35,6 +35,10 @@ span {
     justify-content: center;
 }
 
+.mobile-list{
+    display: none;
+}
+
 .header-btn-item:hover{
     background-color: black;
     color: white;
@@ -198,12 +202,6 @@ footer>button {
     background: none;
 }
 
-
-
-#paynav:hover {
-    opacity: 1;
-}
-
 .surv {
     width: 100%;
     text-align: left;
@@ -308,3 +306,138 @@ footer>button {
 #temple {
     width: 90%;
 }
+
+@media (max-width: 426px) {
+  /* 고정 헤더 */
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    z-index: 999;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 로고 스타일 */
+  .Logo img {
+    width: 80px;
+    height: auto;
+  }
+
+  /* 아이콘 정렬 */
+  .login {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .login .btn {
+    width: 35px;
+    height: 35px;
+    border: none;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #333;
+  }
+
+  .login .btn:hover {
+    color: #007bff;
+  }
+
+  /* 검색 영역 */
+  .search-form {
+    position: fixed;
+    top: 60px; /* 헤더 아래 */
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #fff;
+    z-index: 998;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .search-form .form-control {
+    flex: 1;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+  }
+
+  .search-form .btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* 모바일 리스트 */
+  .mobile-list {
+    display:block;
+    margin-top: 120px; /* 검색창 아래로 */
+    text-align: center;
+  }
+
+  .mobile-list .dropdown-menu {
+    width: 100%;
+    text-align: center;
+  }
+
+  .mobile-list .dropdown-item {
+    padding: 10px;
+    color: #333;
+  }
+
+  .mobile-list .dropdown-item:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  /* PC 리스트 숨기기 */
+  .pc-list * {
+    display: none;
+  }
+
+  /* 회원 등급 정보 정렬 */
+  .member-info {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 5px;
+    color: #333;
+  }
+
+  /* 고객지원 섹션 */
+  .dropdown:last-child {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .dropdown:last-child .dropdown-menu {
+    width: 100%;
+    text-align: center;
+  }
+
+  .dropdown:last-child .dropdown-item {
+    padding: 10px;
+    color: #333;
+  }
+
+  .dropdown:last-child .dropdown-item:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+}
+

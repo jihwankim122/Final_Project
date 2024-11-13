@@ -13,19 +13,24 @@
             border: none;
             border-bottom: solid 0.1px rgb(215, 215, 215);
             margin: 0.4rem;
-            padding: 0.4rem;
+            padding: 0.6rem;
+            font-size: 1rem;
         }
 
         .Qna-read-title {
             font-weight: bold;
             margin-top: 1rem;
-            margin-bottom: 1rem;
-            margin-left: 1rem;
+            margin-bottom: 0.5rem;
+            margin-left: 0.5rem;
+            font-size: 1.1rem;
         }
 
         .Qna-read-h1 {
             margin-top: 2rem;
             margin-bottom: 2rem;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
         }
 
         .Qna-read-day {
@@ -34,16 +39,43 @@
 
         .Qna-container {
             width: 60%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin: auto;
+            margin-top: 2rem;
         }
 
         .Qnabtn {
-            background-color: rgb(237, 237, 237);
-            border-bottom: solid 0.1px gray;
+            background-color: rgb(52, 152, 219);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
         }
 
         .Qnabtn:hover {
-            background-color: rgb(212, 212, 212);
-            border-bottom: solid 0.1px rgb(86, 86, 86);
+            background-color: rgb(41, 128, 185);
+        }
+
+        .textarea1 {
+            box-sizing: border-box;
+            resize: none;
+            font-size: 1rem;
+            min-height: 100px;
+            max-height: 300px;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        .answerContent{
+            min-height: 100px;
+            max-height: 200px;
         }
     </style>
 </th:block>
@@ -65,7 +97,8 @@
             </div>
             <div class="form-group">
                 <label class="Qna-read-title">내용</label>
-                <textarea class="form-control" rows="5" name="content" readonly>[[${dto.content}]]</textarea>
+                <textarea class="form-control" rows="16" name="content"
+                    readonly>[[${dto.content}]]</textarea>
             </div>
             <div class="form-group">
                 <label class="Qna-read-title">작성자</label>
@@ -109,8 +142,8 @@
             <div th:each="answer : ${answers}">
                 <div class="card mt-2">
                     <div class="card-body">
-                        <p class="card-title" th:text="${answer.writerName}">작성자</p>
-                        <textarea id="answerContent${answer.id}" class="form-control Qna-read-body" name="content"
+                        <p class="card-title" th:text="${answer.writerName}"></p>
+                        <textarea style="min-height: 150px;" id="answerContent${answer.id}" class="form-control Qna-read-body answerContent" name="content"
                             readonly th:text="${answer.content}"></textarea>
 
                         <p class="card-text">
@@ -138,13 +171,24 @@
 
                 <div class="form-group">
                     <label class="Qna-read-title" for="content">내용</label>
-                    <textarea id="content" class="form-control Qna-read-body" name="content" required></textarea>
+                    <textarea id="content" class="form-control Qna-read-body textarea1" name="content" required></textarea>
                 </div>
 
                 <button type="submit" class="btn Qnabtn">답변 작성</button>
             </form>
         </div>
+        <script th:inline="javascript">
+            const DEFAULT_HEIGHT = 30;
+            const $textarea = document.querySelector('.textarea1');
+
+            $textarea.oninput = (event) => {
+                const $target = event.target;
+                $target.style.height = 0;
+                $target.style.height = DEFAULT_HEIGHT + $target.scrollHeight + 'px';
+            };
+        </script>
     </div>
+
 </th:block>
 
 </html>

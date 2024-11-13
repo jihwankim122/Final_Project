@@ -23,7 +23,7 @@ public class Item extends BaseEntity {
     @Column(nullable = false)
     private Long category;// 241022 은열 추가
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100) // 50 -> 100 수정
     private String itemNm; //상품명
 
     @Column(name="price", nullable = false)

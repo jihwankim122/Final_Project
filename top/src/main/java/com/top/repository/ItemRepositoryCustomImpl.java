@@ -202,7 +202,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                 .where(builder)//은열 1018 수정
                 //                .where(itemImg.repimgYn.eq("Y"))
                 //                .where(itemNmLike(itemSearchDto.getSearchQuery()))
-                .orderBy(item.no.desc()) // 1101 성아 수정
+                .orderBy(getSortOrder(itemSearchDto.getSortCondition())) // 1107 성아 정렬 조건 수정
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

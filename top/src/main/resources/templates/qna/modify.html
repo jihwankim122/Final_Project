@@ -1,92 +1,181 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout1}">
 
 <th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">
 
+    <th:block layout:fragment="css">
+        <style>
+            a {
+                text-decoration: none;
+                color: black;
+            }
+
+            .Qna-read-body {
+                border: none;
+                border-bottom: solid 0.1px rgb(215, 215, 215);
+                margin: 0.4rem;
+                padding: 0.6rem;
+                font-size: 1rem;
+            }
+
+            .Qna-read-title {
+                font-weight: bold;
+                margin-top: 1rem;
+                margin-bottom: 0.5rem;
+                margin-left: 0.5rem;
+                font-size: 1.1rem;
+            }
+
+            .Qna-read-h1 {
+                margin-top: 2rem;
+                margin-bottom: 2rem;
+                font-size: 1.8rem;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            .Qna-read-day {
+                float: right;
+            }
+
+            .Qna-container {
+                width: 60%;
+                padding: 20px;
+                background-color: #f9f9f9;
+                border-radius: 8px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                margin: auto;
+                margin-top: 2rem;
+            }
+
+            .Qnabtn {
+                background-color: rgb(52, 152, 219);
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                margin-top: 1rem;
+                border-radius: 5px;
+                font-size: 1rem;
+                transition: background-color 0.3s ease;
+            }
+
+            .Qnabtn:hover {
+                background-color: rgb(41, 128, 185);
+            }
+
+            textarea {
+                resize: none;
+                box-sizing: border-box;
+                min-height: 100px;
+                max-height: 300px;
+                font-size: 1rem;
+            }
+
+            .btn-container {
+                text-align: center;
+                margin-top: 1.5rem;
+            }
+        </style>
+    </th:block>
+
     <div layout:fragment="content">
+        <div class="container Qna-container">
 
-        <h1 class="mt-4">Qna Modify Page</h1>
+            <h1 class="Qna-read-h1">Qna 수정</h1>
 
-        <form action="/qna/modify" method="post">
+            <form action="/qna/modify" method="post">
 
-            <!--페이지 번호  -->
-            <input type="hidden" name="page" th:value="${requestDTO.page}">
-            <input type="hidden" name="type" th:value="${requestDTO.type}" >
-            <input type="hidden" name="keyword" th:value="${requestDTO.keyword}" >
+                <!--페이지 번호  -->
+                <input type="hidden" name="page" th:value="${requestDTO.page}">
+                <input type="hidden" name="type" th:value="${requestDTO.type}">
+                <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
 
+                <div class="form-group">
+                    <label class="Qna-read-title">글 번호</label>
+                    <input type="text" class="form-control Qna-read-body" name="qno" th:value="${dto.qno}" readonly>
+                </div>
 
-            <div class="form-group">
-                <label ></label>
-                <input type="text" class="form-control" name="qno" th:value="${dto.qno}" readonly >
+                <div class="form-group">
+                    <label class="Qna-read-title">제목</label>
+                    <input type="text" class="form-control Qna-read-body" name="title" th:value="${dto.title}">
+                </div>
+
+                <div class="form-group">
+                    <label class="Qna-read-title">내용</label>
+                    <textarea id="textarea" class="form-control Qna-read-body" name="content">[[${dto.content}]]</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="Qna-read-title">작성자</label>
+                    <input type="text" class="form-control Qna-read-body" name="writer" th:value="${dto.writerName}"
+                        readonly>
+                </div>
+
+                <div class="form-group">
+                    <label class="Qna-read-title">등록일</label>
+                    <input type="text" class="form-control Qna-read-body"
+                        th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label class="Qna-read-title">수정일</label>
+                    <input type="text" class="form-control Qna-read-body"
+                        th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+                </div>
+
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            </form>
+
+            <div class="btn-container">
+                <button type="button" class="Qnabtn modifyBtn">수정</button>
+                <button type="button" class="Qnabtn listBtn">목록</button>
             </div>
 
-            <div class="form-group">
-                <label >Title</label>>
-                <input type="text" class="form-control" name="title" th:value="${dto.title}" >
-            </div>
-            <div class="form-group">
-                <label >Content</label>
-                <textarea class="form-control" rows="5" name="content">[[${dto.content}]]</textarea>
-            </div>
-            <div class="form-group">
-                <label >Writer</label>
-                <input type="text" class="form-control" name="writer" th:value="${dto.writerName}" readonly>
-            </div>
-            <div class="form-group">
-                <label >RegDate</label>
-                <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-            </div>
-            <div class="form-group">
-                <label >ModDate</label>
-                <input type="text" class="form-control" th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-            </div>
+            <script th:inline="javascript">
+                var actionForm = $("form");
 
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                $(".modifyBtn").click(function () {
+                    if (!confirm("수정하시겠습니까?")) {
+                        return;
+                    }
 
-        </form>
+                    actionForm
+                        .attr("action", "/qna/modify")
+                        .attr("method", "post")
+                        .submit();
+                });
 
-        <button type="button" class="btn btn-primary modifyBtn">Modify</button>
+                $(".listBtn").click(function () {
+                    var page = $("input[name='page']");
+                    var type = $("input[name='type']");
+                    var keyword = $("input[name='keyword']");
 
-        <button type="button" class="btn btn-info listBtn">List</button>
+                    actionForm.empty();
+                    actionForm.append(page);
+                    actionForm.append(type);
+                    actionForm.append(keyword);
 
+                    actionForm
+                        .attr("action", "/qna/list")
+                        .attr("method", "get");
 
-        <script th:inline="javascript">
-            var actionForm = $("form"); //form 태그 객체
+                    actionForm.submit();
+                });
 
-            $(".modifyBtn").click(function() {
-                if(!confirm("수정하시겠습니까?")){
-                    return ;
-                }
+                const DEFAULT_HEIGHT = 30;
+                const $textarea = document.querySelector('#textarea');
 
-                actionForm
-                    .attr("action", "/qna/modify")
-                    .attr("method","post")
-                    .submit();
-            });
+                $textarea.oninput = (event) => {
+                    const $target = event.target;
+                    $target.style.height = 0;
+                    $target.style.height = DEFAULT_HEIGHT + $target.scrollHeight + 'px';
+                };
+            </script>
 
-            $(".listBtn").click(function() {
-                //var pageInfo = $("input[name='page']");
-                var page = $("input[name='page']");
-                var type = $("input[name='type']");
-                var keyword = $("input[name='keyword']");
-
-                actionForm.empty(); //form 태그의 모든 내용을 지우고
-                actionForm.append(page);
-                actionForm.append(type);
-                actionForm.append(keyword);
-
-                actionForm
-                    .attr("action", "/qna/list")
-                    .attr("method","get");
-
-               actionForm.submit();
-            })
-        </script>
-
-
+        </div>
     </div>
 
 </th:block>
+
 </html>

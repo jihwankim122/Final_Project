@@ -2,60 +2,119 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout1}">
 
-<th:block layout:fragment="css">
-  <style>
-    a {
-      text-decoration: none;
-      color: black;
-    }
-
-    .Noticetop {
-      margin-bottom: 3rem;
-      gap: 1em;
-    }
-
-    .custom-select {
-      height: 100%;
-    }
-
-    .Noticesearch {
-      border: none;
-      border-bottom: solid 0.1px rgb(190, 190, 190);
-      border-radius: 5%;
-    }
-
-    /* 공지 뱃지 스타일 */
-    .notice-badge {
-      background-color: #000000; /* 검정색 배경 */
-      color: white; /* 흰색 글씨 */
-      padding: 2px 8px;
-      font-size: 12px;
-      border-radius: 12px;
-      margin-right: 10px; /* 제목과 뱃지 사이 간격 */
-    }
-
-    /* 고정된 공지사항 강조 */
-    .pinned-notice {
-      font-weight: bold;
-    }
-
-    /* 파란색 줄 제거 */
-    .pinned-notice a {
-      text-decoration: none;
-      color: black;
-    }
-
-  </style>
-</th:block>
+      <th:block layout:fragment="css">
+        <style>
+          a {
+            text-decoration: none;
+            color: black;
+          }
+      
+          .Noticetop {
+            margin-bottom: 3rem;
+            gap: 1em;
+            display: flex;
+            align-items: center;
+          }
+      
+          .custom-select {
+            width: auto;
+            height: 100%;
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid rgb(190, 190, 190);
+            background-color: #f9f9f9;
+          }
+      
+          .Noticesearch {
+            border: 1px solid rgb(190, 190, 190);
+            border-radius: 5px;
+            padding: 0.5rem;
+            width: 60%;
+          }
+      
+          .btn-outline-secondary {
+            background-color: rgb(245, 245, 245);
+            border: 1px solid rgb(200, 200, 200);
+            border-radius: 5px;
+            padding: 5px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+          }
+      
+          .btn-outline-secondary:hover {
+            background-color: rgb(230, 230, 230);
+          }
+      
+          .table {
+            margin-top: 1rem;
+            border-collapse: collapse;
+            width: 100%;
+            text-align: left;
+          }
+      
+          .table thead {
+            background-color: rgb(52, 152, 219);
+            color: white;
+          }
+      
+          .table th,
+          .table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+          }
+      
+          .pagination {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+          }
+      
+          .page-link {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            text-decoration: none;
+            color: black;
+            transition: background-color 0.3s ease;
+          }
+      
+          .page-link:hover {
+            background-color: #ddd;
+          }
+      
+          .page-item.active .page-link {
+            background-color: rgb(52, 152, 219);
+            color: white;
+            border: none;
+          }
+      
+          .notice-badge {
+            background-color: rgb(52, 73, 94); /* Dark color for notice badge */
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            border-radius: 12px;
+            margin-right: 10px;
+          }
+      
+          .pinned-notice {
+            font-weight: bold;
+          }
+      
+          .pinned-notice a {
+            text-decoration: none;
+            color: black;
+          }
+        </style>
+      </th:block>
+      
 
 <!--  <th:block th:fragment="content">-->
 <div layout:fragment="content">
   <div class="container">
-    <h1 class="mt-4">FAQ
-      <span sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-        <a th:href="@{/notice/register}"><button type="button" class="btn btn-outline-primary">등록</button></a>
-      </span>
-    </h1>
+    <h1 class="mt-4">FAQ</h1>
 
     <!-- 검색 --------------------------------------------------------------->
     <form action="/notice/list" method="get" id="searchForm">
@@ -127,7 +186,9 @@
       </tbody>
     </table>
     <!-- 목록 end -->
-
+    <span sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+      <a style="float: right;" th:href="@{/notice/register}"><button type="button" class="btn btn-outline-primary">등록</button></a>
+    </span>
     <!-- 페이징 ------------------------------------------------------------------------->
     <ul class="pagination h-100 justify-content-center align-items-center">
       <li class="page-item" th:if="${result.prev}">

@@ -13,24 +13,114 @@
     .Qnaregisterbtn {
       float: right;
       margin-right: 2rem;
+      background-color: rgb(52, 152, 219);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .Qnaregisterbtn:hover {
+      background-color: rgb(41, 128, 185);
     }
 
     .Qnatop {
       margin-bottom: 3rem;
       gap: 1em;
+      display: flex;
+      align-items: center;
     }
 
     .custom-select {
-      height: 100%
+      width: auto;
+      height: 100%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid rgb(190, 190, 190);
+      background-color: #f9f9f9;
     }
 
     .Qnasearch {
+      border: 1px solid rgb(190, 190, 190);
+      border-radius: 5px;
+      padding: 0.5rem;
+      width: 60%;
+    }
+
+    .btn-outline-secondary {
+      background-color: rgb(245, 245, 245);
+      border: 1px solid rgb(200, 200, 200);
+      border-radius: 5px;
+      padding: 5px 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+      background-color: rgb(230, 230, 230);
+    }
+
+    .table {
+      margin-top: 1rem;
+      border-collapse: collapse;
+      width: 100%;
+      text-align: left;
+    }
+
+    .table thead {
+      background-color: rgb(52, 152, 219);
+      color: white;
+    }
+
+    .table th,
+    .table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .pagination {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .page-link {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      text-decoration: none;
+      color: black;
+      transition: background-color 0.3s ease;
+    }
+
+    .page-link:hover {
+      background-color: #ddd;
+    }
+
+    .page-item.active .page-link {
+      background-color: rgb(52, 152, 219);
+      color: white;
       border: none;
-      border-bottom: solid 0.1px rgb(190, 190, 190);
-      border-radius: 5%;
+    }
+
+    .badge {
+      padding: 0.4em 0.6em;
+      font-size: 0.9rem;
+      border-radius: 5px;
+      display: inline-block;
+    }
+
+    .badge.bg-dark {
+      background-color: rgb(52, 73, 94);
+      color: white;
     }
   </style>
 </th:block>
+
 
 
 <!--  <th:block th:fragment="content">-->
@@ -43,7 +133,7 @@
         <input type="hidden" name="page" value="1">
         <div class="input-group-prepend">
           <select class="custom-select" name="type">
-<!--            <option th:selected="${npageRequestDTO.type == null}">-&#45;&#45;&#45;&#45;&#45;&#45;</option>-->
+            <!--            <option th:selected="${npageRequestDTO.type == null}">-&#45;&#45;&#45;&#45;&#45;&#45;</option>-->
             <option value="tc" th:selected="${npageRequestDTO.type =='tc'}">제목 + 내용</option>
             <option value="t" th:selected="${npageRequestDTO.type =='t'}">제목</option>
             <option value="c" th:selected="${npageRequestDTO.type =='c'}">내용</option>

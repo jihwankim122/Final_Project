@@ -62,8 +62,10 @@
       margin-left: 2rem;
       margin-bottom: 2rem;
     }
-    
-    #itemSellStatus, #category, .input-group-text{
+
+    #itemSellStatus,
+    #category,
+    .input-group-text {
       border: none;
       background: none;
     }
@@ -77,12 +79,64 @@
       padding: 1rem;
     }
 
-    .create-img-list, .icreate, .input-group-text {
+    .create-img-list,
+    .icreate,
+    .input-group-text {
       border-bottom: solid 0.1px rgb(156, 156, 156);
       border-radius: 5%;
     }
+
     .form-control:focus {
-  box-shadow: none;
+      box-shadow: none;
+    }
+
+    @media (max-width: 768px) {
+  .itemcreate {
+    padding: 10px;
+  }
+  .icreate {
+    width: 100%;
+  }
+
+  .input-group {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .input-group-text {
+    width: 100%;
+    margin-bottom: 5px;
+    text-align: left;
+  }
+
+  .form-control {
+    width: 100%;
+  }
+  .form-group {
+    text-align: center;
+  }
+
+  button {
+    width: 100%;
+    margin: 10px 0;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .input-group-text {
+    font-size: 12px;
+  }
+
+  .form-control {
+    font-size: 12px;
+  }
+
+  button {
+    font-size: 12px;
+    padding: 10px;
+  }
 }
   </style>
 </th:block>

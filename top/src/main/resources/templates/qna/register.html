@@ -4,27 +4,70 @@
 
 <th:block layout:fragment="css">
     <style>
-        .Qna-register-label{
+        .Qna-register-label {
             font-weight: bold;
-            font-size: large;
-            margin: 1rem;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+            display: block;
         }
-        .Qna-register-h1{
+
+        .Qna-register-h1 {
             margin-bottom: 2rem;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
         }
-        .Qna-register-text{
-            width: 80%;
+
+        .Qna-register-text {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
         }
-        .btn-primary{
-            margin-top: 0.5rem;
+
+        .Qna-container {
+            width: 60%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+            margin-top: 2rem;
+        }
+
+        .btn-primary {
+            background-color: rgb(52, 152, 219);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: rgb(41, 128, 185);
+        }
+
+        textarea {
+            resize: none;
+            min-height: 100px;
+            max-height: 300px;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 1.5rem;
         }
     </style>
 </th:block>
 <!--<th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">-->
 
     <div layout:fragment="content">
-        <div class="container">
-            <h1 class="mt-4 Qna-register-h1">QnA 작성</h1>
+        <div class="container Qna-container">
+            <h1 class="Qna-register-h1">QnA 작성</h1>
 
             <form th:action="@{/qna/register}" th:method="post">
                 <div class="form-group">
@@ -33,7 +76,7 @@
                 </div>
                 <div class="form-group" style="margin-bottom: 3rem;">
                     <label class="Qna-register-label">내용</label>
-                    <textarea class="form-control Qna-register-text" rows="5" name="content" placeholder="내용을 입력해주세요."></textarea>
+                    <textarea id="textarea" class="form-control Qna-register-text" rows="5" name="content" placeholder="내용을 입력해주세요."></textarea>
                 </div>
                 <!--            Writer ----------  ----------------------------------------------------------------------->
                 <!--            <div class="form-group">-->
@@ -41,9 +84,21 @@
                 <!--                <input type="text" class="form-control" name="writer" placeholder="Enter Writer">-->
                 <!--            </div>-->
 
-                <button type="submit" class="btn btn-primary">작성</button>
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-primary">작성</button>
+                </div>
             </form>
         </div>
+        <script th:inline="javascript">
+            const DEFAULT_HEIGHT = 30;
+            const $textarea = document.querySelector('#textarea');
+
+            $textarea.oninput = (event) => {
+                const $target = event.target;
+                $target.style.height = 0;
+                $target.style.height = DEFAULT_HEIGHT + $target.scrollHeight + 'px';
+            };
+        </script>
     </div>
 <!--</th:block>-->
 
