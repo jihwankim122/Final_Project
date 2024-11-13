@@ -15,4 +15,6 @@ public class SmsRequestDto {
     private String phoneNum;
 
     private String redirectPath;
+
+    public String email;
 }

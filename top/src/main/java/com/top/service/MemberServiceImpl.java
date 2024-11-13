@@ -101,6 +101,7 @@ public class MemberServiceImpl implements MemberService {
         // 새 비밀번호 설정
         member.setPassword(passwordEncoder.encode(newPassword));
         memberRepository.save(member);
+
         return true;
     }
 
