@@ -5,6 +5,40 @@
     font-family: 'IBM Plex Sans KR', sans-serif;
 }
 
+.icon-group {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 간격 조정 */
+    justify-content: flex-start; /* 정렬 방향 */
+    flex-wrap: wrap; /* 줄바꿈 허용 */
+}
+
+.icon-group .search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-group .btn {
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-group .btn:hover {
+    color: #007bff;
+}
+
+.member-info {
+    font-size: 12px;
+    color: #333;
+}
+
+
 .form-select{
     box-shadow: none;
 }
@@ -29,7 +63,6 @@ span {
 
 .navbar,
 #maincetegori {
-    width: 100%;
     border-bottom: solid 0.1px rgba(206, 206, 206, 0.232);
     display: flex;
     justify-content: center;
@@ -75,6 +108,7 @@ span {
     float: right;
     display: flex;
     gap: 20px;
+    margin-bottom: 1rem;
 }
 
 .navbar>.Logo {
@@ -308,136 +342,52 @@ footer>button {
 }
 
 @media (max-width: 426px) {
-  /* 고정 헤더 */
-  .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #fff;
-    z-index: 999;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
+    .navbar {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
 
-  /* 로고 스타일 */
-  .Logo img {
-    width: 80px;
-    height: auto;
-  }
+    .Logo img {
+        width: 80px;
+    }
 
-  /* 아이콘 정렬 */
-  .login {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+    .search-form {
+        flex: 1;
+        justify-content: center;
+    }
 
-  .login .btn {
-    width: 35px;
-    height: 35px;
-    border: none;
-    background: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    color: #333;
-  }
+    .search-form .form-control {
+        width: 80%;
+    }
 
-  .login .btn:hover {
-    color: #007bff;
-  }
+    .login {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
 
-  /* 검색 영역 */
-  .search-form {
-    position: fixed;
-    top: 60px; /* 헤더 아래 */
-    width: 100%;
-    padding: 10px 15px;
-    background-color: #fff;
-    z-index: 998;
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-  }
+    .member-info {
+        text-align: center;
+        font-size: 10px;
+    }
 
-  .search-form .form-control {
-    flex: 1;
-    padding: 5px 10px;
-    border-radius: 20px;
-    border: 1px solid #ddd;
-  }
+    .pc-list,
+    .pc-list * {
+        display: none;
+    }
 
-  .search-form .btn {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .mobile-list {
+        display: flex;
+    }
 
-  /* 모바일 리스트 */
-  .mobile-list {
-    display:block;
-    margin-top: 120px; /* 검색창 아래로 */
-    text-align: center;
-  }
-
-  .mobile-list .dropdown-menu {
-    width: 100%;
-    text-align: center;
-  }
-
-  .mobile-list .dropdown-item {
-    padding: 10px;
-    color: #333;
-  }
-
-  .mobile-list .dropdown-item:hover {
-    background-color: #007bff;
-    color: #fff;
-  }
-
-  /* PC 리스트 숨기기 */
-  .pc-list * {
-    display: none;
-  }
-
-  /* 회원 등급 정보 정렬 */
-  .member-info {
-    font-size: 14px;
-    text-align: center;
-    margin-top: 5px;
-    color: #333;
-  }
-
-  /* 고객지원 섹션 */
-  .dropdown:last-child {
-    margin-top: 20px;
-    text-align: center;
-  }
-
-  .dropdown:last-child .dropdown-menu {
-    width: 100%;
-    text-align: center;
-  }
-
-  .dropdown:last-child .dropdown-item {
-    padding: 10px;
-    color: #333;
-  }
-
-  .dropdown:last-child .dropdown-item:hover {
-    background-color: #007bff;
-    color: #fff;
-  }
+    .mobile-list .dropdown-menu {
+        padding: 10px;
+        font-size: 14px;
+    }
+    #temple {
+        width: 0px;
+    }
+    .service-center{
+        margin-right: 0rem;
+    }
 }
-
