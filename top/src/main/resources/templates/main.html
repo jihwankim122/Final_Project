@@ -646,6 +646,8 @@
     <div class="container">
         <img src="/img/temple.png" style="width:100%">
     </div>
+
+
     <!----------------- 카테코리.end ------------------->
 
     <div class="row" style="padding: 50px; margin-bottom: 90px;;">
@@ -658,6 +660,10 @@
                 <option value="priceDesc" th:selected="${itemSearchDto.sortCondition == 'priceDesc'}">가격 높은순</option>
                 <option value="priceAsc" th:selected="${itemSearchDto.sortCondition == 'priceAsc'}">가격 낮은순</option>
             </select>
+
+            <!-- 카카오 1:1 상담 ----------------------------------------------------------------->
+            <img src="/img/kakaochat.png" onclick="window.open('http://pf.kakao.com/_EDUVn/chat')" style="cursor: pointer;">
+
             <!-- 1107 성아 수정 - 데이터를 표시할 컨테이너 -->
             <div id="content-container" class="row">
                 <th:block th:each="item, status: ${items.getContent()}">
@@ -714,6 +720,9 @@
         </div>
     </div>
     <!-- 챗봇 끝 -->
+
+
+
 </div>
 <script>
     // Initialize tooltips

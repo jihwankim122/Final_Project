@@ -55,7 +55,11 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public NpageResultDTO<NoticeDTO, Notice> getList(NpageRequestDTO requestDTO) {
-        Pageable pageable = requestDTO.getPageable(Sort.by("nno").descending()); // order by nno desc limit 0,10
+        // 'pinned' 필드를 우선적으로 정렬한 후 'nno' 기준으로 내림차순 정렬
+        Pageable pageable = requestDTO.getPageable(Sort.by(
+                Sort.Order.desc("pinned"), // pinned가 true인 공지사항을 먼저
+                Sort.Order.desc("nno") // 그 다음은 nno 내림차순으로 정렬
+        ));
         BooleanBuilder booleanBuilder = getSearch(requestDTO);
 
         Page<Notice> result = repository.findAll(booleanBuilder, pageable); // Using Querydsl
