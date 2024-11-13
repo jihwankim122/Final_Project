@@ -11,8 +11,6 @@
 
 <th:block layout:fragment="script">
   <script th:inline="javascript">
-
-
     function validatePassword() {
       const password = document.getElementById("password").value;
       const passwordConfirm = document.getElementById("passwordConfirm").value;
@@ -44,22 +42,30 @@
         success: function(response) {
           console.log(response);
           emailError.style.display = "block";
-          if (response=='true') { // 사용 가능한 이메일일 때
+          if (response == 'true') {
             emailError.classList.add("fieldSuccess");
             emailError.classList.remove("fieldError");
             emailError.innerText = "사용 가능한 이메일입니다";
-            emailError.style.color = "green";
-          } else { // 이미 등록된 이메일일 때
+          } else {
             emailError.classList.add("fieldError");
             emailError.classList.remove("fieldSuccess");
             emailError.innerText = "이미 가입된 이메일입니다";
-            emailError.style.color = "red";
           }
         },
         error: function() {
           console.error("이메일 중복 확인 요청 실패");
         }
       });
+    }
+
+    function sample6_execDaumPostcode() {
+      new daum.Postcode({
+        oncomplete: function(data) {
+          document.getElementById("sample6_postcode").value = data.zonecode;
+          document.getElementById("sample6_address").value = data.address;
+          document.getElementById("sample6_detailAddress").focus();
+        }
+      }).open();
     }
 
     $(document).ready(function () {
@@ -74,11 +80,11 @@
 <th:block layout:fragment="css">
   <style>
     .fieldError {
-      color: #bd2130; /* 빨간색 */
+      color: #bd2130;
     }
 
     .fieldSuccess {
-      color: #28a745; /* 초록색 */
+      color: #28a745;
     }
 
     .form-group {
