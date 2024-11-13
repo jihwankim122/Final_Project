@@ -24,7 +24,9 @@ public class MemberServiceImpl implements MemberService {
     // 회원 저장
     @Override
     public Member saveMember(Member member) {
-        validateDuplicateMember(member); // 중복 회원 검증
+        if (memberRepository.existsByEmail(member.getEmail())) {
+            throw new IllegalStateException("이미 가입된 이메일입니다."); // 중복 회원 검증
+        }
         return memberRepository.save(member);
     }
 
@@ -114,5 +116,10 @@ public class MemberServiceImpl implements MemberService {
     public Member verifyMemberByEmailAndPhone(String email, String phone) {
         return (Member) memberRepository.findByEmailAndPhone(email, phone).orElseThrow(() ->
                 new UsernameNotFoundException("해당 정보로 가입된 회원이 없습니다."));
+    }
+
+    @Override
+    public boolean isEmailAvailable(String email) {
+        return memberRepository.findByEmail(email) == null;
     }
 }

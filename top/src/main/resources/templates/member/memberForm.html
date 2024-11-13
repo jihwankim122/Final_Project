@@ -1,88 +1,90 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layouts/layout1}">
+      layout:decorate="~{layouts/layout1}">
 
 <head>
-  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> <!-- 다음 주소 API -->
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 
-<!-- 사용자 CSS 추가 -->
-
-
-<!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
   <script th:inline="javascript">
     function validatePassword() {
-      // 비밀번호와 비밀번호 재확인 입력 필드 가져오기
       const password = document.getElementById("password").value;
       const passwordConfirm = document.getElementById("passwordConfirm").value;
       const passwordError = document.getElementById("passwordError");
 
-      // 비밀번호가 일치하는지 확인
       if (password !== passwordConfirm) {
-        passwordError.style.display = "block"; // 에러 메시지 표시
+        passwordError.style.display = "block";
       } else {
-        passwordError.style.display = "none"; // 에러 메시지 숨기기
+        passwordError.style.display = "none";
       }
     }
+
+    function checkEmail() {
+      const csrfToken = $('meta[name="_csrf"]').attr('content');
+      const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+      const email = document.getElementById("email").value;
+      const emailError = document.getElementById("emailError");
+
+      console.log(email);
+
+      $.ajax({
+        url: '/members/checkEmail',
+        type: 'POST',
+        data: { email: email },
+        dataType: 'TEXT',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success: function(response) {
+          console.log(response);
+          emailError.style.display = "block";
+          if (response == 'true') {
+            emailError.classList.add("fieldSuccess");
+            emailError.classList.remove("fieldError");
+            emailError.innerText = "사용 가능한 이메일입니다";
+          } else {
+            emailError.classList.add("fieldError");
+            emailError.classList.remove("fieldSuccess");
+            emailError.innerText = "이미 가입된 이메일입니다";
+          }
+        },
+        error: function() {
+          console.error("이메일 중복 확인 요청 실패");
+        }
+      });
+    }
+
+    function sample6_execDaumPostcode() {
+      new daum.Postcode({
+        oncomplete: function(data) {
+          document.getElementById("sample6_postcode").value = data.zonecode;
+          document.getElementById("sample6_address").value = data.address;
+          document.getElementById("sample6_detailAddress").focus();
+        }
+      }).open();
+    }
+
     $(document).ready(function () {
       var errorMessage = [[${ errorMessage }]];
       if (errorMessage != null) {
         alert(errorMessage);
       }
     });
-
-    // 다음 주소 API 호출
-    function sample6_execDaumPostcode() {
-      var themeObj = {
-        bgColor: "#ECECEC",
-        searchBgColor: "#FFFFFF",
-        contentBgColor: "#FFFFFF",
-        pageBgColor: "#FAFAFA",
-        textColor: "#333333",
-        queryTextColor: "#222222",
-        postcodeTextColor: "#FA4256",
-        emphTextColor: "#008BD3",
-        outlineColor: "#E0E0E0"
-      };
-      new daum.Postcode({
-        oncomplete: function (data) {
-          var addr = '';
-          var detailAddr = '';
-
-          if (data.userSelectedType === 'R') {
-            addr = data.roadAddress;
-          } else {
-            addr = data.jibunAddress;
-          }
-
-          if (data.userSelectedType === 'R') {
-            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-              detailAddr += data.bname;
-            }
-            if (data.buildingName !== '' && data.apartment === 'Y') {
-              detailAddr += (detailAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-            }
-            if (detailAddr !== '') {
-              detailAddr = ' (' + detailAddr + ')';
-            }
-            document.getElementById("sample6_detailAddress").value = detailAddr;
-          } else {
-            document.getElementById("sample6_detailAddress").value = '';
-          }
-
-          document.getElementById('sample6_postcode').value = data.zonecode;
-          document.getElementById("sample6_address").value = addr;
-          document.getElementById("sample6_detailAddress").focus();
-        }
-      }).open();
-    }
   </script>
 </th:block>
+
 <th:block layout:fragment="css">
   <style>
     .fieldError {
       color: #bd2130;
+    }
+
+    .fieldSuccess {
+      color: #28a745;
     }
 
     .form-group {
@@ -99,6 +101,7 @@
     }
   </style>
 </th:block>
+
 <div layout:fragment="content" class="memberform">
   <div class="container">
     <h1>회원가입</h1>
@@ -106,58 +109,59 @@
       <div class="form-group">
         <label th:for="name">이름</label>
         <input type="text" th:field="*{name}" class="form-control login-con" placeholder="이름을 입력해주세요">
-        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="fieldError">Incorrect data</p>
+        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="fieldError">올바르지 않은 데이터입니다</p>
       </div>
 
       <div class="form-group">
-        <label th:for="email">이메일주소</label>
-        <input type="email" th:field="*{email}" class="form-control login-con" placeholder="이메일을 입력해주세요">
-        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError">Incorrect data</p>
+        <label th:for="email">이메일 주소</label>
+        <div class="input-group">
+          <input type="email" th:field="*{email}" id="email" class="form-control login-con" placeholder="이메일을 입력해주세요">
+          <div class="input-group-append">
+            <button type="button" class="btn btn-secondary" onclick="checkEmail()">중복 확인</button>
+          </div>
+        </div>
+        <p id="emailError" style="display: none;"></p>
       </div>
 
       <div class="form-group">
         <label th:for="password">비밀번호</label>
-        <input type="password" th:field="*{password}" id="password" class="form-control login-con" placeholder="비밀번호 입력" oninput="validatePassword()">
-        <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="fieldError">Incorrect data</p>
+        <input type="password" th:field="*{password}" id="password" class="form-control login-con" placeholder="비밀번호를 입력해주세요" oninput="validatePassword()">
+        <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="fieldError">올바르지 않은 데이터입니다</p>
       </div>
-      
+
       <div class="form-group">
-        <label for="passwordConfirm">비밀번호 재확인</label>
+        <label for="passwordConfirm">비밀번호 확인</label>
         <input type="password" id="passwordConfirm" class="form-control login-con" placeholder="비밀번호를 다시 입력해주세요" oninput="validatePassword()">
-        <p id="passwordError" class="fieldError" style="display: none;">비밀번호가 일치하지 않습니다.</p>
+        <p id="passwordError" class="fieldError" style="display: none;">비밀번호가 일치하지 않습니다</p>
       </div>
 
       <div class="form-group">
         <label th:for="phone">전화번호</label>
-        <input type="text" th:field="*{phone}" class="form-control login-con" placeholder="전화번호를 입력하세요">
-        <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="fieldError"readonly>Invalid phone number</p>
+        <input type="text" th:field="*{phone}" class="form-control login-con" placeholder="전화번호를 입력하세요" readonly>
+        <p th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="fieldError">유효하지 않은 전화번호입니다</p>
       </div>
-
 
       <div class="form-group">
         <label th:for="postcode">우편번호</label>
         <div class="input-group">
-          <input type="text" th:field="*{postcode}" id="sample6_postcode" class="form-control login-con"
-            placeholder="우편번호">
+          <input type="text" th:field="*{postcode}" id="sample6_postcode" class="form-control login-con" placeholder="우편번호">
           <div class="input-group-append">
             <button type="button" class="btn btn-secondary" onclick="sample6_execDaumPostcode()">우편번호 찾기</button>
           </div>
         </div>
-        <p th:if="${#fields.hasErrors('postcode')}" th:errors="*{postcode}" class="fieldError">Incorrect data</p>
+        <p th:if="${#fields.hasErrors('postcode')}" th:errors="*{postcode}" class="fieldError">올바르지 않은 데이터입니다</p>
       </div>
 
       <div class="form-group">
         <label th:for="address">주소</label>
-        <input type="text" th:field="*{address}" id="sample6_address" class="form-control login-con" placeholder="주소">
-        <p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="fieldError">Incorrect data</p>
+        <input type="text" th:field="*{address}" id="sample6_address" class="form-control login-con" placeholder="주소를 입력해주세요">
+        <p th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="fieldError">올바르지 않은 데이터입니다</p>
       </div>
 
       <div class="form-group">
         <label th:for="detailAddress">상세주소</label>
-        <input type="text" th:field="*{detailAddress}" id="sample6_detailAddress" class="form-control login-con"
-          placeholder="상세주소">
-        <p th:if="${#fields.hasErrors('detailAddress')}" th:errors="*{detailAddress}" class="fieldError">Incorrect data
-        </p>
+        <input type="text" th:field="*{detailAddress}" id="sample6_detailAddress" class="form-control login-con" placeholder="상세주소를 입력해주세요">
+        <p th:if="${#fields.hasErrors('detailAddress')}" th:errors="*{detailAddress}" class="fieldError">올바르지 않은 데이터입니다</p>
       </div>
 
       <div style="text-align: center">

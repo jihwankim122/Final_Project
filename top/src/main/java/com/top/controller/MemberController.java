@@ -7,6 +7,8 @@ import com.top.entity.Member;
 import com.top.service.MemberServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequestMapping("/members")
 @Controller
@@ -203,12 +207,35 @@ public class MemberController extends MemberBasicController {
         return "redirect:/";
     }
 
+//    @GetMapping("/checkEmail")
+//    public String checkEmail(@RequestParam("email") String email, Model model) {
+//        boolean isAvailable = memberService.isEmailAvailable(email);
+//        int result = isAvailable ? 0 : 1; // 사용 가능하면 0, 이미 사용 중이면 1
+//        model.addAttribute("email", email);
+//        model.addAttribute("result", memberService.isEmailAvailable(email));
+//        return "member/checkEmail";
+//    }
+
+    @RequestMapping (value="/checkEmail",method = {RequestMethod.POST})
+    @ResponseBody
+    public  ResponseEntity<String> checkEmail(@RequestParam("email") String email) {
+        String isAvailable = String.valueOf(memberService.isEmailAvailable(email));
+        return new ResponseEntity<>(isAvailable,HttpStatus.OK);
+    }
+
     // 아이디 찾기 폼
     @GetMapping("/findIdForm")
     public String findIdForm() {
         return "member/findIdForm";
     }
 
+    @GetMapping("/foundId")
+    public String foundIdForm(Model model) {
+        String phone = (String) session.getAttribute("verifiedPhone");
+        session.removeAttribute("verifiedPhone");
+        model.addAttribute("email",memberService.findByPhone(phone).getEmail());
+        return "member/foundId";
+    }
     // 아이디 찾기 처리
     @PostMapping("/foundId")
     public String findIdByPhone(@RequestParam("phone") String phone, Model model) {
@@ -223,48 +250,51 @@ public class MemberController extends MemberBasicController {
     }
 
     // 비밀번호 찾기 폼
-    @GetMapping("/find-password")
+    @GetMapping("/findPassword")
     public String findPasswordForm() {
         return "member/findPasswordForm";
     }
 
-    // 비밀번호 재설정 요청 처리
-    @PostMapping("/request-password-reset")
-    public String requestPasswordReset(@RequestParam("email") String email, @RequestParam("phone") String phone, Model model) {
+    // 비밀번호 찾기 처리
+    @PostMapping("/findPassword")
+    public String findPassword(@RequestParam("email") String email, @RequestParam("phone") String phone, HttpSession session, Model model) {
         try {
             Member member = memberService.verifyMemberByEmailAndPhone(email, phone);
-            session.setAttribute("resetEmail", member.getEmail());
-            return "redirect:/members/reset-password";
+            session.setAttribute("verifiedMemberEmail", member.getEmail()); // 인증된 회원 정보 세션에 저장
+            return "redirect:/members/reset-password"; // 인증 성공 시 비밀번호 재설정 페이지로 리다이렉트
         } catch (UsernameNotFoundException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("errorMessage", "입력한 정보로 가입된 회원을 찾을 수 없습니다.");
             return "member/findPasswordForm";
         }
     }
 
-    // 새로운 비밀번호 입력 폼
+    // 비밀번호 재설정 폼
     @GetMapping("/reset-password")
-    public String resetPasswordForm() {
+    public String resetPasswordForm(HttpSession session, Model model) {
+        String email = (String) session.getAttribute("verifiedMemberEmail");
+        if (email == null) {
+            return "redirect:/members/findPassword"; // 이메일 인증이 없다면 다시 찾기 폼으로 리다이렉트
+        }
+        model.addAttribute("email", email);
         return "member/resetPasswordForm";
     }
 
     // 비밀번호 재설정 처리
     @PostMapping("/reset-password")
-    public String resetPassword(@RequestParam("newPassword") String newPassword, Model model) {
-        String email = (String) session.getAttribute("resetEmail");
-
+    public String resetPassword(@RequestParam("newPassword") String newPassword, HttpSession session, Model model) {
+        String email = (String) session.getAttribute("verifiedMemberEmail");
         if (email == null) {
-            model.addAttribute("errorMessage", "비밀번호 재설정 세션이 만료되었습니다.");
-            return "member/findPasswordForm";
+            return "redirect:/members/findPassword"; // 인증되지 않은 상태에서 접근 시 찾기 폼으로 리다이렉트
         }
 
         boolean result = memberService.resetPassword(email, newPassword);
-        session.removeAttribute("resetEmail");
+        session.removeAttribute("verifiedMemberEmail"); // 인증 정보 세션에서 제거
 
-        if (!result) {
+        if (result) {
+            return "redirect:/members/login"; // 비밀번호 재설정 성공 시 로그인 페이지로 리다이렉트
+        } else {
             model.addAttribute("errorMessage", "비밀번호 재설정 중 오류가 발생했습니다.");
             return "member/resetPasswordForm";
         }
-
-        return "redirect:/members/login";
     }
 }

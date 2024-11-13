@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
 
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/starrr.js").permitAll()
-                        .requestMatchers("/", "/members/**", "/item/**", "/images/**", "/reviews/**", "/notice/**", "/load-items").permitAll()
+                        .requestMatchers("/", "/members/**", "/item/**", "/images/**", "/reviews/**", "/notice/**", "/load-items", "/load-main-items").permitAll()
                         .requestMatchers("/members/foundId", "/sms/**", "/members/login", "/members/find-password").permitAll() // 명시적으로 허용 경로 추가
 
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/starrr.js").permitAll() // 1105 성아 추가
