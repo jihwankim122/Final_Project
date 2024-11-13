@@ -3,7 +3,7 @@
       layout:decorate="~{layouts/layout1}">
 
 <head>
-    <title>회원 정보 수정</title>
+    <title>TOP</title>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> <!-- 다음 주소 API -->
     <style>
         .hidden {
@@ -32,6 +32,35 @@
         .form-group {
             width: 50%;
         }
+        @media (max-width: 426px) {
+        .updatemember {
+            margin-top: 2rem;
+            padding: 1rem;
+        }
+
+        .updatetitle {
+            font-size: 1.5rem; /* 타이틀 크기 조정 */
+        }
+
+        .form-group {
+            width: 100%; /* 전체 폭으로 확장 */
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            font-size: 14px; /* 입력 필드 글자 크기 축소 */
+        }
+
+        .input-group-append button {
+            width: 100%; /* 버튼 전체 폭 */
+            margin-top: 0.5rem; /* 위아래 여백 추가 */
+        }
+
+        button.btn {
+            font-size: 14px; /* 버튼 텍스트 크기 축소 */
+            padding: 0.8rem;
+        }
+    }
     </style>
 </th:block>
 

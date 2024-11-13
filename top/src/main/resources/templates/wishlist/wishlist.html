@@ -104,20 +104,87 @@
         .fs18 {
             font-size: 18px;
         }
-        .mr-2{
+
+        .mr-2 {
             text-overflow: ellipsis;
             width: 100%;
         }
+
         .fs24 {
             font-size: larger;
             font-weight: bold;
             display: flex;
             width: 5rem;
         }
-        .wish-item-delete{
+
+        .wish-item-delete {
             background: none;
             border: none;
             border-radius: 20%;
+        }
+
+        @media (max-width: 426px) {
+            .content-mg {
+                margin-left: 5%;
+                margin-right: 5%;
+                margin-top: 2%;
+            }
+
+            table {
+                width: 100%;
+                font-size: 14px;
+            }
+
+            thead {
+                display: none;
+            }
+
+            tbody tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #ddd;
+                border-radius: 10px;
+                padding: 10px;
+            }
+
+            tbody td {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px 5px;
+            }
+
+            .repImgDiv {
+                margin: 0 auto 1rem auto;
+                width: 50%;
+            }
+
+            .repImg {
+                height: auto;
+                max-width: 100%;
+            }
+
+            .fs24 {
+                font-size: 16px;
+                width: auto;
+            }
+
+            .fs18 {
+                font-size: 14px;
+            }
+
+            .wish-item-delete span {
+                font-size: 16px;
+            }
+
+            .cart-btn {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+
+            .wishprice h4 {
+                font-size: 14px;
+            }
         }
     </style>
 </th:block>
@@ -140,7 +207,7 @@
                 </tr>
             </thead>
             <tbody>
-                
+
                 <tr th:each="wishlistItem : ${wishlistItems}">
 
                     <td class="d-flex">
@@ -158,7 +225,7 @@
                                     th:data-price="${wishlistItem.price}" th:text="${wishlistItem.price} + '원'"
                                     class="mr-2">
                                 </span> -->
-                                
+
                             </div>
                         </div>
                     </td>
@@ -170,7 +237,7 @@
 
                     <!--                 06Nov 의빈추가-->
                     <td class="text-center align-middle">
-                        <button class="btn btn-danger" type="button" th:data-id="${wishlistItem.wishlistItemId}"
+                        <button class="btn cart-btn btn-danger" type="button" th:data-id="${wishlistItem.wishlistItemId}"
                             onclick="moveItemToCart(this)">장바구니+</button>
                     </td>
 

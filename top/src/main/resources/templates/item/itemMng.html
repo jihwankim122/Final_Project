@@ -38,19 +38,59 @@
             border-bottom: solid 0.1px rgb(218, 218, 218);
             border-radius: 5%;
         }
-        .admin-item{
+
+        .admin-item {
             width: 90%;
             margin-top: 4rem;
         }
-        .admin-item-search{
+
+        .admin-item-search {
             display: flex;
             margin: none;
             padding: none;
             margin-bottom: 0.5rem;
             gap: 4px;
         }
-        .admin-item-h3{
+
+        .admin-item-h3 {
             margin-bottom: 4rem;
+        }
+
+        @media (max-width: 426px) {
+            .admin-item {
+                width: 100%;
+                margin-top: 2rem;
+            }
+
+            .admin-item-search {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .admin-item-h3 {
+                font-size: 1.5rem;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                /* 테이블 가로 스크롤 허용 */
+                font-size: 0.8rem;
+            }
+
+            th,
+            td {
+                text-align: left;
+                padding: 0.3rem;
+            }
+
+            thead {
+                font-size: 0.9rem;
+            }
+
+            .pagination {
+                font-size: 0.7rem;
+            }
         }
     </style>
 </th:block>
@@ -132,9 +172,11 @@
                             <a th:href="'/admin/item/'+${item.no}" th:text="${item.itemNm}"></a>
                         </td>
                         <!--                1017 은열 수정-->
-                        <td th:text="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL ? '판매중' :
+                        <td
+                            th:text="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SELL ? '판매중' :
                                       item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT ? '품절' :
-                                      item.itemSellStatus == T(com.top.constant.ItemSellStatus).DELETE ? '삭제' : '상태 없음'}"></td>
+                                      item.itemSellStatus == T(com.top.constant.ItemSellStatus).DELETE ? '삭제' : '상태 없음'}">
+                        </td>
                         <td th:text="${item.stockNumber}"></td> <!-- 1107 성아 재고 추가 -->
                         <td th:text="${item.createdBy}"></td>
                         <td th:text="${item.regTime}"></td>

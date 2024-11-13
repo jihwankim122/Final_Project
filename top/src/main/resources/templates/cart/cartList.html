@@ -263,8 +263,84 @@
             text-align: center;
             width: 40%;
         }
-        .cart-content{
+
+        .cart-content {
             text-align: center;
+        }
+
+        @media (max-width: 426px) {
+            .content-mg {
+                margin-left: 5%;
+                margin-right: 5%;
+                margin-top: 2%;
+            }
+
+            table {
+                width: 100%;
+                /* 테이블 전체 폭 */
+                font-size: 14px;
+                /* 테이블 텍스트 크기 조정 */
+            }
+
+            thead {
+                display: none;
+                /* 테이블 헤더 숨기기 */
+            }
+
+            tbody tr {
+                display: block;
+                /* 각 행을 블록으로 변환 */
+                margin-bottom: 1rem;
+                border: 1px solid #ddd;
+                /* 각 행에 경계선 추가 */
+                border-radius: 10px;
+                padding: 10px;
+            }
+
+            tbody td {
+                display: flex;
+                flex-direction: column;
+                /* 셀 내용을 세로로 정렬 */
+                align-items: flex-start;
+                /* 좌측 정렬 */
+                padding: 10px 5px;
+            }
+
+            .repImgDiv {
+                margin: 0 auto 1rem auto;
+                /* 이미지 중앙 정렬 */
+                width: 80%;
+            }
+
+            .repImg {
+                height: auto;
+                max-width: 100%;
+                /* 이미지 폭 제한 */
+            }
+
+            .fs24 {
+                font-size: 16px;
+                /* 상품명 크기 축소 */
+                width: auto;
+            }
+
+            .fs18 {
+                font-size: 14px;
+                /* 상품 가격 크기 축소 */
+            }
+
+            #orderTotalPrice,
+            #discountAmount,
+            #finalPrice {
+                font-size: 16px;
+                /* 가격 텍스트 크기 조정 */
+            }
+
+            .order-btn {
+                width: 100%;
+                /* 버튼 폭 전체로 */
+                margin-top: 0.5rem;
+            }
         }
     </style>
 </th:block>
@@ -342,7 +418,7 @@
         </h5>
 
         <div class="text-center mt-3">
-            <button type="button" class="btn btn-primary btn-lg" onclick="orders()">주문하기</button>
+            <button type="button" class="btn order-btn btn-primary btn-lg" onclick="orders()">주문하기</button>
         </div>
 
     </div>
