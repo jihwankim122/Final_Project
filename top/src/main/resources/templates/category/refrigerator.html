@@ -4,6 +4,22 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        $(document).ready(function () {
+            // 스크롤 이동 함수
+            function goToScroll(targetId) {
+                $('html, body').animate({
+                    scrollTop: $("#" + targetId).offset().top
+                }, 400);
+            }
+            // 맨위로 버튼 클릭 이벤트
+            $("#topBtn").click(function () {
+                goToScroll('topSection'); // 상세보기 섹션으로 이동
+            });
+            // 맨아래로 버튼 클릭 이벤트
+            $("#bottomBtn").click(function () {
+                goToScroll('bottomSection'); // 상세보기 섹션으로 이동
+            });
+        });
         // 1107 성아 추가 // 상품 정렬 함수
         function changeSortOrder() {
             // 드롭다운에서 선택한 정렬 옵션을 가져오기
@@ -150,7 +166,10 @@
 </th:block>
 
 <div layout:fragment="content">
-
+    <div class="itemManu">
+        <button id="topBtn" class="btn">▲</button>
+        <button id="bottomBtn" class="btn">▼</button>
+    </div>
     <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
     <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
         <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'"></p>

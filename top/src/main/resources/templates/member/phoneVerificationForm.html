@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
 <head>
     <meta charset="UTF-8">
     <title>TOP</title>
@@ -9,6 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+<div layout:fragment="content">
 <div class="container mt-5">
     <h2 class="text-center mb-4">휴대폰 인증</h2>
     <form id="phoneVerificationForm" class="mx-auto" style="max-width: 400px;">
@@ -33,7 +35,6 @@
         </div>
     </form>
 </div>
-
 <script>
     $(document).ready(function() {
         const csrfToken = $('meta[name="_csrf"]').attr('content');
@@ -94,6 +95,7 @@
         });
     });
 </script>
+</div>
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

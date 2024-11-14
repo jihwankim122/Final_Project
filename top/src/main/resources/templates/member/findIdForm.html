@@ -1,7 +1,7 @@
 <!-- phoneVerificationForm.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layouts/layout1}">
+      layout:decorate="~{layouts/layout1}">
 
 <head>
   <meta charset="UTF-8">
@@ -75,6 +75,7 @@
 </th:block>
 
 <body>
+<div layout:fragment="content">
   <div class="container mt-5">
     <h2 class="text-center mb-4">아이디 찾기 - 휴대폰 인증</h2>
     <form id="phoneVerificationForm" class="mx-auto" style="max-width: 400px;">
@@ -152,6 +153,7 @@
       });
     });
   </script>
+</div>
 </body>
 
 </html>

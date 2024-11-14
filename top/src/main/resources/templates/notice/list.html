@@ -175,6 +175,12 @@
         font-size: 0.8rem;
         padding: 0.5rem;
       }
+      .btn-search{
+        width: 20%;
+      }
+      .Noticesearch{
+        width: 80%;
+      }
     }
   </style>
 </th:block>
@@ -199,9 +205,11 @@
             <option value="tcw" th:selected="${npageRequestDTO.type =='tcw'}">제목 + 내용 + 작성자</option>
           </select>
         </div>
-        <input class="form-control" name="keyword" th:value="${npageRequestDTO.keyword}">
-        <div class="input-group-append" id="button-addon4">
+        <div class="search-form d-flex">
+          <input class="form-control Noticesearch" name="keyword" th:value="${npageRequestDTO.keyword}" placeholder="Search">
           <button class="btn btn-outline-secondary btn-search" type="button"><i class="fi fi-rr-search"></i></button>
+        </div>
+        <div class="input-group-append" id="button-addon4">
           <button class="btn btn-outline-secondary btn-clear" type="button">취소</button>
         </div>
       </div>
