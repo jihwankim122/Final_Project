@@ -76,6 +76,48 @@
                 text-align: center;
                 margin-top: 1.5rem;
             }
+
+            @media (max-width: 426px) {
+                .Qna-container {
+                    width: 90%;
+                    padding: 10px;
+                    margin-top: 1rem;
+                    box-shadow: none;
+                    border: 1px solid #ddd;
+                }
+
+                .Qna-read-h1 {
+                    font-size: 1.4rem;
+                    margin: 1.5rem 0;
+                }
+
+                .Qna-read-title {
+                    font-size: 0.9rem;
+                    margin-top: 0.5rem;
+                    margin-bottom: 0.3rem;
+                }
+
+                .Qna-read-body {
+                    font-size: 0.9rem;
+                    padding: 0.5rem;
+                }
+
+                textarea {
+                    font-size: 0.9rem;
+                }
+
+                .btn-container {
+                    margin-top: 1rem;
+                }
+
+                .Qnabtn {
+                    font-size: 0.9rem;
+                    padding: 8px 15px;
+                    margin-top: 0.5rem;
+                    width: 100%;
+                    text-align: center;
+                }
+            }
         </style>
     </th:block>
 
@@ -103,7 +145,8 @@
 
                 <div class="form-group">
                     <label class="Qna-read-title">내용</label>
-                    <textarea id="textarea" class="form-control Qna-read-body" name="content">[[${dto.content}]]</textarea>
+                    <textarea id="textarea" class="form-control Qna-read-body"
+                        name="content">[[${dto.content}]]</textarea>
                 </div>
 
                 <div class="form-group">

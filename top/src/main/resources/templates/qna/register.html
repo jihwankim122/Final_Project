@@ -61,45 +61,82 @@
             text-align: center;
             margin-top: 1.5rem;
         }
+
+        @media (max-width: 426px) {
+            .Qna-container {
+                width: 90%;
+                padding: 15px;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            .Qna-register-h1 {
+                font-size: 1.4rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .Qna-register-label {
+                font-size: 1rem;
+            }
+
+            .Qna-register-text {
+                font-size: 0.9rem;
+                padding: 0.5rem;
+            }
+
+            .btn-primary {
+                font-size: 0.9rem;
+                padding: 8px 15px;
+                width: 100%;
+                text-align: center;
+            }
+
+            textarea {
+                font-size: 0.9rem;
+                min-height: 80px;
+                max-height: 250px;
+            }
+        }
     </style>
 </th:block>
 <!--<th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">-->
 
-    <div layout:fragment="content">
-        <div class="container Qna-container">
-            <h1 class="Qna-register-h1">QnA 작성</h1>
+<div layout:fragment="content">
+    <div class="container Qna-container">
+        <h1 class="Qna-register-h1">QnA 작성</h1>
 
-            <form th:action="@{/qna/register}" th:method="post">
-                <div class="form-group">
-                    <label class="Qna-register-label">제목</label>
-                    <input type="text" class="form-control Qna-register-text" name="title" placeholder="제목을 입력해주세요.">
-                </div>
-                <div class="form-group" style="margin-bottom: 3rem;">
-                    <label class="Qna-register-label">내용</label>
-                    <textarea id="textarea" class="form-control Qna-register-text" rows="5" name="content" placeholder="내용을 입력해주세요."></textarea>
-                </div>
-                <!--            Writer ----------  ----------------------------------------------------------------------->
-                <!--            <div class="form-group">-->
-                <!--                <label >Writer</label>-->
-                <!--                <input type="text" class="form-control" name="writer" placeholder="Enter Writer">-->
-                <!--            </div>-->
+        <form th:action="@{/qna/register}" th:method="post">
+            <div class="form-group">
+                <label class="Qna-register-label">제목</label>
+                <input type="text" class="form-control Qna-register-text" name="title" placeholder="제목을 입력해주세요.">
+            </div>
+            <div class="form-group" style="margin-bottom: 3rem;">
+                <label class="Qna-register-label">내용</label>
+                <textarea id="textarea" class="form-control Qna-register-text" rows="5" name="content"
+                    placeholder="내용을 입력해주세요."></textarea>
+            </div>
+            <!--            Writer ----------  ----------------------------------------------------------------------->
+            <!--            <div class="form-group">-->
+            <!--                <label >Writer</label>-->
+            <!--                <input type="text" class="form-control" name="writer" placeholder="Enter Writer">-->
+            <!--            </div>-->
 
-                <div class="btn-container">
-                    <button type="submit" class="btn btn-primary">작성</button>
-                </div>
-            </form>
-        </div>
-        <script th:inline="javascript">
-            const DEFAULT_HEIGHT = 30;
-            const $textarea = document.querySelector('#textarea');
-
-            $textarea.oninput = (event) => {
-                const $target = event.target;
-                $target.style.height = 0;
-                $target.style.height = DEFAULT_HEIGHT + $target.scrollHeight + 'px';
-            };
-        </script>
+            <div class="btn-container">
+                <button type="submit" class="btn btn-primary">작성</button>
+            </div>
+        </form>
     </div>
+    <script th:inline="javascript">
+        const DEFAULT_HEIGHT = 30;
+        const $textarea = document.querySelector('#textarea');
+
+        $textarea.oninput = (event) => {
+            const $target = event.target;
+            $target.style.height = 0;
+            $target.style.height = DEFAULT_HEIGHT + $target.scrollHeight + 'px';
+        };
+    </script>
+</div>
 <!--</th:block>-->
 
 </html>
