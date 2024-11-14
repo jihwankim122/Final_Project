@@ -5,48 +5,48 @@
 <th:block layout:fragment="script">
   <script th:inline="javascript">
     $(document).ready(function () {
-            // 스크롤 이동 함수
-            function goToScroll(targetId) {
-                $('html, body').animate({
-                    scrollTop: $("#" + targetId).offset().top
-                }, 400);
-            }
-            // 맨위로 버튼 클릭 이벤트
-            $("#topBtn").click(function () {
-                goToScroll('topSection'); // 상세보기 섹션으로 이동
-            });
-            // 맨아래로 버튼 클릭 이벤트
-            $("#bottomBtn").click(function () {
-                goToScroll('bottomSection'); // 상세보기 섹션으로 이동
-            });
-        });
+      // 스크롤 이동 함수
+      function goToScroll(targetId) {
+        $('html, body').animate({
+          scrollTop: $("#" + targetId).offset().top
+        }, 400);
+      }
+      // 맨위로 버튼 클릭 이벤트
+      $("#topBtn").click(function () {
+        goToScroll('topSection'); // 상세보기 섹션으로 이동
+      });
+      // 맨아래로 버튼 클릭 이벤트
+      $("#bottomBtn").click(function () {
+        goToScroll('bottomSection'); // 상세보기 섹션으로 이동
+      });
+    });
     // 1107 성아 추가 // 상품 정렬 함수
     function changeSortOrder() {
-        // 드롭다운에서 선택한 정렬 옵션을 가져오기
-        const sortOrder = document.getElementById("sortOrder").value;
-        const url = new URL(window.location.href);
+      // 드롭다운에서 선택한 정렬 옵션을 가져오기
+      const sortOrder = document.getElementById("sortOrder").value;
+      const url = new URL(window.location.href);
 
-        // 기존의 sortCondition 파라미터를 제거하고, 새로운 값을 추가
-        url.searchParams.set("sortCondition", sortOrder);
+      // 기존의 sortCondition 파라미터를 제거하고, 새로운 값을 추가
+      url.searchParams.set("sortCondition", sortOrder);
 
-        // 현재 스크롤 위치 저장 (세션 스토리지 사용)
-        sessionStorage.setItem('scrollPosition', window.scrollY);
+      // 현재 스크롤 위치 저장 (세션 스토리지 사용)
+      sessionStorage.setItem('scrollPosition', window.scrollY);
 
-        // 현재 검색 쿼리와 기타 파라미터도 유지하면서 페이지 새로고침
-        window.location.href = url.toString();
+      // 현재 검색 쿼리와 기타 파라미터도 유지하면서 페이지 새로고침
+      window.location.href = url.toString();
     }
 
-    window.onload = function() {
-        // 저장된 스크롤 위치가 있다면
-        const savedScrollPosition = sessionStorage.getItem('scrollPosition');
+    window.onload = function () {
+      // 저장된 스크롤 위치가 있다면
+      const savedScrollPosition = sessionStorage.getItem('scrollPosition');
 
-        if (savedScrollPosition !== null) {
-            // 해당 위치로 스크롤 이동
-            window.scrollTo(0, savedScrollPosition);
+      if (savedScrollPosition !== null) {
+        // 해당 위치로 스크롤 이동
+        window.scrollTo(0, savedScrollPosition);
 
-            // 스크롤 위치 저장을 제거 (페이지 새로고침 시만 적용되도록)
-            sessionStorage.removeItem('scrollPosition');
-        }
+        // 스크롤 위치 저장을 제거 (페이지 새로고침 시만 적용되도록)
+        sessionStorage.removeItem('scrollPosition');
+      }
     };
 
 
@@ -57,44 +57,44 @@
     let categoryId = 8;
 
     window.addEventListener("scroll", () => {
-        const scrollPosition = window.scrollY + window.innerHeight;
-        const pageHeight = document.documentElement.scrollHeight;
+      const scrollPosition = window.scrollY + window.innerHeight;
+      const pageHeight = document.documentElement.scrollHeight;
 
-        // 페이지가 거의 끝에 도달했을 때 새로운 데이터를 불러옵니다.
-        if (scrollPosition >= pageHeight - 100) {
-            if (!isLoading && !isLastPage) {
-                loadMoreItems();
-            }
+      // 페이지가 거의 끝에 도달했을 때 새로운 데이터를 불러옵니다.
+      if (scrollPosition >= pageHeight - 100) {
+        if (!isLoading && !isLastPage) {
+          loadMoreItems();
         }
+      }
     });
 
     function loadMoreItems() {
-        isLoading = true;
-        document.getElementById("loadMore").style.display = "block";  // 로딩 메시지 표시
+      isLoading = true;
+      document.getElementById("loadMore").style.display = "block";  // 로딩 메시지 표시
 
-        // 새로운 데이터를 서버에서 받아오는 AJAX 요청
-        fetch(`/load-items?page=${currentPage + 1}&categoryId=${categoryId}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log("서버 응답 데이터:", data);  // 서버에서 받은 전체 데이터 구조 출력
+      // 새로운 데이터를 서버에서 받아오는 AJAX 요청
+      fetch(`/load-items?page=${currentPage + 1}&categoryId=${categoryId}`)
+        .then(response => response.json())
+        .then(data => {
+          console.log("서버 응답 데이터:", data);  // 서버에서 받은 전체 데이터 구조 출력
 
-                // data가 배열일 경우에만 실행
-                if (Array.isArray(data)) {
-                    const container = document.getElementById("content-container");
+          // data가 배열일 경우에만 실행
+          if (Array.isArray(data)) {
+            const container = document.getElementById("content-container");
 
-                    // 데이터가 없으면 더 이상 불러올 데이터가 없다는 표시
-                    if (data.length === 0) {
-                        isLastPage = true;  // 더 이상 데이터가 없으면 isLastPage를 true로 설정
-                        document.getElementById("loadMore").style.display = "none";  // 로딩 메시지 숨기기
-                        document.getElementById("noMoreDataMessage").style.display = "block";  // "마지막 페이지입니다." 메시지 표시
-                        return;
-                    }
+            // 데이터가 없으면 더 이상 불러올 데이터가 없다는 표시
+            if (data.length === 0) {
+              isLastPage = true;  // 더 이상 데이터가 없으면 isLastPage를 true로 설정
+              document.getElementById("loadMore").style.display = "none";  // 로딩 메시지 숨기기
+              document.getElementById("noMoreDataMessage").style.display = "block";  // "마지막 페이지입니다." 메시지 표시
+              return;
+            }
 
-                    // 데이터를 화면에 추가
-                    data.forEach(item => {
-                        const itemElement = document.createElement("div");
-                        itemElement.classList.add("col-md-4", "margin");
-                        itemElement.innerHTML = `
+            // 데이터를 화면에 추가
+            data.forEach(item => {
+              const itemElement = document.createElement("div");
+              itemElement.classList.add("col-md-3", "margin");
+              itemElement.innerHTML = `
                             <div class="card">
                                 <a class="text-dark" href="/item/${item.no}">
                                     <img class="card-img-top" alt="${item.itemNm}" src="${item.imgUrl}">
@@ -106,22 +106,22 @@
                                 </a>
                             </div>
                         `;
-                        container.appendChild(itemElement);
-                    });
-
-                    currentPage++;  // 페이지 번호 증가
-                } else {
-                    console.warn("서버에서 배열 형태의 데이터가 전달되지 않았습니다.");
-                }
-
-                document.getElementById("loadMore").style.display = "none";  // 로딩 메시지 숨기기
-                isLoading = false;
-            })
-            .catch(error => {
-                console.error("데이터 로드 오류:", error);
-                document.getElementById("loadMore").style.display = "none";  // 로딩 메시지 숨기기
-                isLoading = false;
+              container.appendChild(itemElement);
             });
+
+            currentPage++;  // 페이지 번호 증가
+          } else {
+            console.warn("서버에서 배열 형태의 데이터가 전달되지 않았습니다.");
+          }
+
+          document.getElementById("loadMore").style.display = "none";  // 로딩 메시지 숨기기
+          isLoading = false;
+        })
+        .catch(error => {
+          console.error("데이터 로드 오류:", error);
+          document.getElementById("loadMore").style.display = "none";  // 로딩 메시지 숨기기
+          isLoading = false;
+        });
     }
   </script>
 </th:block>
@@ -129,6 +129,31 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
   <style>
+    .card img {
+      width: 100%;
+      height: 300px;
+      object-fit: contain;
+    }
+
+    .card-text,
+    .card-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-body {
+      padding: 10px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
     .carousel-inner>.item {
       height: 350px;
     }
@@ -150,6 +175,7 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
+      border: none;
     }
 
     a:hover {
@@ -159,8 +185,23 @@
     .center {
       text-align: center;
     }
-    #sortOrder{
-      margin-bottom:2rem;
+
+    #sortOrder {
+      margin-bottom: 2rem;
+    }
+
+    .itemManu {
+      z-index: 99;
+      position: fixed;
+      bottom: 28rem;
+      right: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      background-color: white;
+      border-radius: 5%;
+      border: solid 0.1px rgb(208, 208, 208);
     }
   </style>
 </th:block>
@@ -169,14 +210,14 @@
   <div class="itemManu">
     <button id="topBtn" class="btn">▲</button>
     <button id="bottomBtn" class="btn">▼</button>
-</div>
+  </div>
   <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
   <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
     <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + '검색 결과'"></p>
   </div>
   <div class="container">
     <h3
-            style="margin-top: 3rem; margin-bottom: 3rem; border-bottom: solid 0.1px rgb(186, 186, 186);padding-bottom: 2rem;">
+      style="margin-top: 3rem; margin-bottom: 3rem; border-bottom: solid 0.1px rgb(186, 186, 186);padding-bottom: 2rem;">
       식기세척기</h3>
   </div>
 
@@ -192,7 +233,7 @@
       <!-- 1107 성아 수정 - 데이터를 표시할 컨테이너 -->
       <div id="content-container" class="row">
         <th:block th:each="item, status: ${items.getContent()}">
-          <div class="col-md-4 margin">
+          <div class="col-md-3 margin content-body">
             <div class="card">
               <!-- 1101 성아 수정 -->
               <!--                    <a class="text-dark" th:href="'/item/' +${item.id}">-->
@@ -204,10 +245,12 @@
                   <h3 class="card-title text-danger" th:if="${item.itemSellStatus == 'SOLD_OUT'}">품절</h3>
                   <!-- 1108 성아 수정 -->
                   <!-- 품절일 때 -->
-                  <h3 class="card-title text-danger" th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">품절</h3>
+                  <h3 class="card-title text-danger"
+                    th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">품절</h3>
 
                   <!-- 품절이 아닐 때 가격 표시 -->
-                  <h3 class="card-title text-danger" th:unless="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">
+                  <h3 class="card-title text-danger"
+                    th:unless="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">
                     [[${item.price}]]원
                   </h3>
 
@@ -221,7 +264,8 @@
       <div id="loadMore" class="text-center" style="display:none;">
         <p>로딩 중...</p>
       </div>
-      <div id="noMoreDataMessage" style="display: none; text-align: center; padding: 20px; font-size: 18px; color: #999;">
+      <div id="noMoreDataMessage"
+        style="display: none; text-align: center; padding: 20px; font-size: 18px; color: #999;">
         마지막 페이지입니다.
       </div>
     </div>

@@ -93,7 +93,7 @@
                         // 데이터를 화면에 추가
                         data.forEach(item => {
                             const itemElement = document.createElement("div");
-                            itemElement.classList.add("col-md-4", "margin");
+                            itemElement.classList.add("col-md-3", "margin");
                             itemElement.innerHTML = `
                                 <div class="card">
                                     <a class="text-dark" href="/item/${item.no}">
@@ -129,6 +129,31 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
+        .card img {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+        }
+
+        .card-text,
+        .card-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-body {
+            padding: 10px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
         .carousel-inner>.item {
             height: 350px;
         }
@@ -150,6 +175,7 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
+            border: none;
         }
 
         a:hover {
@@ -162,6 +188,20 @@
 
         #sortOrder {
             margin-bottom: 2rem;
+        }
+
+        .itemManu {
+            z-index: 99;
+            position: fixed;
+            bottom: 28rem;
+            right: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            background-color: white;
+            border-radius: 5%;
+            border: solid 0.1px rgb(208, 208, 208);
         }
     </style>
 </th:block>
@@ -193,7 +233,7 @@
             <!-- 1107 성아 수정 - 데이터를 표시할 컨테이너 -->
             <div id="content-container" class="row">
                 <th:block th:each="item, status: ${items.getContent()}">
-                    <div class="col-md-4 margin">
+                    <div class="col-md-3 margin content-body">
                         <div class="card">
                             <!-- 1101 성아 수정 -->
                             <!--                    <a class="text-dark" th:href="'/item/' +${item.id}">-->

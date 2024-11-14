@@ -5,12 +5,19 @@
     font-family: 'IBM Plex Sans KR', sans-serif;
 }
 
+a {
+    text-decoration: none;
+}
+
 .icon-group {
     display: flex;
     align-items: center;
-    gap: 20px; /* 간격 조정 */
-    justify-content: flex-start; /* 정렬 방향 */
-    flex-wrap: wrap; /* 줄바꿈 허용 */
+    gap: 20px;
+    /* 간격 조정 */
+    justify-content: flex-start;
+    /* 정렬 방향 */
+    flex-wrap: wrap;
+    /* 줄바꿈 허용 */
 }
 
 .icon-group .search-form {
@@ -39,13 +46,13 @@
 }
 
 
-.form-select{
+.form-select {
     box-shadow: none;
 }
 
 .form-control:focus {
     box-shadow: none;
-  }
+}
 
 a {
     text-decoration: none;
@@ -68,16 +75,17 @@ span {
     justify-content: center;
 }
 
-.mobile-list{
+.mobile-list {
     display: none;
 }
 
-.header-btn-item:hover{
+.header-btn-item:hover {
     background-color: black;
     color: white;
     transition-duration: 0.5s;
 }
-.header-btn-item{
+
+.header-btn-item {
     transition-duration: 0.5s;
     border-radius: 5%;
 }
@@ -134,6 +142,7 @@ span {
     height: 100%;
     width: 100%;
     object-fit: cover;
+    display: inline;
 }
 
 .carousel-inner,
@@ -371,10 +380,12 @@ footer>button {
         padding: 10px;
         font-size: 14px;
     }
+
     #temple {
         width: 0px;
     }
-    .service-center{
+
+    .service-center {
         margin-right: 0rem;
     }
 }

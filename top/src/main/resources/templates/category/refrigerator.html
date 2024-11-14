@@ -36,7 +36,7 @@
             window.location.href = url.toString();
         }
 
-        window.onload = function() {
+        window.onload = function () {
             // 저장된 스크롤 위치가 있다면
             const savedScrollPosition = sessionStorage.getItem('scrollPosition');
 
@@ -93,7 +93,7 @@
                         // 데이터를 화면에 추가
                         data.forEach(item => {
                             const itemElement = document.createElement("div");
-                            itemElement.classList.add("col-md-4", "margin");
+                            itemElement.classList.add("col-md-3", "margin");
                             itemElement.innerHTML = `
                                 <div class="card">
                                     <a class="text-dark" href="/item/${item.no}">
@@ -129,6 +129,31 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
+        .card img {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+        }
+
+        .card-text,
+        .card-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-body {
+            padding: 10px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
         .carousel-inner>.item {
             height: 350px;
         }
@@ -150,6 +175,7 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
+            border: none;
         }
 
         a:hover {
@@ -159,9 +185,24 @@
         .center {
             text-align: center;
         }
-        #sortOrder{
-      margin-bottom:2rem;
-    }
+
+        #sortOrder {
+            margin-bottom: 2rem;
+        }
+
+        .itemManu {
+            z-index: 99;
+            position: fixed;
+            bottom: 28rem;
+            right: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            background-color: white;
+            border-radius: 5%;
+            border: solid 0.1px rgb(208, 208, 208);
+        }
     </style>
 </th:block>
 
@@ -176,7 +217,7 @@
     </div>
     <div class="container">
         <h3
-                style="margin-top: 3rem; margin-bottom: 3rem; border-bottom: solid 0.1px rgb(186, 186, 186);padding-bottom: 2rem;">
+            style="margin-top: 3rem; margin-bottom: 3rem; border-bottom: solid 0.1px rgb(186, 186, 186);padding-bottom: 2rem;">
             냉장고</h3>
     </div>
 
@@ -192,7 +233,7 @@
             <!-- 1107 성아 수정 - 데이터를 표시할 컨테이너 -->
             <div id="content-container" class="row">
                 <th:block th:each="item, status: ${items.getContent()}">
-                    <div class="col-md-4 margin">
+                    <div class="col-md-3 margin content-body">
                         <div class="card">
                             <!-- 1101 성아 수정 -->
                             <!--                    <a class="text-dark" th:href="'/item/' +${item.id}">-->
@@ -201,13 +242,17 @@
                                 <div class="card-body">
                                     <h4 class="card-title Best3-item-title">[[${item.itemNm}]]</h4>
                                     <p class="card-text">[[${item.itemDetail}]]</p>
-                                    <h3 class="card-title text-danger" th:if="${item.itemSellStatus == 'SOLD_OUT'}">품절</h3>
+                                    <h3 class="card-title text-danger" th:if="${item.itemSellStatus == 'SOLD_OUT'}">품절
+                                    </h3>
                                     <!-- 1108 성아 수정 -->
                                     <!-- 품절일 때 -->
-                                    <h3 class="card-title text-danger" th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">품절</h3>
+                                    <h3 class="card-title text-danger"
+                                        th:if="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">품절
+                                    </h3>
 
                                     <!-- 품절이 아닐 때 가격 표시 -->
-                                    <h3 class="card-title text-danger" th:unless="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">
+                                    <h3 class="card-title text-danger"
+                                        th:unless="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">
                                         [[${item.price}]]원
                                     </h3>
 
@@ -221,7 +266,8 @@
             <div id="loadMore" class="text-center" style="display:none;">
                 <p>로딩 중...</p>
             </div>
-            <div id="noMoreDataMessage" style="display: none; text-align: center; padding: 20px; font-size: 18px; color: #999;">
+            <div id="noMoreDataMessage"
+                style="display: none; text-align: center; padding: 20px; font-size: 18px; color: #999;">
                 마지막 페이지입니다.
             </div>
         </div>

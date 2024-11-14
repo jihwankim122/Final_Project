@@ -43,7 +43,7 @@ public class MainController extends MemberBasicController {
 
         }
 
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 8);
         Page<MainItemDto> items = itemService.getMainItemPage(itemSearchDto, pageable);
 
         // 1031 성아 추가
@@ -69,7 +69,7 @@ public class MainController extends MemberBasicController {
     @GetMapping("/load-main-items") // 1111 성아 경로 수정
     @ResponseBody
     public List<MainItemDto> loadItems(@RequestParam int page, ItemSearchDto itemSearchDto) {
-        Pageable pageable = PageRequest.of(page, 6);  // 페이지당 6개씩 불러옴
+        Pageable pageable = PageRequest.of(page, 8);  // 페이지당 8개씩 불러옴
         Page<MainItemDto> items = itemService.getMainItemPage(itemSearchDto, pageable);
         return items.getContent();  // 실제 데이터만 반환
     }

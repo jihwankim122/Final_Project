@@ -36,7 +36,7 @@ public class CateController extends MemberBasicController {
         itemSearchDto.setCategory(categoryId);
 
         // 페이지네이션 처리
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 8);
         Page<MainItemDto> items = itemService.getCateItemPage(itemSearchDto, pageable);
 
         // 모델에 데이터 추가
@@ -103,7 +103,7 @@ public class CateController extends MemberBasicController {
     @GetMapping("/load-items")
     @ResponseBody
     public List<MainItemDto> loadItems(@RequestParam int page, ItemSearchDto itemSearchDto, @RequestParam Long categoryId) {
-        Pageable pageable = PageRequest.of(page, 6);  // 페이지당 6개씩 불러옴
+        Pageable pageable = PageRequest.of(page, 8);  // 페이지당 8개씩 불러옴
         itemSearchDto.setCategory(categoryId);
         Page<MainItemDto> items = itemService.getCateItemPage(itemSearchDto, pageable);
         return items.getContent();  // 실제 데이터만 반환
