@@ -402,6 +402,144 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
+        /* 리뷰 섹션 전체 컨테이너 */
+.container.reviewtable {
+    margin-top: 2rem;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 제목 버튼 */
+.container.reviewtable h2.btn {
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+.container.reviewtable h2.btn .badge {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+/* 리뷰 작성 버튼 */
+.addReviewBtn {
+    background-color: #28a745;
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.reviewList {
+    margin-top: 1rem;
+    padding: 0;
+    list-style: none;
+}
+
+.reviewModal .modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.reviewModal .modal-header {
+    background-color: #e3e3e3;
+    border-bottom: 1px solid #ccc;
+}
+
+.reviewModal .modal-title {
+    font-weight: bold;
+    color: #333;
+}
+
+.reviewModal .close {
+    color: #333;
+    opacity: 0.7;
+}
+
+.reviewModal .close:hover {
+    opacity: 1;
+}
+
+.reviewModal .modal-body {
+    padding: 1.5rem;
+    background-color: #fff;
+}
+
+.reviewbody label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.reviewbody .form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+/* 별점 스타일 */
+#divGrade .starrr {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    color: #f1c40f;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* 모달 푸터 */
+.reviewModal .modal-footer {
+    background-color: #e3e3e3;
+    border-top: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+}
+
+.reviewModal .btn {
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+}
+
+.reviewModal .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.reviewModal .btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.reviewModal .btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.reviewModal .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.reviewModal .btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.reviewModal .btn-danger:hover {
+    background-color: #c82333;
+}
+
+        .reviewModal{
+            font-weight: bold;
+        }
         .mgb-15 {
             margin-bottom: 15px;
         }
@@ -500,6 +638,8 @@
 
         .reviewtable {
             margin-bottom: 20rem;
+            border-bottom: solid 1px rgb(184, 184, 184);
+            padding-bottom: 3rem;
         }
 
         #closeModal2 {
@@ -552,6 +692,8 @@
             flex-direction: column;
             align-items: center;
             gap:1rem;
+            background-color: rgba(255, 255, 255, 0.445);
+            border-radius: 10px;
         }
         .itemManu>*{
             margin-bottom:1rem;
@@ -613,8 +755,7 @@
             }
 
             .itemManu {
-                bottom: 10rem;
-                /* 버튼 메뉴 위치 조정 */
+                bottom: 14rem;
                 right: 1rem;
             }
 
@@ -637,12 +778,10 @@
 
             .reviewModal .modal-body {
                 font-size: 14px;
-                /* 모달 내부 폰트 크기 조정 */
             }
 
             .reviewList .card-body {
                 font-size: 14px;
-                /* 리뷰 리스트 폰트 크기 조정 */
             }
 
             .container-fluid h4,
@@ -652,16 +791,13 @@
 
             #totalPrice {
                 font-size: 18px;
-                /* 결제 금액 크기 */
             }
 
             .addReviewBtn {
                 width: 100%;
-                /* 리뷰 작성 버튼 전체 폭 */
                 margin-top: 1rem;
             }
 
-            /* 별점 평균 영역 */
             #avgStarRating {
                 justify-content: center;
             }
@@ -732,27 +868,27 @@
         </div>
     </div>
 
-    <div class="jumbotron jumbotron-fluid container mgt-30">
+    <div class="jumbotron jumbotron-fluid container mt-30" style="margin-bottom: 10rem;">
         <div class="container">
             <h4 class="display-5" id="detailSection">상품 상세 설명</h4>
             <hr class="my-4">
-            <p class="lead" th:text="${item.itemDetail}"></p>
+            <p style="text-align: center; font-weight: bold; font-size: xx-large;" class="lead" th:text="${item.itemDetail}"></p>
         </div>
     </div>
 
     <!-- 1108 성아 수정 -->
-    <div th:each="itemImg, iterStat : ${item.itemImgDtoList}" class="text-center">
+    <div th:each="itemImg, iterStat : ${item.itemImgDtoList}" class="text-center" style="margin-bottom: 10rem;">
         <img th:if="${not #strings.isEmpty(itemImg.imgUrl) and iterStat.index > 0}"
              th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
     </div>
 
     <div class="container reviewtable" id="reviewSection">
-        <button type="button" class="btn" th:text="'리뷰수 ' + ${item.reviewCnt}">
+        <h2 style="font-weight: bold;" type="button" class="btn" th:text="'리뷰수 ' + ${item.reviewCnt}">
             <span class="badge badge-light" th:text="${item.reviewCnt}">0</span>
-        </button>
-        <button type="button" class="btn" th:text="'별점 평균 ' + ${item.avg} + ' / 5.0'"> <!-- 1106 성아 수정 -->
+        </h2>
+        <h2 style="font-weight: bold;" type="button" class="btn" th:text="'별점 평균 ' + ${item.avg} + ' / 5.0'"> <!-- 1106 성아 수정 -->
             <span class="badge badge-light" th:text="${item.avg}">0</span>
-        </button>
+        </h2>
 
         <!-- 1106 성아 수정 -->
         <button type="button" class="btn addReviewBtn" th:if="${member != null}" th:data-hasOrdered="${hasOrdered ? 'true' : 'false'}">리뷰 작성</button>
@@ -764,7 +900,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">상품 리뷰</h5>
+                    <h5 class="modal-title" style="font-weight: bold;">상품 리뷰</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModal2">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -777,9 +913,9 @@
                         <input type="text" class="form-control" name="name"
                             th:value="${member != null ? member.name : '비회원'}" readonly>
                     </div>
-                    <div class="form-group reviewbody" id="divGrade">
+                    <div class="form-group reviewbody" id="divGrade" style="margin-top: 2rem; margin-bottom: 2rem;">
                         <label>별점 <span class="grade"></span></label>
-                        <div class='starrr'></div>
+                        <div style="color: white;" class='starrr'></div>
                     </div>
                     <div class="form-group reviewbody">
                         <label>내용</label>
@@ -800,7 +936,7 @@
         <div class="container">
             <div class="surv row">
                 <div class="col-sm-8" style="text-align: left;">
-                    <h2 style="font-weight: bold;" th:text="${item.itemNm}"></h2>
+                    <h3 style="font-weight: bold;" th:text="${item.itemNm}"></h3>
                     <h2>
                         <span class="price" th:data-raw-price="${item.price}"></span>
                     </h2>
