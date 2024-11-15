@@ -13,6 +13,7 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+
         document.addEventListener('DOMContentLoaded', function () {
     function addCommas(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -799,7 +800,7 @@
         <div class="container">
             <div class="surv row">
                 <div class="col-sm-8" style="text-align: left;">
-                    <h4 th:text="${item.itemNm}"></h4>
+                    <h2 style="font-weight: bold;" th:text="${item.itemNm}"></h2>
                     <h2>
                         <span class="price" th:data-raw-price="${item.price}"></span>
                     </h2>

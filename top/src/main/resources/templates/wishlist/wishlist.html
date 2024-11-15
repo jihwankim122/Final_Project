@@ -114,7 +114,7 @@
             font-size: larger;
             font-weight: bold;
             display: flex;
-            width: 5rem;
+            width: 20rem;
         }
 
         .wish-item-delete {
@@ -177,6 +177,24 @@
                 font-size: 16px;
             }
 
+            .wishlist-card img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .wishlist-item-title {
+                font-size: 18px;
+            }
+
+            .wishlist-item-price {
+                font-size: 16px;
+            }
+
+            .wishlist-actions button {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+
             .cart-btn {
                 width: 100%;
                 margin-top: 0.5rem;
@@ -219,7 +237,7 @@
                             <img th:src="${wishlistItem.imgUrl}" class="rounded repImg" th:alt="${wishlistItem.itemNm}">
                         </div>
                         <div class="align-self-center">
-                            <span th:text="${wishlistItem.itemNm}" class="fs24"></span>
+                            <span style="" th:text="${wishlistItem.itemNm}" class="fs24"></span>
                             <div class="fs18 font-weight-light">
                                 <!-- <span th:id="'price_' + ${wishlistItem.wishlistItemId}"
                                     th:data-price="${wishlistItem.price}" th:text="${wishlistItem.price} + '원'"
@@ -237,8 +255,8 @@
 
                     <!--                 06Nov 의빈추가-->
                     <td class="text-center align-middle">
-                        <button class="btn cart-btn btn-danger" type="button" th:data-id="${wishlistItem.wishlistItemId}"
-                            onclick="moveItemToCart(this)">장바구니+</button>
+                        <button class="btn cart-btn btn-danger" type="button"
+                            th:data-id="${wishlistItem.wishlistItemId}" onclick="moveItemToCart(this)">장바구니+</button>
                     </td>
 
 
