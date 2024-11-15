@@ -4,6 +4,21 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        function addCommas(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const priceElements = document.querySelectorAll('.price');
+    priceElements.forEach(element => {
+        const rawPrice = element.dataset.price; // data-price 속성에서 가격 가져오기
+        if (rawPrice) {
+            const formattedPrice = addCommas(rawPrice); // 1,000 단위 콤마 추가
+            element.textContent = `${formattedPrice}원`; // 텍스트 업데이트
+        }
+    });
+});
+
         $(document).ready(function () {
             // 스크롤 이동 함수
             function goToScroll(targetId) {
@@ -253,7 +268,7 @@
                                     <!-- 품절이 아닐 때 가격 표시 -->
                                     <h3 class="card-title text-danger"
                                         th:unless="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">
-                                        [[${item.price}]]원
+                                        <span class="price" th:attr="data-price=${item.price}"></span>
                                     </h3>
 
                                 </div>

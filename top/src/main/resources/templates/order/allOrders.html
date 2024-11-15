@@ -12,32 +12,49 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
   <script th:inline="javascript">
-    function cancelOrder(orderId) {
-      var token = $("meta[name='_csrf']").attr("content");
-      var header = $("meta[name='_csrf_header']").attr("content");
+    document.addEventListener('DOMContentLoaded', () => {
+      function addCommas(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      }
 
-      var url = "/order/" + orderId + "/cancel";
-
-      $.ajax({
-        url: url,
-        type: "POST",
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader(header, token);
-        },
-        success: function (result, status) {
-          alert("취소가 승인되었습니다.");
-          location.reload();
-        },
-        error: function (jqXHR, status, error) {
-          if (jqXHR.status == '200') {
-            alert('로그인 후 이용해주세요.');
-            location.href = '/members/login';
-          } else {
-            alert(jqXHR.responseText);
+      // 모든 .price 클래스 요소 처리
+      document.querySelectorAll('.price').forEach(priceElement => {
+        const rawPrice = priceElement.getAttribute('data-raw-price');
+        if (rawPrice) {
+          const price = parseInt(rawPrice, 10);
+          if (!isNaN(price)) {
+            priceElement.textContent = addCommas(price) + '원';
           }
         }
       });
-    }
+    });
+
+            function cancelOrder(orderId) {
+              var token = $("meta[name='_csrf']").attr("content");
+              var header = $("meta[name='_csrf_header']").attr("content");
+
+              var url = "/order/" + orderId + "/cancel";
+
+              $.ajax({
+                url: url,
+                type: "POST",
+                beforeSend: function (xhr) {
+                  xhr.setRequestHeader(header, token);
+                },
+                success: function (result, status) {
+                  alert("취소가 승인되었습니다.");
+                  location.reload();
+                },
+                error: function (jqXHR, status, error) {
+                  if (jqXHR.status == '200') {
+                    alert('로그인 후 이용해주세요.');
+                    location.href = '/members/login';
+                  } else {
+                    alert(jqXHR.responseText);
+                  }
+                }
+              });
+            }
   </script>
 </th:block>
 
@@ -160,13 +177,19 @@
         <div class="align-self-center w-75">
           <span th:text="${orderItem.itemNm}" class="fs24 font-weight-bold"></span>
           <div class="fs18 font-weight-light">
-            <div>상품가격 : <span th:text="${orderItem.orderPrice} +'원'"></span></div>
+            <div>상품가격 :
+              <span class="price" th:data-raw-price="${orderItem.orderPrice}"></span>
+            </div>
             <div> 주문 갯수 : <span th:text="${orderItem.count} +'개'"></span></div>
           </div>
         </div>
       </div>
-      <div>VIP 할인 가격 : <span th:text="${order.discount} +'원'"></span></div>
-      <div>최종 가격 : <span th:text="${order.finalPrice} +'원'"></span></div>
+      <div>VIP 할인 가격 :
+        <span class="price" style="text-decoration-line: line-through;" th:data-raw-price="${order.discount}"></span>
+      </div>
+      <div>최종 가격 :
+        <span class="price" th:data-raw-price="${order.finalPrice}"></span>
+      </div>
     </div>
   </div>
 

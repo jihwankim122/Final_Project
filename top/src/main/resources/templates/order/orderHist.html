@@ -14,6 +14,7 @@
 <th:block layout:fragment="script">
 
   <script th:inline="javascript">
+
 <!--    function cancelOrder(orderId) {-->
 <!--        var token = $("meta[name='_csrf']").attr("content");-->
 <!--        var header = $("meta[name='_csrf_header']").attr("content");-->
@@ -50,7 +51,22 @@
 <!--            }-->
 <!--        });-->
 <!--    }-->
+    document.addEventListener('DOMContentLoaded', () => {
+  function addCommas(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
 
+  // 모든 .price 클래스 요소 처리
+  document.querySelectorAll('.price').forEach(priceElement => {
+    const rawPrice = priceElement.getAttribute('data-raw-price');
+    if (rawPrice) {
+      const price = parseInt(rawPrice, 10);
+      if (!isNaN(price)) {
+        priceElement.textContent = addCommas(price) + '원';
+      }
+    }
+  });
+});
     // 주문 취소 요청
     function requestCancelOrder(orderId) {
         var token = $("meta[name='_csrf']").attr("content");
@@ -257,9 +273,15 @@
     </div>
     <!--    241028 은열 추가-->
     <div class="mt-3 total-price">
-      <h4>주문 총 금액: <span th:text="${order.totalPrice} + '원'"></span></h4>
-      <h4>할인 금액: <span style="text-decoration-line: line-through;" th:text="${order.discount} + '원'"></span></h4>
-      <h4>결제 금액: <span style="color: red; font-weight: bold;" th:text="${order.finalPrice} + '원'"></span></h4>
+      <h4>주문 총 금액:
+        <span class="price" th:data-raw-price="${order.totalPrice}" th:text="${order.totalPrice} + '원'"></span>
+      </h4>
+      <h4>할인 금액:
+        <span class="price" style="text-decoration-line: line-through;" th:data-raw-price="${order.discount}" th:text="${order.discount} + '원'"></span>
+      </h4>
+      <h4>결제 금액:
+        <span class="price" style="color: red; font-weight: bold;" th:data-raw-price="${order.finalPrice}" th:text="${order.finalPrice} + '원'"></span>
+      </h4>
     </div>
   </div>
 

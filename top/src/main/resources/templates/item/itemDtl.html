@@ -13,6 +13,22 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+    function addCommas(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    // 모든 price 클래스의 요소를 대상으로 쉼표를 추가
+    document.querySelectorAll('.price').forEach(function (element) {
+        const rawPrice = element.getAttribute('data-raw-price');
+        if (rawPrice && !isNaN(rawPrice)) {
+            const formattedPrice = addCommas(parseInt(rawPrice, 10));
+            element.textContent = formattedPrice + '원';
+        } else {
+            console.warn('data-raw-price 속성이 없거나 값이 올바르지 않습니다:', element);
+        }
+    });
+});
         $(document).ready(function () {
                         // 스크롤 이동 함수
             function goToScroll(targetId) {
@@ -690,7 +706,7 @@
             <div class="text-right">
                 <div class="h4 text-danger text-left">
                     <input type="hidden" th:value="${item.price}" id="price" name="price">
-                    <span th:text="${item.price}"></span>원
+                    <span class="price" th:data-raw-price="${item.price}"></span>
                 </div>
                 <div class="input-group w-50">
                     <div class="input-group-prepend">
@@ -702,7 +718,9 @@
             <hr class="my-4">
             <div class="text-right mgt-50">
                 <h5>결제 금액</h5>
-                <h3 name="totalPrice" id="totalPrice" class="font-weight-bold text-danger"></h3>
+                <h3 name="totalPrice" id="totalPrice" class="font-weight-bold text-danger">
+                    <span class="price" data-raw-price="${item.price}"></span>
+                </h3>
             </div>
             <div  class="text-left">
                 <button type="button" class="btn-buy paybt" onclick="addWishlist()">찜하기</button>
@@ -783,7 +801,7 @@
                 <div class="col-sm-8" style="text-align: left;">
                     <h4 th:text="${item.itemNm}"></h4>
                     <h2>
-                        <p th:text="${item.price}+'원'"></p>
+                        <span class="price" th:data-raw-price="${item.price}"></span>
                     </h2>
                 </div>
                 <div class="col-sm-4">
