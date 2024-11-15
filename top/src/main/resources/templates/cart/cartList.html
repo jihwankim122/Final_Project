@@ -135,8 +135,18 @@
             });
         }
 
-        /* 결제 요청 */
-        function requestPay() {
+        /* 카카오페이 결제 요청 */
+        function requestKakaoPay() {
+            requestPay("kakaopay");  // "kakaopay" 값을 전달하여 pgProvider가 정의됨
+        }
+
+        /* 이니시스 결제 요청 */
+        function requestInicisPay() {
+            requestPay("html5_inicis");  // "html5_inicis" 값을 전달하여 pgProvider가 정의됨
+        }
+
+        /* 결제 요청 공통 함수 */
+        function requestPay(pgProvider) {
             var IMP = window.IMP; // 아임포트 라이브러리 호출
             IMP.init("imp12017008"); // 본인의 아임포트 코드로 변경
 
@@ -157,8 +167,7 @@
             }
 
             IMP.request_pay({
-                //pg: "html5_inicis", // 이니시스 사용
-                pg: "kakaopay", // 카카오페이 사용
+                pg: pgProvider,
                 pay_method: "card", // 결제 방식
                 name: firstItemNm, // 상품명으로 설정
                 amount: totalAmount, // 결제 금액
@@ -417,8 +426,10 @@
             <h3 class="text-center">총 결제금액 : <span id="finalPrice">0원</span></h3>
         </h5>
 
+        <!-- 1115 성아 수정 -->
         <div class="text-center mt-3">
-            <button type="button" class="btn order-btn btn-primary btn-lg" onclick="orders()">주문하기</button>
+            <button type="button" class="btn order-btn btn-warning btn-lg" onclick="requestKakaoPay()">카카오페이로 결제</button>
+            <button type="button" class="btn order-btn btn-danger btn-lg" onclick="requestInicisPay()">이니시스로 결제</button>
         </div>
 
     </div>
