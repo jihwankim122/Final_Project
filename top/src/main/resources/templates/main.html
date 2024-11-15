@@ -8,8 +8,9 @@
 <th:block layout:fragment="css">
     <style>
         a {
-    text-decoration: none;
-}
+            text-decoration: none;
+        }
+
         #categori {
             margin-top: 4rem;
             margin-bottom: 4rem;
@@ -377,6 +378,11 @@
             opacity: 1;
         }
 
+        .item-row {
+            padding: 6rem;
+            margin-bottom: 3rem;
+        }
+
 
         /* 모바일 스타일 */
         @media (max-width: 426px) {
@@ -412,8 +418,21 @@
             }
 
             .itemManu {
-                bottom: 6rem;
+                bottom: 10rem;
                 right: 2.4rem;
+            }
+
+            .content-body {
+                margin: none;
+            }
+
+            .item-row {
+                padding: 0rem;
+                margin-bottom: 1rem;
+
+            }
+            .card{
+                height: 400px;
             }
         }
     </style>
@@ -422,6 +441,20 @@
 <!-- 1030 성아 챗봇 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        function addCommas(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const priceElements = document.querySelectorAll('.price');
+    priceElements.forEach(element => {
+        const rawPrice = element.dataset.price; // data-price 속성에서 가격 가져오기
+        if (rawPrice) {
+            const formattedPrice = addCommas(rawPrice); // 1,000 단위 콤마 추가
+            element.textContent = `${formattedPrice}원`; // 텍스트 업데이트
+        }
+    });
+});
         $(document).ready(function () {
             // 스크롤 이동 함수
             function goToScroll(targetId) {
@@ -765,11 +798,12 @@
     <img class="kakaochat" src="/img/kakaochat.png" onclick="window.open('http://pf.kakao.com/_EDUVn/chat')"
         style="cursor: pointer;">
 
-    <div class="row" style="padding: 6rem; margin-bottom: 3rem;">
         <!-- 1107 성아 추가 정렬 드롭다운 메뉴 -->
+
         <div class="container" style="width: 80%;">
+            <div class="row item-row">
             <select id="sortOrder" class="form-select" onchange="changeSortOrder()"
-                style="width: 150px; font-size: large; font-weight: bold;">
+                    style="width: 150px; font-size: large; font-weight: bold;">
                 <option value="newest" th:selected="${itemSearchDto.sortCondition == 'newest'}">최신순</option>
                 <option value="oldest" th:selected="${itemSearchDto.sortCondition == 'oldest'}">오래된순</option>
                 <option value="priceDesc" th:selected="${itemSearchDto.sortCondition == 'priceDesc'}">가격 높은순</option>
@@ -798,9 +832,9 @@
                                     </h3>
 
                                     <!-- 품절이 아닐 때 가격 표시 -->
-                                    <h3 class="card-title text-danger"
+                                    <h3 class="card-title"
                                         th:unless="${item.itemSellStatus == T(com.top.constant.ItemSellStatus).SOLD_OUT}">
-                                        [[${item.price}]]원
+                                        <span class="price" th:attr="data-price=${item.price}"></span>
                                     </h3>
 
                                 </div>
@@ -814,15 +848,15 @@
                 <p>로딩 중...</p>
             </div>
             <div id="noMoreDataMessage"
-                style="display: none; text-align: center; padding: 20px; font-size: 18px; color: #999;">
+                 style="display: none; text-align: center; padding: 20px; font-size: 18px; color: #999;">
                 마지막 페이지입니다.
             </div>
         </div>
     </div>
-    <!-- 1030 성아 챗봇 추가 ------------------------------------------------------>
-    <!-- 챗봇 아이콘 -->
     <div class="btn chatbot-icon" onclick="toggleChatbot()" data-bs-toggle="tooltip" title="Bot chat!"><i
             class="fi fi-rr-user-robot" style="color: white;"></i></div>
+    <!-- 1030 성아 챗봇 추가 ------------------------------------------------------>
+    <!-- 챗봇 아이콘 -->
     <!-- 챗봇 컨테이너 -->
     <div class="chatbot-container" id="chatbot">
         <button class="close-button" onclick="closeChatbot()">✖</button> <!-- X 버튼 추가 -->
