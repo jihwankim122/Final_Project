@@ -13,7 +13,31 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+    const paynav = document.getElementById('paynav');
+    const showAfterScroll = 600; // 스크롤 위치(px)
+    let isVisible = false;
 
+    paynav.style.transform = 'translateY(100%)';
+    paynav.style.opacity = '0';
+    paynav.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+
+    window.addEventListener('scroll', function () {
+        if (window.scrollY > showAfterScroll) {
+            if (!isVisible) {
+                paynav.style.transform = 'translateY(0)';
+                paynav.style.opacity = '1';
+                isVisible = true;
+            }
+        } else {
+            if (isVisible) {
+                paynav.style.transform = 'translateY(100%)';
+                paynav.style.opacity = '0';
+                isVisible = false;
+            }
+        }
+    });
+});
         document.addEventListener('DOMContentLoaded', function () {
     function addCommas(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -403,139 +427,137 @@
 <th:block layout:fragment="css">
     <style>
         /* 리뷰 섹션 전체 컨테이너 */
-.container.reviewtable {
-    margin-top: 2rem;
-    padding: 2rem;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+        .container.reviewtable {
+            margin-top: 2rem;
+            padding: 2rem;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-/* 제목 버튼 */
-.container.reviewtable h2.btn {
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 1.25rem;
-    display: inline-flex;
-    align-items: center;
-    margin-right: 1rem;
-}
+        /* 제목 버튼 */
+        .container.reviewtable h2.btn {
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1.25rem;
+            display: inline-flex;
+            align-items: center;
+            margin-right: 1rem;
+        }
 
-.container.reviewtable h2.btn .badge {
-    margin-left: 10px;
-    font-weight: bold;
-}
+        .container.reviewtable h2.btn .badge {
+            margin-left: 10px;
+            font-weight: bold;
+        }
 
-/* 리뷰 작성 버튼 */
-.addReviewBtn {
-    background-color: #28a745;
-    color: white;
-    font-size: 1rem;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+        /* 리뷰 작성 버튼 */
+        .addReviewBtn {
+            background-color: #28a745;
+            color: white;
+            font-size: 1rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-.reviewList {
-    margin-top: 1rem;
-    padding: 0;
-    list-style: none;
-}
+        .reviewList {
+            margin-top: 1rem;
+            padding: 0;
+            list-style: none;
+        }
 
-.reviewModal .modal-content {
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
+        .reviewModal .modal-content {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
 
-.reviewModal .modal-header {
-    background-color: #e3e3e3;
-    border-bottom: 1px solid #ccc;
-}
+        .reviewModal .modal-header {
+            background-color: #e3e3e3;
+            border-bottom: 1px solid #ccc;
+        }
 
-.reviewModal .modal-title {
-    font-weight: bold;
-    color: #333;
-}
+        .reviewModal .modal-title {
+            font-weight: bold;
+            color: #333;
+        }
 
-.reviewModal .close {
-    color: #333;
-    opacity: 0.7;
-}
+        .reviewModal .close {
+            color: #333;
+            opacity: 0.7;
+        }
 
-.reviewModal .close:hover {
-    opacity: 1;
-}
+        .reviewModal .close:hover {
+            opacity: 1;
+        }
 
-.reviewModal .modal-body {
-    padding: 1.5rem;
-    background-color: #fff;
-}
+        .reviewModal .modal-body {
+            padding: 1.5rem;
+            background-color: #fff;
+        }
 
-.reviewbody label {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    display: block;
-}
+        .reviewbody label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
 
-.reviewbody .form-control {
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    padding: 10px;
-}
+        .reviewbody .form-control {
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
 
-/* 별점 스타일 */
-#divGrade .starrr {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    color: #f1c40f;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
+        #divGrade .starrr {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            color: #f1c40f;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
 
-/* 모달 푸터 */
-.reviewModal .modal-footer {
-    background-color: #e3e3e3;
-    border-top: 1px solid #ccc;
-    display: flex;
-    justify-content: space-between;
-}
+        .reviewModal .modal-footer {
+            background-color: #e3e3e3;
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+        }
 
-.reviewModal .btn {
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 1rem;
-}
+        .reviewModal .btn {
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
 
-.reviewModal .btn-secondary {
-    background-color: #6c757d;
-    color: white;
-}
+        .reviewModal .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
 
-.reviewModal .btn-secondary:hover {
-    background-color: #5a6268;
-}
+        .reviewModal .btn-secondary:hover {
+            background-color: #5a6268;
+        }
 
-.reviewModal .btn-primary {
-    background-color: #007bff;
-    color: white;
-}
+        .reviewModal .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
 
-.reviewModal .btn-primary:hover {
-    background-color: #0056b3;
-}
+        .reviewModal .btn-primary:hover {
+            background-color: #0056b3;
+        }
 
-.reviewModal .btn-danger {
-    background-color: #dc3545;
-    color: white;
-}
+        .reviewModal .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
 
-.reviewModal .btn-danger:hover {
-    background-color: #c82333;
-}
+        .reviewModal .btn-danger:hover {
+            background-color: #c82333;
+        }
 
         .reviewModal{
             font-weight: bold;
